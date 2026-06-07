@@ -1,0 +1,270 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+import { catalogo } from '../data/catalogo';
+
+const areas = [
+  {
+    t: 'Formación bonificable',
+    d: 'Acciones presenciales y online diseñadas para encajar en el crédito FUNDAE de la empresa: salud, habilidades, prevención y cumplimiento.',
+  },
+  {
+    t: 'Bienestar laboral',
+    d: 'Ergonomía, gestión del estrés, comunicación y hábitos saludables aplicados al puesto real de cada equipo.',
+  },
+  {
+    t: 'Team building',
+    d: 'Experiencias de cohesión diseñadas para activar, conectar y energizar a los equipos.',
+  },
+  {
+    t: 'Wellness in company',
+    d: 'Fisioterapia, yoga, masajes y bienestar recurrente integrado en la jornada, en las instalaciones del cliente.',
+  },
+  {
+    t: 'Formación técnica y obligatoria',
+    d: 'Cursos técnicos y de cumplimiento normativo (PRL, primeros auxilios, igualdad…) con su documentación gestionada.',
+  },
+];
+
+const beneficios = [
+  ['Reduce el desgaste físico y mental', 'Menos molestias, menos estrés acumulado y más energía sostenible.'],
+  ['Mejora el clima laboral', 'Equipos que se cuidan colaboran mejor y discuten menos.'],
+  ['Refuerza el sentido de pertenencia', 'El cuidado del equipo se traduce en compromiso con la empresa.'],
+  ['Facilita el trabajo de RRHH', 'Una sola interlocución para formación, bienestar y cohesión.'],
+  ['Centraliza proveedores', 'Menos contratos que gestionar y una única propuesta coordinada.'],
+  ['Detecta necesidades reales', 'El diagnóstico 360º identifica prioridades antes de actuar.'],
+];
+
+const proceso = [
+  ['Diagnóstico', 'Analizamos las necesidades reales del equipo y de la empresa.'],
+  ['Diseño', 'Proponemos un plan a medida con acciones, formato y calendario.'],
+  ['Bonificación', 'Revisamos el encaje en el crédito FUNDAE y preparamos la documentación.'],
+  ['Ejecución', 'Impartimos las acciones, presenciales u online, con profesionales especializados.'],
+  ['Medición', 'Recogemos resultados y feedback para ajustar y dar continuidad.'],
+];
+---
+
+<BaseLayout
+  title="Qué hacemos"
+  description="Centralizamos formación bonificable, bienestar laboral, team building y wellness in company en una sola interlocución para RRHH, con un proceso claro de principio a fin."
+  path="/que-hacemos"
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:760px">
+        <p class="eyebrow">Qué hacemos</p>
+        <h1 class="h2" style="font-size:38px">Una sola vía para cuidar, formar y cohesionar al equipo</h1>
+        <p class="lead">
+          Centralizamos formación, bienestar corporativo y experiencias de cohesión para que RRHH
+          tenga una propuesta clara, una ejecución coordinada y menos proveedores que gestionar.
+        </p>
+      </div>
+
+      <div class="rows">
+        {
+          areas.map((a, i) => (
+            <div class="row reveal">
+              <span class="row__num">0{i + 1}</span>
+              <div class="row__body">
+                <h2 class="row__title">{a.t}</h2>
+                <p class="card-text" style="font-size:15.5px">{a.d}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Beneficios -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal" style="max-width:740px">
+        <p class="eyebrow">Beneficios</p>
+        <h2 class="h2">Lo que gana la empresa</h2>
+        <p class="lead">
+          No es un gasto en actividades sueltas: es una forma estructurada de cuidar al equipo que
+          repercute en clima, retención y rendimiento.
+        </p>
+      </div>
+      <div class="ben">
+        {
+          beneficios.map(([t, d], i) => (
+            <div class="ben__item reveal">
+              <span class="ben__num">0{i + 1}</span>
+              <div>
+                <h3 class="ben__title">{t}</h3>
+                <p class="card-text">{d}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Método -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:740px">
+        <p class="eyebrow">Cómo trabajamos</p>
+        <h2 class="h2">Un proceso claro, de principio a fin</h2>
+        <p class="lead">
+          Del primer diagnóstico a la medición de resultados, con la documentación gestionada en cada
+          paso.
+        </p>
+      </div>
+      <ol class="method">
+        {
+          proceso.map(([t, d], i) => (
+            <li class="method__step reveal">
+              <span class="method__dot">{i + 1}</span>
+              <div>
+                <h3 class="method__title">{t}</h3>
+                <p class="card-text">{d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Áreas del catálogo -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Catálogo</p>
+        <h2 class="h2">Áreas que cubrimos</h2>
+      </div>
+      <div class="tags reveal">
+        {catalogo.map((c) => <a href="/catalogo" class="tag">{c.tab} · {c.items.length}</a>)}
+      </div>
+      <div class="reveal" style="margin-top:24px">
+        <a href="/catalogo" class="btn btn--primary">Ver catálogo completo <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>
+
+<style>
+  .rows {
+    margin-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 24px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .row__num {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--line);
+  }
+  .row__title {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--green);
+    margin: 0 0 8px;
+  }
+
+  .ben {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 56px;
+    margin-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+  .ben__item {
+    display: flex;
+    gap: 20px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .ben__num {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--green);
+    min-width: 28px;
+  }
+  .ben__title {
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.35;
+  }
+
+  .method {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+  }
+  .method__step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 24px;
+    padding-bottom: 32px;
+  }
+  .method__step:last-child {
+    padding-bottom: 0;
+  }
+  .method__dot {
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    border: 2px solid var(--green);
+    color: var(--green);
+    background: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .method__title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    margin: 0 0 6px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .tag {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--green);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 9px 16px;
+    text-decoration: none;
+    background: #fff;
+  }
+  .tag:hover {
+    border-color: var(--green);
+  }
+
+  @media (max-width: 980px) {
+    .ben {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+  }
+</style>

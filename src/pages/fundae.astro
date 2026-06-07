@@ -1,0 +1,186 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+import { BONIF_NOTE } from '../data/catalogo';
+
+const pasos = [
+  ['Revisamos el encaje', 'Comprobamos qué acciones de tu plan pueden encajar con el crédito formativo disponible de la empresa.'],
+  ['Preparamos la documentación', 'Elaboramos la documentación conforme a la normativa vigente para la gestión de la bonificación.'],
+  ['Gestionamos los plazos', 'Te acompañamos en comunicaciones y plazos para que todo quede en regla.'],
+  ['Impartimos y justificamos', 'Ejecutamos la formación y dejamos la justificación documental ordenada.'],
+];
+
+const faqs = [
+  ['¿La formación es gratis?', 'No. La formación tiene un coste. Lo que ocurre es que muchas acciones pueden bonificarse a través del crédito formativo del que dispone la empresa, lo que reduce su coste neto, siempre sujeto a crédito, modalidad, plazos y cumplimiento de requisitos.'],
+  ['¿Qué es el crédito FUNDAE?', 'Es el crédito formativo del que dispone cada empresa para la formación de sus personas trabajadoras. Su importe depende de las cotizaciones y de otros factores de cada empresa.'],
+  ['¿Sois partner oficial de FUNDAE?', 'No. Batmotrópicos no es un organismo oficial ni partner de FUNDAE. Te ayudamos a revisar el encaje y a preparar la documentación conforme a la normativa vigente.'],
+  ['¿Todas las acciones se pueden bonificar?', 'No necesariamente. La bonificación depende del tipo de acción, su modalidad y el cumplimiento de los requisitos. Algunas experiencias (como ciertos team building o servicios wellness) pueden ser solo parcialmente bonificables o no serlo.'],
+];
+---
+
+<BaseLayout
+  title="Formación bonificable FUNDAE"
+  description="Cómo funciona la bonificación FUNDAE para formación de empresa. Revisamos el encaje y preparamos la documentación conforme a la normativa vigente. Sin promesas de gratuidad."
+  path="/fundae"
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal card card--accent fundae__hero">
+        <p class="eyebrow">Bonificación</p>
+        <h1 class="h2" style="font-size:34px">Formación bonificable a través del crédito FUNDAE</h1>
+        <p class="lead" style="margin-bottom:18px">{BONIF_NOTE}</p>
+        <p class="note" style="max-width:740px">
+          Batmotrópicos no es un organismo oficial ni partner de FUNDAE: te ayudamos a revisar el
+          encaje y a preparar la documentación conforme a la normativa vigente.
+        </p>
+        <div class="fundae__badges">
+          <span class="badge">FUNDAE</span>
+          <span class="badge">Crédito formativo</span>
+          <span class="badge">Documentación gestionada</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo lo gestionamos -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal" style="max-width:740px">
+        <p class="eyebrow">Cómo lo gestionamos</p>
+        <h2 class="h2">Te acompañamos en todo el proceso</h2>
+      </div>
+      <ol class="steps">
+        {
+          pasos.map(([t, d], i) => (
+            <li class="steps__item reveal">
+              <span class="steps__num">{i + 1}</span>
+              <div>
+                <h3 class="steps__title">{t}</h3>
+                <p class="card-text">{d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:740px">
+        <p class="eyebrow">Preguntas frecuentes</p>
+        <h2 class="h2">Lo que conviene tener claro</h2>
+      </div>
+      <div class="faq">
+        {
+          faqs.map(([q, a]) => (
+            <details class="faq__item reveal">
+              <summary class="faq__q">{q}</summary>
+              <p class="faq__a">{a}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Empieza por aquí"
+    title="¿Quieres saber qué parte de tu plan puede bonificarse?"
+    text="Cuéntanos qué tienes en mente y revisamos contigo el posible encaje en el crédito formativo de tu empresa."
+    primaryLabel="Consultar el encaje FUNDAE"
+  />
+</BaseLayout>
+
+<style>
+  .fundae__hero {
+    padding: 36px 32px;
+  }
+  .fundae__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .steps {
+    list-style: none;
+    margin: 32px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .steps__item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .steps__num {
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    border: 2px solid var(--green);
+    color: var(--green);
+    background: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .steps__title {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 6px;
+  }
+
+  .faq {
+    margin-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+  .faq__q {
+    font-weight: 600;
+    font-size: 16.5px;
+    color: var(--text);
+    cursor: pointer;
+    padding: 18px 36px 18px 0;
+    position: relative;
+    list-style: none;
+  }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+  .faq__q::after {
+    content: '+';
+    position: absolute;
+    right: 4px;
+    top: 16px;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--green);
+  }
+  .faq__item[open] .faq__q::after {
+    content: '–';
+  }
+  .faq__a {
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.7;
+    margin: 0;
+    padding: 0 36px 20px 0;
+  }
+
+  @media (max-width: 720px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,325 @@
+/* ════════════════════════════════════════════════════════════
+   BATMOTRÓPICOS — ESTILOS GLOBALES
+   Branding: limpio, sobrio, sanitario/corporativo.
+   ════════════════════════════════════════════════════════════ */
+
+:root {
+  --green: #1a5c1a;
+  --green-dark: #123f12;
+  --green-accent: #1e7a1e;
+  --bg: #ffffff;
+  --bg-soft: #f7f7f7;
+  --text: #111111;
+  --text-sec: #666666;
+  --line: #e6e6e6;
+  --font: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --maxw: 1080px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-weight: 400;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--green);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  letter-spacing: -0.01em;
+}
+
+/* ── Layout helpers ───────────────────────────────────────── */
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.section {
+  padding: 88px 0;
+  border-bottom: 1px solid var(--line);
+}
+.section--soft {
+  background: var(--bg-soft);
+}
+.section--tight {
+  padding: 64px 0;
+}
+
+/* ── Tipografía editorial ─────────────────────────────────── */
+.eyebrow {
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green-accent);
+  margin: 0 0 14px;
+}
+.eyebrow--light {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+h1.title {
+  font-weight: 700;
+  font-size: 44px;
+  line-height: 1.16;
+  letter-spacing: -0.02em;
+  margin: 0 0 20px;
+}
+
+h2.h2 {
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.22;
+  margin: 0 0 18px;
+}
+.h2--light {
+  color: #fff;
+}
+
+.lead {
+  font-weight: 400;
+  font-size: 17px;
+  color: var(--text-sec);
+  line-height: 1.7;
+  max-width: 740px;
+  margin: 0 0 28px;
+}
+.lead--light {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.note {
+  font-size: 13px;
+  color: var(--text-sec);
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ── Botones ──────────────────────────────────────────────── */
+.btn {
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 13px 26px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  line-height: 1.2;
+  border: 1px solid var(--green);
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+.btn--sm {
+  font-size: 13px;
+  padding: 9px 16px;
+  gap: 7px;
+}
+.btn--primary {
+  background: var(--green);
+  color: #fff;
+}
+.btn--primary:hover {
+  background: var(--green-dark);
+  border-color: var(--green-dark);
+}
+.btn--outline {
+  background: transparent;
+  color: var(--green);
+}
+.btn--outline:hover {
+  background: var(--green);
+  color: #fff;
+}
+.btn--light {
+  background: #fff;
+  color: var(--green);
+  border-color: #fff;
+}
+.btn--light:hover {
+  background: transparent;
+  color: #fff;
+}
+.btn .arrow {
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+.btn:hover .arrow {
+  transform: translateX(3px);
+}
+
+/* ── Cards / chips ────────────────────────────────────────── */
+.card {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+}
+.card--accent {
+  border-top: 3px solid var(--green);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--green);
+  margin: 0 0 10px;
+  line-height: 1.3;
+}
+.card-text {
+  font-weight: 400;
+  font-size: 14.5px;
+  color: var(--text-sec);
+  line-height: 1.62;
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-sec);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 4px 9px;
+}
+
+.bonif-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--green-accent);
+  border: 1px solid var(--green);
+  background: rgba(26, 92, 26, 0.05);
+  border-radius: 100px;
+  padding: 5px 12px;
+}
+.bonif-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  background: var(--green);
+}
+
+/* ── Reveal (animación sobria en scroll) ──────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Logo animado (trazado) ───────────────────────────────── */
+.bm-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: bmDraw 1.5s ease forwards;
+}
+.bm-draw.bm-p2 {
+  animation-delay: 0.45s;
+}
+.bm-pulse {
+  animation: bmPulse 1.3s ease 1.7s 1;
+}
+@keyframes bmDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes bmPulse {
+  0% {
+    filter: none;
+  }
+  45% {
+    filter: drop-shadow(0 0 7px rgba(30, 122, 30, 0.55));
+  }
+  100% {
+    filter: none;
+  }
+}
+
+/* ── Accesibilidad: reduce motion ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .bm-draw {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .bm-pulse {
+    animation: none;
+  }
+}
+
+/* ── Utilidades de grid responsivas ───────────────────────── */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+}
+.split-center {
+  align-items: center;
+}
+
+@media (max-width: 980px) {
+  h1.title {
+    font-size: 36px;
+  }
+  h2.h2 {
+    font-size: 27px;
+  }
+  .grid-2 {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .section {
+    padding: 64px 0;
+  }
+}

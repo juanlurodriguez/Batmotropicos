@@ -1,0 +1,132 @@
+---
+import { WHATSAPP } from '../data/site';
+---
+
+<!-- FAB de escritorio -->
+<div class="fab" data-fab>
+  <div class="fab__panel" data-fab-panel hidden>
+    <p class="fab__txt">¿Quieres saber qué programa encaja mejor con tu equipo?</p>
+    <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
+      WhatsApp
+    </a>
+    <a href="/contacto" class="btn btn--outline btn--sm">Diagnóstico 360º</a>
+  </div>
+  <button class="fab__btn" aria-label="Abrir ayuda" aria-expanded="false" data-fab-toggle>
+    <svg class="fab__icon-chat" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5Z"></path>
+    </svg>
+    <svg class="fab__icon-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" hidden>
+      <path d="M6 6 L18 18 M18 6 L6 18"></path>
+    </svg>
+  </button>
+</div>
+
+<!-- Barra inferior móvil -->
+<div class="bottombar">
+  <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="bottombar__wa">WhatsApp</a>
+  <a href="/contacto" class="bottombar__diag">Diagnóstico</a>
+</div>
+
+<style>
+  .fab {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 70;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+  }
+  .fab__panel {
+    width: 300px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .fab__txt {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0 0 6px;
+  }
+  .fab__btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 56px;
+    background: var(--green);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(26, 92, 26, 0.3);
+  }
+
+  .bottombar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 70;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+  .bottombar__wa,
+  .bottombar__diag {
+    font-weight: 600;
+    font-size: 15px;
+    text-align: center;
+    padding: 16px 0;
+    text-decoration: none;
+  }
+  .bottombar__wa {
+    color: var(--green);
+    border-right: 1px solid var(--line);
+  }
+  .bottombar__diag {
+    color: #fff;
+    background: var(--green);
+  }
+
+  @media (max-width: 880px) {
+    .fab {
+      display: none;
+    }
+    .bottombar {
+      display: grid;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const toggle = document.querySelector('[data-fab-toggle]');
+    const panel = document.querySelector('[data-fab-panel]');
+    if (!toggle || !panel) return;
+    const chat = toggle.querySelector('.fab__icon-chat');
+    const close = toggle.querySelector('.fab__icon-close');
+    toggle.addEventListener('click', function () {
+      const open = panel.hasAttribute('hidden');
+      if (open) {
+        panel.removeAttribute('hidden');
+        chat.setAttribute('hidden', '');
+        close.removeAttribute('hidden');
+        toggle.setAttribute('aria-expanded', 'true');
+      } else {
+        panel.setAttribute('hidden', '');
+        close.setAttribute('hidden', '');
+        chat.removeAttribute('hidden');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,164 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CatalogCard from '../components/CatalogCard.astro';
+import CTASection from '../components/CTASection.astro';
+import { catalogo, BONIF_NOTE } from '../data/catalogo';
+
+const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
+---
+
+<BaseLayout
+  title="Catálogo de formación y bienestar"
+  description="Catálogo completo de formación bonificable, salud física y mental, formación técnica obligatoria, team building y wellness in company para empresas."
+  path="/catalogo"
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:760px">
+        <p class="eyebrow">Catálogo</p>
+        <h1 class="h2" style="font-size:38px">Un catálogo amplio, una sola interlocución</h1>
+        <p class="lead">
+          {totalItems} acciones de formación, bienestar, cohesión y servicios wellness organizadas
+          por áreas. Busca una acción concreta o explora por categoría.
+        </p>
+      </div>
+
+      <!-- Buscador -->
+      <div class="search reveal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <path d="M21 21 l-4.3 -4.3" stroke-linecap="round"></path>
+        </svg>
+        <input
+          type="search"
+          id="catalog-search"
+          placeholder="Buscar formación o servicio…"
+          aria-label="Buscar en el catálogo"
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Chips de categorías -->
+      <nav class="chips reveal" aria-label="Categorías del catálogo">
+        {catalogo.map((c) => <a href={`#${c.id}`} class="chip"><span aria-hidden="true">{c.letter}</span> {c.tab}</a>)}
+      </nav>
+
+      <p class="search-empty" data-empty hidden>
+        No encontramos acciones para tu búsqueda. Prueba otra palabra o explora por categoría.
+      </p>
+
+      <!-- Categorías -->
+      <div class="cats">
+        {
+          catalogo.map((c) => (
+            <div id={c.id} class="cats__item reveal" data-category data-text={(c.title + ' ' + c.tab + ' ' + c.items.map((i) => i.name + ' ' + (i.note ?? '')).join(' ')).toLowerCase()}>
+              <CatalogCard category={c} />
+            </div>
+          ))
+        }
+      </div>
+
+      <p class="note reveal" style="margin-top:24px; max-width:740px">{BONIF_NOTE}</p>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="¿No sabes qué elegir?"
+    title="Empieza por el Diagnóstico 360º"
+    text="Detectamos las prioridades reales del equipo y te proponemos un plan a medida combinando las áreas que mejor encajen."
+  />
+</BaseLayout>
+
+<style>
+  .search {
+    position: relative;
+    max-width: 440px;
+    margin-top: 30px;
+    color: var(--text-sec);
+  }
+  .search svg {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+  .search input {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    width: 100%;
+    padding: 12px 14px 12px 42px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    outline: none;
+  }
+  .search input:focus {
+    border-color: var(--green);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 22px;
+  }
+  .chip {
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--text);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 9px 16px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .chip span {
+    opacity: 0.6;
+    margin-right: 4px;
+  }
+  .chip:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .cats {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .cats__item {
+    scroll-margin-top: 90px;
+  }
+  .cats__item[hidden] {
+    display: none;
+  }
+
+  .search-empty {
+    margin-top: 24px;
+    font-size: 15px;
+    color: var(--text-sec);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const input = document.getElementById('catalog-search');
+    const cats = Array.from(document.querySelectorAll('[data-category]'));
+    const empty = document.querySelector('[data-empty]');
+    if (!input) return;
+    input.addEventListener('input', function () {
+      const q = input.value.trim().toLowerCase();
+      let visible = 0;
+      cats.forEach(function (cat) {
+        const match = !q || (cat.getAttribute('data-text') || '').includes(q);
+        cat.hidden = !match;
+        if (match) visible++;
+      });
+      if (empty) empty.hidden = visible !== 0;
+    });
+  })();
+</script>

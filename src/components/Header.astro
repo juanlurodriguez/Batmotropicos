@@ -1,0 +1,169 @@
+---
+import Icon from './Icon.astro';
+import { nav } from '../data/site';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) =>
+  href === '/' ? current === '/' : current.startsWith(href);
+---
+
+<header class="hd">
+  <div class="wrap hd__inner">
+    <a href="/" class="hd__logo" aria-label="Batmotrópicos — inicio">
+      <Icon size={34} />
+      <span class="hd__word">Batmotrópicos</span>
+    </a>
+
+    <nav class="hd__nav" aria-label="Navegación principal">
+      {
+        nav.map((item) => (
+          <a
+            href={item.href}
+            class={isActive(item.href) ? 'hd__link is-active' : 'hd__link'}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+      <a href="/contacto" class="btn btn--primary btn--sm hd__cta">
+        Solicitar diagnóstico <span class="arrow">→</span>
+      </a>
+    </nav>
+
+    <button class="hd__burger" aria-label="Abrir menú" aria-expanded="false" data-burger>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="hd__mobile" data-mobile-menu hidden>
+    {
+      nav.map((item) => (
+        <a href={item.href} class="hd__mlink">
+          {item.label}
+        </a>
+      ))
+    }
+    <a href="/contacto" class="btn btn--primary hd__mcta">
+      Solicitar diagnóstico <span class="arrow">→</span>
+    </a>
+  </div>
+</header>
+
+<style>
+  .hd {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .hd__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  .hd__logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .hd__word {
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.03em;
+    color: var(--green);
+    text-transform: uppercase;
+  }
+  .hd__nav {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+  }
+  .hd__link {
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 6px 10px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+  }
+  .hd__link:hover {
+    color: var(--green);
+  }
+  .hd__link.is-active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+  }
+  .hd__cta {
+    margin-left: 8px;
+  }
+  .hd__burger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+  }
+  .hd__burger span {
+    width: 22px;
+    height: 2px;
+    background: var(--green);
+    display: block;
+  }
+  .hd__mobile {
+    border-top: 1px solid var(--line);
+    padding: 8px 24px 16px;
+  }
+  .hd__mlink {
+    display: block;
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--text);
+    text-decoration: none;
+    padding: 12px 6px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hd__mcta {
+    margin-top: 14px;
+  }
+
+  @media (max-width: 880px) {
+    .hd__nav {
+      display: none;
+    }
+    .hd__burger {
+      display: flex;
+    }
+  }
+  @media (min-width: 881px) {
+    .hd__mobile {
+      display: none !important;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const burger = document.querySelector('[data-burger]');
+    const menu = document.querySelector('[data-mobile-menu]');
+    if (!burger || !menu) return;
+    burger.addEventListener('click', function () {
+      const open = menu.hasAttribute('hidden');
+      if (open) {
+        menu.removeAttribute('hidden');
+        burger.setAttribute('aria-expanded', 'true');
+      } else {
+        menu.setAttribute('hidden', '');
+        burger.setAttribute('aria-expanded', 'false');
+      }
+    });
+  })();
+</script>

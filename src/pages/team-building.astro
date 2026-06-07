@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+import { teamBuilding, EXTRA_NOTE } from '../data/teamBuilding';
+import { BONIF_NOTE } from '../data/catalogo';
+---
+
+<BaseLayout
+  title="Team building y experiencias de cohesión"
+  description="Experiencias de team building para empresas: cohesión, comunicación y energía de equipo. Dinámicas adaptadas a cada plantilla, presenciales y a medida."
+  path="/team-building"
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:760px">
+        <p class="eyebrow">Team building</p>
+        <h1 class="h2" style="font-size:38px">Experiencias que activan y conectan equipos</h1>
+        <p class="lead">
+          Dinámicas de cohesión diseñadas para romper la rutina, mejorar la comunicación y reforzar
+          el sentido de pertenencia. Cada experiencia se adapta al tamaño, la condición física y los
+          objetivos del equipo.
+        </p>
+      </div>
+
+      <div class="tb">
+        {
+          teamBuilding.map((e) => (
+            <article class="tb__card card card--accent reveal">
+              <div class="tb__top">
+                <h2 class="tb__title">{e.name}</h2>
+                <span class="tb__dur">{e.dur}</span>
+              </div>
+              <span class="badge tb__obj">{e.objetivo}</span>
+              <p class="card-text tb__desc">{e.desc}</p>
+              {e.extra && <p class="note tb__extra">{EXTRA_NOTE}</p>}
+            </article>
+          ))
+        }
+      </div>
+
+      <p class="note reveal" style="margin-top:24px; max-width:740px">{BONIF_NOTE}</p>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Diseñamos tu experiencia"
+    title="¿Quieres una jornada a medida para tu equipo?"
+    text="Cuéntanos cuántos sois y qué buscáis (clima, energía, creatividad…) y te proponemos la experiencia que mejor encaje."
+    primaryLabel="Solicitar propuesta de team building"
+  />
+</BaseLayout>
+
+<style>
+  .tb {
+    margin-top: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .tb__card {
+    padding: 26px 26px 24px;
+    display: flex;
+    flex-direction: column;
+  }
+  .tb__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+  }
+  .tb__title {
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.3;
+  }
+  .tb__dur {
+    font-weight: 500;
+    font-size: 12.5px;
+    color: var(--text-sec);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .tb__obj {
+    align-self: flex-start;
+    margin: 12px 0 14px;
+    color: var(--green-accent);
+    border-color: var(--green);
+  }
+  .tb__desc {
+    font-size: 15px;
+  }
+  .tb__extra {
+    margin-top: 12px;
+  }
+
+  @media (max-width: 720px) {
+    .tb {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

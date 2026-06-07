@@ -1,0 +1,101 @@
+---
+import { WHATSAPP } from '../data/site';
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  /** Texto del botón primario */
+  primaryLabel?: string;
+  /** Destino del botón primario */
+  primaryHref?: string;
+  /** Mostrar botón de WhatsApp como secundario */
+  whatsapp?: boolean;
+  /** Fondo verde (invertido) o claro */
+  variant?: 'green' | 'soft';
+}
+
+const {
+  eyebrow = 'Empieza por aquí',
+  title = '¿No sabes qué necesita tu equipo?',
+  text = 'Empieza por el Diagnóstico 360º. Detectamos las prioridades reales del equipo y te proponemos un plan a medida, con la documentación gestionada.',
+  primaryLabel = 'Solicitar diagnóstico 360º',
+  primaryHref = '/contacto',
+  whatsapp = true,
+  variant = 'green',
+} = Astro.props;
+---
+
+<section class={`cta cta--${variant}`}>
+  <div class="wrap cta__inner">
+    <div class="cta__copy">
+      <p class={variant === 'green' ? 'eyebrow eyebrow--light' : 'eyebrow'}>{eyebrow}</p>
+      <h2 class={variant === 'green' ? 'h2 h2--light cta__title' : 'h2 cta__title'}>{title}</h2>
+      <p class={variant === 'green' ? 'lead lead--light cta__text' : 'lead cta__text'}>{text}</p>
+    </div>
+    <div class="cta__actions">
+      <a
+        href={primaryHref}
+        class={variant === 'green' ? 'btn btn--light' : 'btn btn--primary'}
+      >
+        {primaryLabel} <span class="arrow">→</span>
+      </a>
+      {
+        whatsapp && (
+          <a
+            href={WHATSAPP}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={variant === 'green' ? 'btn btn--outline cta__wa-light' : 'btn btn--outline'}
+          >
+            Escribir por WhatsApp
+          </a>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    border-bottom: 1px solid var(--line);
+  }
+  .cta--green {
+    background: var(--green);
+  }
+  .cta--soft {
+    background: var(--bg-soft);
+  }
+  .cta__inner {
+    padding: 64px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .cta__copy {
+    max-width: 620px;
+  }
+  .cta__title {
+    margin-bottom: 12px;
+  }
+  .cta__text {
+    margin-bottom: 0;
+  }
+  .cta__actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  /* botón outline sobre fondo verde: borde y texto blancos */
+  .cta__wa-light {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.6);
+  }
+  .cta__wa-light:hover {
+    background: #fff;
+    color: var(--green);
+    border-color: #fff;
+  }
+</style>

@@ -1,0 +1,125 @@
+---
+import Icon from './Icon.astro';
+import { contacto, nav, site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="ft">
+  <div class="wrap ft__inner">
+    <div class="ft__brand">
+      <Icon size={40} />
+      <div>
+        <div class="ft__name">BATMOTRÓPICOS</div>
+        <div class="ft__tag">HEALTH SERVICES</div>
+      </div>
+    </div>
+
+    <nav class="ft__nav" aria-label="Pie de página">
+      {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+      <a href="/contacto">Contacto</a>
+    </nav>
+
+    <div class="ft__contact">
+      <div class="ft__contact-name">{contacto.nombre} · {contacto.ubicacion}</div>
+      <div>
+        <a href={`mailto:${contacto.email}`}>{contacto.email}</a>
+        <span aria-hidden="true"> · </span>
+        <a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a>
+      </div>
+      <div>
+        <a href={contacto.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap ft__legal">
+    <span>© {site.name} {year}. Todos los derechos reservados.</span>
+    <span class="ft__disclaimer">
+      Batmotrópicos no es un organismo oficial ni partner de FUNDAE.
+    </span>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    background: #fff;
+    border-top: 1px solid var(--line);
+    padding: 46px 0 40px;
+  }
+  .ft__inner {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 40px;
+    align-items: start;
+  }
+  .ft__brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ft__name {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--green);
+    letter-spacing: 0.03em;
+  }
+  .ft__tag {
+    font-weight: 500;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 0.18em;
+  }
+  .ft__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    align-content: start;
+  }
+  .ft__nav a {
+    font-size: 13px;
+    color: var(--text-sec);
+    text-decoration: none;
+  }
+  .ft__nav a:hover {
+    color: var(--green);
+  }
+  .ft__contact {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    line-height: 1.9;
+    text-align: right;
+    min-width: 240px;
+  }
+  .ft__contact-name {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .ft__contact a {
+    color: var(--text-sec);
+    text-decoration: none;
+  }
+  .ft__contact a:hover {
+    color: var(--green);
+  }
+  .ft__legal {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 11.5px;
+    color: var(--text-sec);
+  }
+
+  @media (max-width: 880px) {
+    .ft__inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+    .ft__contact {
+      text-align: left;
+    }
+  }
+</style>

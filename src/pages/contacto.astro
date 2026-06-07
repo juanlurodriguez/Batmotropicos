@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
+---
+
+<BaseLayout
+  title="Contacto · Solicita tu diagnóstico 360º"
+  description="Solicita tu diagnóstico 360º. Cuéntanos sobre tu equipo y te preparamos una propuesta personalizada de formación y bienestar corporativo en 48 horas."
+  path="/contacto"
+>
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:760px">
+        <p class="eyebrow">Contacto</p>
+        <h1 class="h2" style="font-size:38px">Solicita tu diagnóstico</h1>
+        <p class="lead">
+          Cuéntanos quién eres y qué necesitas. Te preparamos una propuesta personalizada en 48
+          horas, sin compromiso.
+        </p>
+      </div>
+
+      <div class="contact">
+        <!-- Formulario -->
+        <div class="reveal">
+          <form class="form" id="contact-form" novalidate>
+            <div class="form__row">
+              <div class="field">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" required autocomplete="name" />
+              </div>
+              <div class="field">
+                <label for="empresa">Empresa</label>
+                <input type="text" id="empresa" name="empresa" required autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="field">
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" name="telefono" required autocomplete="tel" />
+              </div>
+              <div class="field">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required autocomplete="email" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="trabajadores">Número aproximado de trabajadores</label>
+              <select id="trabajadores" name="trabajadores" required>
+                <option value="">Selecciona…</option>
+                {SIZES.map((s) => <option value={s}>{s}</option>)}
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="necesidad">Qué necesitas</label>
+              <select id="necesidad" name="necesidad" required>
+                <option value="">Selecciona…</option>
+                {NEEDS.map((n) => <option value={n}>{n}</option>)}
+              </select>
+            </div>
+
+            <!-- Honeypot anti-spam (oculto) -->
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+
+            <div class="field">
+              <button type="submit" class="btn btn--primary" data-submit>
+                Solicitar diagnóstico <span class="arrow">→</span>
+              </button>
+              <p class="form__error" data-error hidden>
+                No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
+              </p>
+            </div>
+          </form>
+
+          <!-- Mensaje de éxito -->
+          <div class="ok card card--accent" data-success hidden>
+            <h2 class="card-title" style="font-size:19px">Solicitud registrada</h2>
+            <p class="card-text">
+              Gracias. Te contactaremos en menos de 48 horas con una propuesta a medida.
+            </p>
+          </div>
+        </div>
+
+        <!-- Datos de contacto -->
+        <aside class="reveal">
+          <div class="card info">
+            <h2 class="card-title">Datos de contacto</h2>
+            <div class="info__list">
+              <div class="info__name">{contacto.nombre}</div>
+              <div><a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a></div>
+              <div><a href={`mailto:${contacto.email}`}>{contacto.email}</a></div>
+              <div class="info__muted">{contacto.ubicacion}</div>
+              <div><a href={contacto.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn: {contacto.linkedinLabel}</a></div>
+            </div>
+            <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--sm info__wa">
+              Escribir por WhatsApp
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 48px;
+    margin-top: 36px;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+  .field label {
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-sec);
+    margin-bottom: 6px;
+  }
+  .field input,
+  .field select {
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: #fff;
+    outline: none;
+  }
+  .field input:focus,
+  .field select:focus {
+    border-color: var(--green);
+  }
+  .field input:invalid:not(:placeholder-shown) {
+    border-color: #b00020;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .form__error {
+    color: #b00020;
+    font-size: 13.5px;
+    margin: 10px 0 0;
+  }
+  .ok {
+    padding: 30px 26px;
+  }
+
+  .info {
+    padding: 26px 24px;
+  }
+  .info__list {
+    font-size: 15px;
+    color: var(--text);
+    line-height: 2;
+  }
+  .info__name {
+    font-weight: 600;
+  }
+  .info__muted {
+    color: var(--text-sec);
+  }
+  .info__list a {
+    text-decoration: none;
+    color: var(--green);
+  }
+  .info__list a[href^='tel']:first-child,
+  .info__list div:nth-child(2) a {
+    color: var(--text);
+  }
+  .info__wa {
+    margin-top: 20px;
+  }
+
+  @media (max-width: 880px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+    .form__row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    // ── CONFIGURA AQUÍ EL WEBHOOK (Make / n8n / Airtable) ──
+    // Pega la URL del webhook. Si se deja vacía, el formulario
+    // mostrará el mensaje de éxito sin realizar la petición (modo demo).
+    const WEBHOOK_URL = '';
+
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+    const success = document.querySelector('[data-success]');
+    const errorEl = document.querySelector('[data-error]');
+    const submitBtn = document.querySelector('[data-submit]');
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (errorEl) errorEl.hidden = true;
+
+      // Validación nativa
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // Honeypot: si está relleno, es un bot → simulamos éxito sin enviar
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (data._gotcha) {
+        form.hidden = true;
+        if (success) success.hidden = false;
+        return;
+      }
+      delete data._gotcha;
+
+      const payload = {
+        ...data,
+        origen: 'web-batmotropicos',
+        pagina: window.location.pathname,
+        enviadoEn: new Date().toISOString(),
+      };
+
+      const finish = function () {
+        form.hidden = true;
+        if (success) success.hidden = false;
+        success && success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      };
+
+      if (!WEBHOOK_URL) {
+        finish();
+        return;
+      }
+
+      try {
+        if (submitBtn) submitBtn.setAttribute('disabled', '');
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        finish();
+      } catch (err) {
+        console.error('Envío del formulario:', err);
+        if (errorEl) errorEl.hidden = false;
+      } finally {
+        if (submitBtn) submitBtn.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>

@@ -1,0 +1,450 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+import { site } from '../data/site';
+import { catalogo, BONIF_NOTE } from '../data/catalogo';
+
+const queHacemos = [
+  ['Formación bonificable', 'Acciones presenciales y online, diseñadas para encajar en el crédito FUNDAE de la empresa.'],
+  ['Bienestar laboral', 'Ergonomía, estrés, comunicación y hábitos saludables aplicados al puesto.'],
+  ['Team building', 'Experiencias de cohesión diseñadas para activar y conectar equipos.'],
+  ['Wellness in company', 'Fisioterapia, yoga, masajes y bienestar recurrente en las instalaciones.'],
+  ['Formación técnica y obligatoria', 'Cursos técnicos y de cumplimiento normativo con su documentación.'],
+];
+
+const beneficios = [
+  ['Reduce el desgaste físico y mental', 'Menos molestias, menos estrés acumulado y más energía sostenible.'],
+  ['Mejora el clima laboral', 'Equipos que se cuidan colaboran mejor y discuten menos.'],
+  ['Refuerza el sentido de pertenencia', 'El cuidado del equipo se traduce en compromiso con la empresa.'],
+  ['Facilita el trabajo de RRHH', 'Una sola interlocución para formación, bienestar y cohesión.'],
+];
+
+const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medición'];
+---
+
+<BaseLayout
+  title="Bienestar corporativo y formación bonificable para empresas"
+  description="Batmotrópicos activa personas para que los equipos funcionen mejor: formación bonificable FUNDAE, bienestar laboral, team building y wellness in company."
+  path="/"
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div class="reveal">
+        <p class="eyebrow">Formación · Bienestar · Cohesión</p>
+        <h1 class="title">{site.claim}</h1>
+        <p class="hero__sub">{site.subclaim}</p>
+        <div class="hero__actions">
+          <a href="/contacto" class="btn btn--primary">Solicitar diagnóstico 360º <span class="arrow">→</span></a>
+          <a href="/catalogo" class="btn btn--outline">Ver catálogo</a>
+        </div>
+        <ul class="hero__pills">
+          <li>Bonificable vía FUNDAE</li>
+          <li>Propuesta en 48h</li>
+          <li>Presencial y online</li>
+        </ul>
+      </div>
+
+      <div class="reveal hero__panel">
+        <img
+          src="/assets/logo/batmotropicos-stacked.svg"
+          alt="Batmotrópicos Health Services"
+          class="hero__logo"
+          width="360"
+          height="275"
+        />
+        <p class="hero__panel-txt">Salud y electricidad. El impulso que activa al equipo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUÉ HACEMOS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Qué hacemos</p>
+        <h2 class="h2">Una sola vía para RRHH</h2>
+        <p class="lead">
+          Centralizamos formación, bienestar corporativo y experiencias de cohesión para que RRHH
+          tenga una propuesta clara, una ejecución coordinada y menos proveedores que gestionar.
+        </p>
+      </div>
+      <div class="qh">
+        {
+          queHacemos.map(([t, d], i) => (
+            <div class="qh__item reveal">
+              <span class="qh__num">0{i + 1}</span>
+              <h3 class="card-title">{t}</h3>
+              <p class="card-text">{d}</p>
+            </div>
+          ))
+        }
+      </div>
+      <div class="reveal" style="margin-top:30px">
+        <a href="/que-hacemos" class="btn btn--outline">Conocer el enfoque <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATÁLOGO PREVIEW -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Catálogo</p>
+        <h2 class="h2">Un catálogo amplio, una sola interlocución</h2>
+        <p class="lead">
+          Formación, bienestar, cohesión y servicios wellness organizados por áreas. Una sola puerta
+          de entrada para cubrir todas las necesidades del equipo.
+        </p>
+      </div>
+      <div class="areas">
+        {
+          catalogo.map((c) => (
+            <a href="/catalogo" class="areas__card card card--accent reveal">
+              <span class="areas__letter" aria-hidden="true">{c.letter}</span>
+              <h3 class="areas__title">{c.tab}</h3>
+              <p class="areas__desc">{c.desc}</p>
+              <span class="areas__count">{c.items.length} acciones</span>
+            </a>
+          ))
+        }
+      </div>
+      <p class="note reveal" style="margin-top:18px; max-width:740px">{BONIF_NOTE}</p>
+      <div class="reveal" style="margin-top:24px">
+        <a href="/catalogo" class="btn btn--primary">Explorar el catálogo completo <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFICIOS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="ben-head">
+        <div class="reveal">
+          <p class="eyebrow">Beneficios</p>
+          <h2 class="h2">Lo que gana la empresa</h2>
+        </div>
+        <p class="reveal ben-head__txt">
+          No es un gasto en actividades sueltas: es una forma estructurada de cuidar al equipo que
+          repercute en clima, retención y rendimiento.
+        </p>
+      </div>
+      <div class="ben">
+        {
+          beneficios.map(([t, d], i) => (
+            <div class="ben__item reveal">
+              <span class="ben__num">0{i + 1}</span>
+              <div>
+                <h3 class="ben__title">{t}</h3>
+                <p class="card-text">{d}</p>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- MÉTODO -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Cómo trabajamos</p>
+        <h2 class="h2">Un proceso claro, de principio a fin</h2>
+        <p class="lead">
+          Del primer diagnóstico a la medición de resultados, con la documentación gestionada en cada
+          paso.
+        </p>
+      </div>
+      <ol class="proc reveal">
+        {
+          proceso.map((s, i) => (
+            <li class="proc__step">
+              <span class="proc__dot">{i + 1}</span>
+              <span class="proc__label">{s}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+    padding-top: 84px;
+    padding-bottom: 76px;
+  }
+  .hero__sub {
+    font-size: 18px;
+    color: var(--text-sec);
+    line-height: 1.65;
+    max-width: 520px;
+    margin: 0 0 30px;
+  }
+  .hero__actions {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .hero__pills {
+    list-style: none;
+    margin: 30px 0 0;
+    padding: 22px 0 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .hero__pills li {
+    position: relative;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-sec);
+  }
+  .hero__pills li:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--line);
+    transform: translateY(-50%);
+  }
+  .hero__panel {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: var(--bg-soft);
+    padding: 48px 32px;
+    text-align: center;
+    background-image: linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-position: center;
+  }
+  .hero__logo {
+    width: min(360px, 80%);
+    height: auto;
+    margin: 0 auto 18px;
+  }
+  .hero__panel-txt {
+    font-weight: 500;
+    font-size: 12.5px;
+    color: var(--text-sec);
+    letter-spacing: 0.03em;
+    margin: 0 auto;
+    max-width: 280px;
+  }
+
+  /* Qué hacemos */
+  .qh {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    margin-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .qh__item {
+    padding: 26px 18px 26px 0;
+    border-right: 1px solid var(--line);
+  }
+  .qh__item:last-child {
+    border-right: none;
+  }
+  .qh__num {
+    display: block;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--line);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  /* Áreas (catálogo preview) */
+  .areas {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .areas__card {
+    padding: 24px 22px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+  }
+  .areas__card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+  .areas__letter {
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid var(--green);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green);
+    margin-bottom: 14px;
+  }
+  .areas__title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    margin: 0 0 8px;
+  }
+  .areas__desc {
+    font-size: 14px;
+    color: var(--text-sec);
+    line-height: 1.55;
+    margin: 0 0 16px;
+    flex-grow: 1;
+  }
+  .areas__count {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--green-accent);
+  }
+
+  /* Beneficios */
+  .ben-head {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 40px;
+    margin-bottom: 40px;
+    align-items: end;
+  }
+  .ben-head__txt {
+    font-size: 16.5px;
+    color: var(--text-sec);
+    line-height: 1.7;
+    margin: 0;
+  }
+  .ben {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 56px;
+    border-top: 1px solid var(--line);
+  }
+  .ben__item {
+    display: flex;
+    gap: 20px;
+    padding: 26px 0;
+    border-bottom: 1px solid var(--line);
+    align-items: baseline;
+  }
+  .ben__num {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--green);
+    min-width: 28px;
+  }
+  .ben__title {
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.35;
+  }
+
+  /* Proceso */
+  .proc {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    position: relative;
+  }
+  .proc::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: var(--green);
+    opacity: 0.25;
+  }
+  .proc__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+  }
+  .proc__dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    background: var(--green);
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .proc__label {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text);
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 980px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+      padding-top: 56px;
+      padding-bottom: 56px;
+    }
+    .qh {
+      grid-template-columns: 1fr 1fr;
+    }
+    .qh__item {
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+    }
+    .areas {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ben-head,
+    .ben {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .proc {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .proc::before {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .qh,
+    .areas {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
