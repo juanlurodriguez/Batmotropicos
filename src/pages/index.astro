@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
@@ -34,6 +35,10 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
         <p class="eyebrow">Formación · Bienestar · Cohesión</p>
         <h1 class="title">{site.claim}</h1>
         <p class="hero__sub">{site.subclaim}</p>
+        <p class="hero__hook">
+          Diseñado para reducir la rotación, el absentismo y el desgaste — y mejorar el clima de
+          equipos que trabajan bajo presión.
+        </p>
         <div class="hero__actions">
           <a href="/contacto" class="btn btn--primary">Solicitar diagnóstico 360º <span class="arrow">→</span></a>
           <a href="/catalogo" class="btn btn--outline">Ver catálogo</a>
@@ -45,15 +50,38 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
         </ul>
       </div>
 
-      <div class="reveal hero__panel">
-        <img
-          src="/assets/logo/batmotropicos-stacked.svg"
-          alt="Batmotrópicos Health Services"
-          class="hero__logo"
-          width="360"
-          height="275"
-        />
-        <p class="hero__panel-txt">Salud y electricidad. El impulso que activa al equipo.</p>
+      <div class="reveal hero__panel card card--accent">
+        <p class="eyebrow">Cómo empezamos</p>
+        <h2 class="hero__panel-title">Diagnóstico 360º</h2>
+        <p class="hero__panel-lead">
+          Antes de proponer nada, miramos al equipo de cerca. Sin diagnóstico no hay plan que
+          encaje de verdad.
+        </p>
+        <ol class="hero__steps">
+          <li>
+            <span class="hero__step-n">01</span>
+            <div>
+              <strong>Detectamos</strong> las prioridades reales del equipo: salud, clima, formación
+              o cohesión.
+            </div>
+          </li>
+          <li>
+            <span class="hero__step-n">02</span>
+            <div>
+              <strong>Diseñamos</strong> un plan a medida y revisamos el encaje con el crédito FUNDAE.
+            </div>
+          </li>
+          <li>
+            <span class="hero__step-n">03</span>
+            <div>
+              <strong>Medimos</strong> resultados y proponemos continuidad, sin sobrecargar a RRHH.
+            </div>
+          </li>
+        </ol>
+        <div class="hero__panel-foot">
+          <Icon size={26} />
+          <span>Propuesta a medida en 48 horas</span>
+        </div>
       </div>
     </div>
   </section>
@@ -191,7 +219,17 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     color: var(--text-sec);
     line-height: 1.65;
     max-width: 520px;
+    margin: 0 0 18px;
+  }
+  .hero__hook {
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--green-dark);
+    line-height: 1.6;
+    max-width: 480px;
     margin: 0 0 30px;
+    padding-left: 16px;
+    border-left: 2px solid var(--green);
   }
   .hero__actions {
     display: flex;
@@ -225,28 +263,70 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     transform: translateY(-50%);
   }
   .hero__panel {
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg-soft);
-    padding: 48px 32px;
-    text-align: center;
-    background-image: linear-gradient(var(--line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--line) 1px, transparent 1px);
-    background-size: 26px 26px;
-    background-position: center;
+    padding: 38px 36px;
+    background: #fff;
   }
-  .hero__logo {
-    width: min(360px, 80%);
-    height: auto;
-    margin: 0 auto 18px;
+  .hero__panel-title {
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--text);
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
   }
-  .hero__panel-txt {
-    font-weight: 500;
-    font-size: 12.5px;
+  .hero__panel-lead {
+    font-size: 15px;
     color: var(--text-sec);
-    letter-spacing: 0.03em;
-    margin: 0 auto;
-    max-width: 280px;
+    line-height: 1.65;
+    margin: 0 0 26px;
+  }
+  .hero__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .hero__steps li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 14px;
+    align-items: baseline;
+  }
+  .hero__steps li > div {
+    font-size: 14.5px;
+    color: var(--text-sec);
+    line-height: 1.6;
+  }
+  .hero__steps li strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .hero__step-n {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--green);
+    border: 1.5px solid var(--green);
+    border-radius: 30px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero__panel-foot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .hero__panel-foot span {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--green);
+    letter-spacing: 0.02em;
   }
 
   /* Qué hacemos */

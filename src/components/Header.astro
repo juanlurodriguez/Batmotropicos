@@ -10,8 +10,15 @@ const isActive = (href: string) =>
 <header class="hd">
   <div class="wrap hd__inner">
     <a href="/" class="hd__logo" aria-label="Batmotrópicos — inicio">
-      <Icon size={34} />
-      <span class="hd__word">Batmotrópicos</span>
+      <Icon size={40} />
+      <span class="hd__word">
+        <span class="hd__word-main">Batmotrópicos</span>
+        <span class="hd__word-sub">
+          <span class="hd__rule" aria-hidden="true"></span>
+          Health Services
+          <span class="hd__rule" aria-hidden="true"></span>
+        </span>
+      </span>
     </a>
 
     <nav class="hd__nav" aria-label="Navegación principal">
@@ -69,15 +76,43 @@ const isActive = (href: string) =>
   .hd__logo {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 13px;
     text-decoration: none;
   }
   .hd__word {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    line-height: 1;
+  }
+  .hd__word-main {
     font-weight: 600;
     font-size: 16px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
     color: var(--green);
     text-transform: uppercase;
+  }
+  .hd__word-sub {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: var(--green);
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .hd__rule {
+    height: 1px;
+    width: 18px;
+    background: var(--green);
+    opacity: 0.5;
+  }
+  @media (max-width: 480px) {
+    .hd__word-sub {
+      display: none;
+    }
   }
   .hd__nav {
     display: flex;
