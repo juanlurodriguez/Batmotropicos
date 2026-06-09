@@ -109,15 +109,23 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
         <a href="/que-hacemos" class="btn btn--outline" style="margin-top:22px">Conocer la metodología <span class="arrow">→</span></a>
       </div>
       <div class="reel__media reveal">
-        <video
-          id="hero-reel"
-          class="reel__video"
-          src="/assets/video/hero-reel.mp4"
-          playsinline
-          preload="none"
-          controls
-          aria-label="Sesión presencial de formación y bienestar laboral para equipos de empresa"
-        ></video>
+        <div class="reel__frame">
+          <video
+            id="hero-reel"
+            class="reel__video"
+            src="/assets/video/hero-reel.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            aria-label="Sesión presencial de formación y bienestar laboral para equipos de empresa"
+          ></video>
+          <button type="button" class="reel__sound-btn" id="reel-sound-btn" aria-label="Ver la sesión real con sonido">
+            <span class="reel__sound-ico" aria-hidden="true">▶</span>
+            <span>Ver sesión real</span>
+          </button>
+        </div>
       </div>
     </div>
   </section>
@@ -421,6 +429,44 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
   <CTASection />
 </BaseLayout>
 
+<script is:inline>
+  (function () {
+    var hero = document.getElementById('hero-reel');
+    var soundBtn = document.getElementById('reel-sound-btn');
+    if (!hero) return;
+
+    // Pausa cualquier otro vídeo con sonido para que no suenen dos a la vez.
+    function pauseOthers(except) {
+      document.querySelectorAll('video').forEach(function (v) {
+        if (v !== except && !v.muted && !v.paused) v.pause();
+      });
+    }
+
+    // "Ver sesión real": activa sonido y controles sobre el mismo reel.
+    if (soundBtn) {
+      soundBtn.addEventListener('click', function () {
+        hero.loop = false;
+        hero.muted = false;
+        hero.controls = true;
+        try { hero.currentTime = 0; } catch (e) {}
+        pauseOthers(hero);
+        var p = hero.play();
+        if (p && typeof p.catch === 'function') p.catch(function () {});
+        soundBtn.hidden = true;
+      });
+    }
+
+    // Si se reproduce cualquier vídeo con sonido, pausamos el resto.
+    document.querySelectorAll('video').forEach(function (v) {
+      v.addEventListener('play', function () {
+        if (!v.muted) pauseOthers(v);
+      });
+      v.addEventListener('volumechange', function () {
+        if (!v.muted && v.volume > 0) pauseOthers(v);
+      });
+    });
+  })();
+</script>
 
 <style>
   /* Hero */
@@ -560,14 +606,51 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     flex-direction: column;
     gap: 32px;
   }
+  .reel__frame {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+  }
   .reel__video {
     display: block;
     width: 100%;
-    max-width: 320px;
     aspect-ratio: 9 / 16;
     border-radius: 8px;
     background: #000;
-    margin: 0 auto;
+  }
+  .reel__sound-btn {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--green);
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.28);
+    transition: transform 0.15s, background 0.15s;
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+  }
+  .reel__sound-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
+    background: #fff;
+  }
+  .reel__sound-ico {
+    font-size: 11px;
+    line-height: 1;
+  }
+  .reel__sound-btn[hidden] {
+    display: none;
   }
 
   /* Programas premium */
@@ -954,7 +1037,7 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
       display: flex;
       justify-content: center;
     }
-    .reel__video {
+    .reel__frame {
       max-width: 260px;
       margin: 0;
     }
