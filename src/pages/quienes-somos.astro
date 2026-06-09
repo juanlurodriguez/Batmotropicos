@@ -100,6 +100,46 @@ const steps = [
     </div>
   </section>
 
+  <!-- Juan Luis -->
+  <section class="section">
+    <div class="wrap jl">
+      <div class="jl__media reveal">
+        <img
+          src="/assets/img/real/juanlu.webp"
+          alt="Juan Luis Rodríguez Ávila, fundador de Batmotrópicos"
+          class="jl__img"
+          loading="lazy"
+          decoding="async"
+          width="1200"
+          height="1200"
+        />
+      </div>
+      <div class="jl__body reveal">
+        <p class="eyebrow">El fundador</p>
+        <h2 class="h2">Juan Luis Rodríguez Ávila</h2>
+        <div class="jl__text">
+          <p>
+            Empezó como fisioterapeuta. Luego estuvo años trabajando en hostelería y animación
+            hotelera, donde entendió de primera mano cómo funcionan los equipos bajo presión, qué
+            les desgasta y qué les conecta. Ese tiempo no fue un paréntesis: fue donde aprendió a
+            leer a las personas de verdad.
+          </p>
+          <p>
+            Tiene formación en deporte y educación física, experiencia en teatro, debates y trabajo
+            formativo con grupos. Comunicar con grupos — hacer que algo llegue, que se entienda, que
+            mueva algo por dentro — es algo que le viene natural y que ha trabajado durante años.
+          </p>
+          <p>
+            Batmotrópicos nace de juntar todo eso: fisioterapia, deporte, comunicación, formación y
+            una visión muy concreta de lo que las personas necesitan para estar bien en el trabajo.
+            No es un catálogo de actividades. Es un criterio sobre cómo cuidar a un equipo para que
+            funcione mejor.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Empresa Saludable -->
   <section class="section section--soft">
     <div class="wrap grid-2 split-center">
@@ -242,6 +282,54 @@ const steps = [
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--green);
+  }
+
+  /* Juan Luis */
+  .jl {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .jl__media {
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .jl__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .jl__text {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .jl__text p {
+    font-size: 16px;
+    color: var(--text-sec);
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  @media (min-width: 980px) {
+    .jl {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 56px;
+    }
+    .jl__media {
+      width: 340px;
+      height: 420px;
+      flex-shrink: 0;
+    }
+    .jl__body {
+      flex: 1;
+    }
   }
 
   @media (max-width: 560px) {

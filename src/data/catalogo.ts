@@ -111,7 +111,7 @@ export const catalogo: CatalogCategory[] = [
     letter: 'E',
     tab: 'Wellness in company',
     title: 'Servicios wellness in company',
-    desc: 'Bienestar recurrente integrado en la jornada laboral, prestado en las instalaciones del cliente. Sin desplazamientos para el equipo, sin fricción para RRHH.',
+    desc: 'Bienestar recurrente integrado en la jornada laboral, prestado en las instalaciones del cliente. El equipo no se desplaza y RRHH no necesita coordinar nada extra.',
     bonif: 'Parcialmente bonificable según estructura',
     items: [
       { name: 'Fisioterapia in company', dur: 'Recurrente' },
@@ -129,7 +129,7 @@ export const catalogo: CatalogCategory[] = [
     bonif: 'Parcialmente bonificable según estructura',
     items: [
       { name: 'Acción puntual', note: 'Intervención específica para una necesidad concreta del equipo o la organización.' },
-      { name: 'Cumplimiento formativo RRHH', note: 'Formación técnica y obligatoria agrupada, documentada y gestionada con una sola interlocución.' },
+      { name: 'Cumplimiento formativo RRHH', note: 'Formación técnica y obligatoria agrupada, documentada y gestionada por un solo equipo. RRHH no tiene que coordinar con distintos proveedores.' },
       { name: 'Plan de bienestar semestral', note: 'Seis acciones en seis meses: una intervención mensual con hilo conductor, seguimiento y memoria de resultados.' },
       { name: 'Plan de bienestar anual', note: 'Doce acciones a lo largo del año, con evaluación semestral y propuesta de continuidad basada en resultados.' },
       { name: 'Plan integral anual', note: 'Formación, bienestar y team building integrados en un único programa anual: diagnóstico inicial, diseño a medida, ejecución y medición de impacto.' },

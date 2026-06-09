@@ -55,6 +55,7 @@ import { WHATSAPP } from '../data/site';
     flex-direction: column;
     gap: 10px;
   }
+  .fab__panel[hidden] { display: none; }
   .fab__panel-close {
     position: absolute;
     top: 10px;
@@ -175,7 +176,10 @@ import { WHATSAPP } from '../data/site';
     });
 
     if (closeBtn) {
-      closeBtn.addEventListener('click', closePanel);
+      closeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        closePanel();
+      });
     }
   })();
 </script>

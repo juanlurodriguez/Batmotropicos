@@ -27,10 +27,10 @@ const beneficios = [
   ['Reduce el desgaste físico y mental', 'Menos molestias, menos estrés acumulado y más energía sostenible.'],
   ['Mejora el clima laboral', 'Equipos que se cuidan colaboran mejor y discuten menos.'],
   ['Refuerza el sentido de pertenencia', 'El cuidado del equipo se traduce en compromiso con la empresa.'],
-  ['Facilita el trabajo de RRHH', 'Una sola interlocución para formación, bienestar y cohesión.'],
+  ['Facilita el trabajo de RRHH', 'Formación, bienestar y team building gestionados por un solo equipo, con la documentación ordenada.'],
 ];
 
-const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medición'];
+const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecución', 'Medición y cierre'];
 ---
 
 <BaseLayout
@@ -189,10 +189,10 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">Catálogo</p>
-        <h2 class="h2">Un catálogo amplio, una sola interlocución</h2>
+        <h2 class="h2">Todo lo que necesita un equipo, en un catálogo</h2>
         <p class="lead">
-          Formación, bienestar, cohesión y servicios wellness organizados por áreas. Una sola puerta
-          de entrada para cubrir todas las necesidades del equipo.
+          Formación, bienestar, cohesión y servicios wellness organizados por áreas. Un solo equipo
+          que conoce el contexto y propone lo que encaja.
         </p>
       </div>
       <div class="areas">
@@ -281,28 +281,52 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     </div>
   </section>
 
+  <!-- PERTENENCIA -->
+  <section class="section section--pertenencia">
+    <div class="wrap">
+      <div class="perten reveal">
+        <p class="eyebrow">Por qué el bienestar retiene</p>
+        <h2 class="h2 perten__title">El salario importa. Pero no es suficiente para quedarse.</h2>
+        <div class="perten__body">
+          <p>
+            Si el sueldo es insuficiente, la persona se va. Eso es innegociable. Pero cuando el
+            salario deja de ser el problema, la motivación no se sostiene solo con dinero. Una
+            subida puede generar un pico de motivación, pero ese efecto se enfría.
+          </p>
+          <p>
+            Lo que realmente une a una persona a una empresa es sentir que trabaja en un lugar
+            donde se cuida a las personas, donde los valores encajan y donde formar parte del
+            equipo tiene sentido.
+          </p>
+          <p class="perten__callout">
+            La cultura de cuidado no es un extra. Es lo que hace que alguien quiera seguir.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- RECONOCIMIENTO -->
   <section class="section">
     <div class="wrap reconoc__grid reveal">
       <div class="reconoc__text">
-        <p class="eyebrow">Formación en empresas reales</p>
+        <p class="eyebrow">Reconocimiento</p>
         <h2 class="h2">Reconocimiento interno de compromiso con el bienestar laboral.</h2>
         <p class="lead">
-          Al cierre de cada programa, el equipo recibe un reconocimiento formal del trabajo
-          realizado — no una certificación externa, sino el reflejo de un compromiso real con el
-          cuidado de las personas.
+          Al cierre de cada programa, la empresa recibe una placa que refleja el compromiso real
+          con el cuidado de su equipo. No es una certificación oficial externa: es un símbolo de
+          que el bienestar forma parte de la cultura de la organización.
+        </p>
+        <p class="note" style="margin-top:14px">
+          El equipo también recibe diplomas individuales del trabajo realizado.
         </p>
       </div>
       <div class="reconoc__media">
-        <img
-          src="/assets/img/real/kokomo-diplomas.webp"
-          alt="Equipo recibiendo su reconocimiento interno al finalizar un programa de bienestar laboral"
-          class="reconoc__img"
-          loading="lazy"
-          decoding="async"
-          width="1200"
-          height="900"
-        />
+        <div class="reconoc__plaque-placeholder">
+          <span class="reconoc__plaque-icon">🏆</span>
+          <p>Placa corporativa</p>
+          <span class="reconoc__plaque-note">Fotografía próximamente</span>
+        </div>
       </div>
     </div>
   </section>
@@ -322,14 +346,14 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
         <div class="progs__item card card--accent">
           <span class="progs__tag">Continuidad</span>
           <h3 class="progs__title">Plan Semestral</h3>
-          <p class="progs__meta">6 acciones · 6 meses · 1 acción mensual</p>
+          <p class="progs__meta">6 meses · 6 acciones · 1 al mes</p>
           <p class="card-text">Una intervención mensual con hilo conductor, seguimiento trimestral y memoria de resultados al cierre. Para empresas que quieren empezar con estructura y sin sobredimensionar.</p>
         </div>
         <div class="progs__item card card--accent progs__item--featured">
-          <span class="progs__tag progs__tag--light">Más contratado</span>
+          <span class="progs__tag progs__tag--light">Recomendado</span>
           <h3 class="progs__title">Plan Anual</h3>
           <p class="progs__meta">12 acciones · 12 meses · evaluación semestral</p>
-          <p class="card-text">Programa completo con una acción mensual, evaluación a mitad de año y propuesta de continuidad basada en resultados. Una sola interlocución para todo el año.</p>
+          <p class="card-text">Programa completo con una acción mensual, evaluación a mitad de año y propuesta de continuidad basada en resultados. Un solo equipo gestiona el plan, la documentación y el seguimiento.</p>
         </div>
         <div class="progs__item card card--accent">
           <span class="progs__tag">Integral</span>
@@ -349,10 +373,11 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">Cómo trabajamos</p>
-        <h2 class="h2">Un proceso claro, de principio a fin</h2>
+        <h2 class="h2">Diagnóstico, gestión, ejecución y medición</h2>
         <p class="lead">
-          Del primer diagnóstico a la medición de resultados, con la documentación gestionada en cada
-          paso.
+          Del primer diagnóstico al cierre documental. La gestión FUNDAE se prepara antes de ejecutar,
+          no después. Al final recogemos KPIs: satisfacción, utilidad percibida, aplicabilidad y
+          clima del equipo.
         </p>
       </div>
       <ol class="proc reveal">
@@ -365,6 +390,33 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
           ))
         }
       </ol>
+    </div>
+  </section>
+
+  <!-- JUAN LUIS TEASER -->
+  <section class="section section--soft">
+    <div class="wrap jl-teaser reveal">
+      <div class="jl-teaser__media">
+        <img
+          src="/assets/img/real/juanlu.webp"
+          alt="Juan Luis Rodríguez, fundador de Batmotrópicos"
+          class="jl-teaser__img"
+          loading="lazy"
+          decoding="async"
+          width="1200"
+          height="1200"
+        />
+      </div>
+      <div class="jl-teaser__body">
+        <p class="eyebrow">Quiénes somos</p>
+        <h2 class="h2">Detrás de Batmotrópicos hay una persona con oficio.</h2>
+        <p class="lead">
+          Juan Luis Rodríguez Ávila combina fisioterapia, deporte y formación con años de
+          experiencia en hostelería y trabajo con grupos. Batmotrópicos nace de unir todo eso en
+          una forma de hacer formación que conecta con las personas.
+        </p>
+        <a href="/quienes-somos" class="btn btn--outline" style="margin-top:18px">Conocer la historia <span class="arrow">→</span></a>
+      </div>
     </div>
   </section>
 
@@ -969,6 +1021,87 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
       gap: 12px;
     }
   }
+
+  /* Pertenencia storytelling */
+  .section--pertenencia {
+    background: var(--surface);
+  }
+  .perten {
+    max-width: 740px;
+  }
+  .perten__title {
+    margin-bottom: 24px;
+  }
+  .perten__body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .perten__body p {
+    font-size: 16.5px;
+    color: var(--text-sec);
+    line-height: 1.75;
+    margin: 0;
+  }
+  .perten__callout {
+    font-weight: 600;
+    font-size: 17px !important;
+    color: var(--text) !important;
+    padding-left: 18px;
+    border-left: 3px solid var(--green);
+    margin-top: 8px !important;
+  }
+
+  /* Reconocimiento plaque placeholder */
+  .reconoc__plaque-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 280px;
+    border: 2px dashed var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    text-align: center;
+    padding: 24px;
+  }
+  .reconoc__plaque-icon {
+    font-size: 48px;
+    line-height: 1;
+  }
+  .reconoc__plaque-placeholder p {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    margin: 0;
+  }
+  .reconoc__plaque-note {
+    font-size: 12px;
+    color: var(--text-sec);
+    letter-spacing: 0.04em;
+  }
+
+  /* Juan Luis teaser */
+  .jl-teaser {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .jl-teaser__media {
+    width: 100%;
+    height: 280px;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+  .jl-teaser__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
   /* Desktop 2-col for real-block and reconocimiento */
   @media (min-width: 980px) {
     .real-block {
@@ -1003,6 +1136,19 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     }
     .reconoc__media {
       flex: 0.8;
+    }
+    .jl-teaser {
+      flex-direction: row;
+      align-items: center;
+      gap: 56px;
+    }
+    .jl-teaser__media {
+      width: 320px;
+      height: 360px;
+      flex-shrink: 0;
+    }
+    .jl-teaser__body {
+      flex: 1;
     }
   }
 </style>
