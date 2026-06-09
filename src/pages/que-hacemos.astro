@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
-import { catalogo } from '../data/catalogo';
+import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
 const areas = [
   {
@@ -10,53 +10,76 @@ const areas = [
   },
   {
     t: 'Bienestar laboral',
-    d: 'Ergonomía, gestión del estrés, comunicación y hábitos saludables aplicados al puesto real de cada equipo.',
+    d: 'Ergonomía, gestión del estrés, comunicación y hábitos saludables aplicados al puesto real del equipo.',
   },
   {
-    t: 'Team building',
-    d: 'Experiencias de cohesión diseñadas para activar, conectar y energizar a los equipos.',
+    t: 'Productividad, liderazgo y coaching',
+    d: 'Programas de desarrollo para mandos, equipos de alto rendimiento y organizaciones que quieren mejorar cómo funcionan por dentro.',
+  },
+  {
+    t: 'Team building y cohesión',
+    d: 'Experiencias diseñadas para activar, conectar y reforzar el sentimiento de equipo, adaptadas al tamaño del grupo y al momento de la organización.',
   },
   {
     t: 'Wellness in company',
-    d: 'Fisioterapia, yoga, masajes y bienestar recurrente integrado en la jornada, en las instalaciones del cliente.',
+    d: 'Fisioterapia, psicología, yoga, pausas activas, movilidad y recuperación en las instalaciones de la empresa. Con modelos flexibles: sesiones recurrentes, bolsa de horas mensual o copago empresa-trabajador.',
   },
   {
     t: 'Formación técnica y obligatoria',
-    d: 'Cursos técnicos y de cumplimiento normativo (PRL, primeros auxilios, igualdad…) con su documentación gestionada.',
+    d: 'Cursos técnicos y de cumplimiento normativo (PRL, primeros auxilios, igualdad…) con su documentación gestionada y ordenada.',
   },
 ];
 
 const beneficios = [
-  ['Reduce el desgaste físico y mental', 'Menos molestias, menos estrés acumulado y más energía sostenible.'],
-  ['Mejora el clima laboral', 'Equipos que se cuidan colaboran mejor y discuten menos.'],
-  ['Refuerza el sentido de pertenencia', 'El cuidado del equipo se traduce en compromiso con la empresa.'],
-  ['Facilita el trabajo de RRHH', 'Formación, bienestar y cohesión gestionados por un solo equipo, con la documentación en orden.'],
-  ['Centraliza proveedores', 'Menos contratos que gestionar y una única propuesta coordinada.'],
-  ['Detecta necesidades reales', 'El diagnóstico 360º identifica prioridades antes de actuar.'],
+  ['Reduce el desgaste físico y mental', 'Menos molestias musculoesqueléticas, menos estrés crónico y más energía disponible en la jornada.'],
+  ['Disminuye el absentismo', 'Las intervenciones preventivas reducen bajas y ausencias por causas relacionadas con el entorno de trabajo.'],
+  ['Mejora el clima y la colaboración', 'Un equipo que se cuida discute menos y coopera mejor. El clima laboral tiene impacto directo en los resultados.'],
+  ['Refuerza el sentimiento de pertenencia', 'Cuando la empresa cuida a su equipo de forma real, las personas se quedan. El salario emocional importa.'],
+  ['Atrae y retiene talento', 'El bienestar corporativo es un argumento diferencial frente a empresas que solo ofrecen sueldo y condiciones estándar.'],
+  ['Centraliza la gestión de servicios', 'Un solo equipo para formación, bienestar y cohesión. Menos contratos, menos coordinación dispersa.'],
 ];
 
 const proceso = [
   ['Diagnóstico', 'Analizamos las necesidades reales del equipo y de la empresa.'],
   ['Diseño', 'Proponemos un plan a medida con acciones, formato y calendario.'],
-  ['Gestión FUNDAE previa', 'Revisamos el encaje en el crédito formativo y preparamos la documentación antes de ejecutar.'],
+  ['Gestión FUNDAE previa', 'Si aplica, revisamos el encaje en el crédito formativo y preparamos la documentación antes de ejecutar.'],
   ['Ejecución', 'Impartimos las acciones, presenciales u online, con profesionales especializados.'],
-  ['Medición', 'Recogemos resultados y feedback para ajustar y dar continuidad.'],
+  ['Medición y cierre', 'Recogemos KPIs de bienestar, feedback del equipo y entregamos una memoria de resultados útil para la dirección.'],
+];
+
+const fundaeFaqs = [
+  [
+    '¿La formación tiene coste?',
+    'Sí. Toda formación tiene un coste real. Lo que ocurre es que muchas acciones pueden bonificarse a través del crédito formativo del que dispone cada empresa, lo que puede reducir —o en algunos casos eliminar— el coste neto.',
+  ],
+  [
+    '¿Qué es el crédito formativo FUNDAE?',
+    'Es el crédito anual que cada empresa puede destinar a la formación de sus trabajadoras y trabajadores. Su importe depende de las cotizaciones a la Seguridad Social del ejercicio anterior. No es ilimitado: depende del tamaño de la empresa y del número de acciones.',
+  ],
+  [
+    '¿Puede llegar a coste cero para la empresa?',
+    'En determinados casos sí, cuando el crédito es suficiente y la acción cumple todos los requisitos. No es una garantía, pero es una posibilidad real que revisamos desde el primer momento.',
+  ],
+  [
+    '¿Batmotrópicos gestiona la documentación?',
+    'Sí. Revisamos el encaje de cada acción, preparamos la documentación conforme a la normativa vigente y acompañamos los plazos para que todo quede en regla antes de empezar.',
+  ],
 ];
 ---
 
 <BaseLayout
   title="Qué hacemos"
-  description="Formación bonificable, bienestar laboral, team building y wellness in company para empresas. Un solo equipo que gestiona el plan, la documentación y los resultados."
+  description="Formación bonificable, bienestar laboral, team building y wellness in company para empresas. Un equipo que diseña, ejecuta y mide lo que el equipo necesita."
   path="/que-hacemos"
 >
   <section class="section">
     <div class="wrap">
       <div class="reveal" style="max-width:760px">
         <p class="eyebrow">Qué hacemos</p>
-        <h1 class="h2" style="font-size:38px">Una sola vía para cuidar, formar y cohesionar al equipo</h1>
+        <h1 class="h2" style="font-size:38px">Una sola propuesta para cuidar, formar y cohesionar al equipo</h1>
         <p class="lead">
-          Centralizamos formación, bienestar corporativo y experiencias de cohesión para que RRHH
-          tenga una propuesta clara, una ejecución coordinada y menos proveedores que gestionar.
+          Centralizamos formación, bienestar y cohesión en una propuesta coordinada, con menos
+          proveedores que gestionar y más coherencia en lo que se hace.
         </p>
       </div>
 
@@ -83,8 +106,8 @@ const proceso = [
         <p class="eyebrow">Beneficios</p>
         <h2 class="h2">Lo que gana la empresa</h2>
         <p class="lead">
-          No es un gasto en actividades sueltas: es una forma estructurada de cuidar al equipo que
-          repercute en clima, retención y rendimiento.
+          No son actividades sueltas: es una forma estructurada de cuidar al equipo que repercute en
+          clima, retención y rendimiento.
         </p>
       </div>
       <div class="ben">
@@ -110,8 +133,8 @@ const proceso = [
         <p class="eyebrow">Cómo trabajamos</p>
         <h2 class="h2">Del diagnóstico a los resultados</h2>
         <p class="lead">
-          Del primer diagnóstico a la medición de resultados, con la documentación gestionada en cada
-          paso.
+          Cinco pasos que van desde el análisis inicial hasta el cierre documentado, con la gestión
+          de bonificación resuelta antes de ejecutar.
         </p>
       </div>
       <ol class="method">
@@ -130,8 +153,35 @@ const proceso = [
     </div>
   </section>
 
-  <!-- Áreas del catálogo -->
+  <!-- FUNDAE FAQ -->
   <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal" style="max-width:740px">
+        <p class="eyebrow">Bonificación FUNDAE</p>
+        <h2 class="h2">Lo que conviene saber antes de planificar</h2>
+        <p class="lead">
+          La formación tiene un coste real. Muchas acciones pueden bonificarse mediante el crédito
+          formativo de la empresa. Aquí aclaramos las dudas más habituales.
+        </p>
+      </div>
+      <div class="faq">
+        {
+          fundaeFaqs.map(([q, a]) => (
+            <details class="faq__item reveal">
+              <summary class="faq__q">{q}</summary>
+              <p class="faq__a">{a}</p>
+            </details>
+          ))
+        }
+      </div>
+      <div class="reveal" style="margin-top:20px">
+        <a href="/fundae" class="btn btn--outline">Ver más sobre bonificación FUNDAE <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Áreas del catálogo -->
+  <section class="section">
     <div class="wrap">
       <div class="reveal">
         <p class="eyebrow">Catálogo</p>
@@ -234,6 +284,42 @@ const proceso = [
     font-size: 18px;
     color: var(--text);
     margin: 0 0 6px;
+  }
+
+  .faq {
+    margin-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+  .faq__q {
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--text);
+    cursor: pointer;
+    padding: 18px 36px 18px 0;
+    position: relative;
+    list-style: none;
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::after {
+    content: '+';
+    position: absolute;
+    right: 4px;
+    top: 16px;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--green);
+  }
+  .faq__item[open] .faq__q::after { content: '–'; }
+  .faq__a {
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.7;
+    margin: 0;
+    padding: 0 36px 20px 0;
   }
 
   .tags {

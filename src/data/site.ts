@@ -6,7 +6,7 @@
 export const site = {
   name: 'Batmotrópicos',
   tagline: 'Health Services',
-  claim: 'Activamos personas para que los equipos funcionen mejor.',
+  claim: 'Activamos personas para que los equipos funcionen mejor',
   subclaim:
     'Formación corporativa, bienestar laboral y experiencias de cohesión para empresas que quieren cuidar, formar y retener talento.',
   url: 'https://batmotropicos.com',
@@ -31,8 +31,6 @@ export const WHATSAPP = `https://wa.me/34640761701?text=${encodeURIComponent(WA_
 export const nav: { href: string; label: string }[] = [
   { href: '/que-hacemos', label: 'Qué hacemos' },
   { href: '/catalogo', label: 'Catálogo' },
-  { href: '/team-building', label: 'Team building' },
-  { href: '/fundae', label: 'FUNDAE' },
   { href: '/quienes-somos', label: 'Quiénes somos' },
 ];
 
