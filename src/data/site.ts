@@ -33,7 +33,6 @@ export const nav: { href: string; label: string }[] = [
   { href: '/catalogo', label: 'Catálogo' },
   { href: '/team-building', label: 'Team building' },
   { href: '/fundae', label: 'FUNDAE' },
-  { href: '/casos-de-exito', label: 'Casos de éxito' },
   { href: '/quienes-somos', label: 'Quiénes somos' },
 ];
 

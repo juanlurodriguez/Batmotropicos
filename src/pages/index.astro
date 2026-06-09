@@ -184,17 +184,41 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
         <a href="/catalogo" class="btn btn--primary">Explorar el catálogo completo <span class="arrow">→</span></a>
       </div>
 
-      <div class="case-prep reveal card card--accent">
-        <div class="case-prep__media" aria-hidden="true">
-          <span>Espacio reservado para imagen real</span>
-          <code>/assets/img/real/kokomo-01.jpg</code>
+    </div>
+  </section>
+
+  <!-- BIENESTAR EN EL TERRENO -->
+  <section class="section">
+    <div class="wrap">
+      <div class="real-block reveal card card--accent">
+        <div class="real-block__media">
+          <img
+            src="/assets/img/real/kokomo-formacion.webp"
+            alt="Formador dirigiéndose a un equipo de hostelería durante una sesión presencial de bienestar laboral"
+            class="real-block__img"
+            loading="lazy"
+            decoding="async"
+            width="1200"
+            height="2133"
+          />
         </div>
-        <div class="case-prep__body">
-          <span class="case-prep__tag">Caso en preparación</span>
-          <h3 class="case-prep__title">Kokomo</h3>
-          <p class="case-prep__line">Formación física aplicada a hostelería.</p>
-          <p class="case-prep__line">Ergonomía real para equipos bajo presión.</p>
-          <p class="note">Material visual pendiente de autorización.</p>
+        <div class="real-block__body">
+          <p class="eyebrow">En el terreno</p>
+          <h2 class="h2" style="margin-bottom:14px">Bienestar aplicado al entorno real de trabajo.</h2>
+          <p class="lead" style="margin-bottom:20px">Diseñamos acciones prácticas para que los equipos aprendan, se activen y puedan aplicar lo trabajado en su día a día laboral.</p>
+          <details class="real-block__video-wrap">
+            <summary class="real-block__video-btn">
+              <span>▶ Ver sesión real</span>
+            </summary>
+            <video
+              src="/assets/video/0609 (1)-1.mp4"
+              controls
+              preload="none"
+              playsinline
+              class="real-block__video"
+              aria-label="Sesión presencial de formación en bienestar laboral para equipos de hostelería"
+            ></video>
+          </details>
         </div>
       </div>
     </div>
@@ -225,6 +249,32 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <!-- RECONOCIMIENTO -->
+  <section class="section">
+    <div class="wrap reconoc__grid reveal">
+      <div class="reconoc__text">
+        <p class="eyebrow">Formación en empresas reales</p>
+        <h2 class="h2">Reconocimiento interno de compromiso con el bienestar laboral.</h2>
+        <p class="lead">
+          Al cierre de cada programa, el equipo recibe un reconocimiento formal del trabajo
+          realizado — no una certificación externa, sino el reflejo de un compromiso real con el
+          cuidado de las personas.
+        </p>
+      </div>
+      <div class="reconoc__media">
+        <img
+          src="/assets/img/real/kokomo-diplomas.webp"
+          alt="Equipo recibiendo su reconocimiento interno al finalizar un programa de bienestar laboral"
+          class="reconoc__img"
+          loading="lazy"
+          decoding="async"
+          width="1200"
+          height="900"
+        />
       </div>
     </div>
   </section>
@@ -497,61 +547,68 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     letter-spacing: 0.04em;
   }
 
-  /* Caso en preparación */
-  .case-prep {
-    display: grid;
-    grid-template-columns: 0.85fr 1.15fr;
-    margin-top: 36px;
-    overflow: hidden;
-  }
-  .case-prep__media {
+  /* Bienestar en el terreno — mobile first */
+  .real-block {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    overflow: hidden;
+  }
+  .real-block__media {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .real-block__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center 45%;
+  }
+  .real-block__body {
+    padding: 28px 24px;
+  }
+  .real-block__video-wrap {
+    margin-top: 18px;
+  }
+  .real-block__video-btn {
+    list-style: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
     gap: 8px;
-    padding: 30px 28px;
-    background: var(--bg-soft);
-    border-right: 1px solid var(--line);
-    min-height: 180px;
-  }
-  .case-prep__media span {
     font-weight: 600;
-    font-size: 12.5px;
-    letter-spacing: 0.04em;
-    color: var(--text-sec);
+    font-size: 13px;
+    color: var(--green);
+    padding: 8px 0;
+    user-select: none;
   }
-  .case-prep__media code {
-    font-size: 12px;
-    color: var(--text-sec);
-    opacity: 0.7;
+  .real-block__video-btn::-webkit-details-marker { display: none; }
+  .real-block__video {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 9 / 16;
+    margin-top: 14px;
+    border-radius: 4px;
+    background: #000;
   }
-  .case-prep__body {
-    padding: 30px 32px;
+
+  /* Reconocimiento — mobile first */
+  .reconoc__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
   }
-  .case-prep__tag {
-    display: inline-block;
-    font-weight: 600;
-    font-size: 11.5px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--green-accent);
-    margin-bottom: 10px;
+  .reconoc__img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 4px;
   }
-  .case-prep__title {
-    font-weight: 700;
-    font-size: 24px;
-    color: var(--text);
-    margin: 0 0 12px;
-  }
-  .case-prep__line {
-    font-size: 15px;
-    color: var(--text-sec);
-    line-height: 1.6;
-    margin: 0 0 6px;
-  }
-  .case-prep .note {
-    margin-top: 12px;
+  .reconoc__text .lead {
+    margin-bottom: 0;
   }
 
   /* Áreas (catálogo preview) */
@@ -714,13 +771,6 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
       grid-template-columns: 1fr;
       gap: 32px;
     }
-    .case-prep {
-      grid-template-columns: 1fr;
-    }
-    .case-prep__media {
-      border-right: none;
-      border-bottom: 1px solid var(--line);
-    }
     .areas {
       grid-template-columns: 1fr 1fr;
     }
@@ -746,6 +796,41 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
       flex-direction: column;
       align-items: flex-start;
       gap: 12px;
+    }
+  }
+  /* Desktop 2-col for real-block and reconocimiento */
+  @media (min-width: 980px) {
+    .real-block {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .real-block__media {
+      width: 38%;
+      flex-shrink: 0;
+      border-bottom: none;
+      border-right: 1px solid var(--line);
+    }
+    .real-block__img {
+      height: 100%;
+      aspect-ratio: unset;
+    }
+    .real-block__body {
+      padding: 36px 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .reconoc__grid {
+      flex-direction: row;
+      align-items: center;
+      gap: 56px;
+    }
+    .reconoc__text {
+      flex: 1.2;
+    }
+    .reconoc__media {
+      flex: 0.8;
     }
   }
 </style>
