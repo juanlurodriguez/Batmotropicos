@@ -779,9 +779,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <script is:inline>
 (function () {
-  // ── CONFIGURA AQUÍ EL WEBHOOK (Make / n8n → Airtable "Valoraciones post-formación") ──
-  // Pega la URL del webhook. Si está vacía, modo demo: muestra éxito sin enviar.
-  const POST_FORMACION_WEBHOOK_URL = '';
+  // Endpoint server-side seguro (Cloudflare Pages Function → Airtable).
+  // El token de Airtable vive solo en el servidor, nunca en el navegador.
+  // Si las variables de entorno no están puestas, el endpoint responde en
+  // modo demo (éxito sin guardar). Déjalo vacío ('') para forzar modo demo local.
+  const POST_FORMACION_WEBHOOK_URL = '/api/valoracion-formacion';
 
   const TOTAL = 6;
   const LABELS = [
