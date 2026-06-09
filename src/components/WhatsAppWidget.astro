@@ -5,6 +5,7 @@ import { WHATSAPP } from '../data/site';
 <!-- FAB de escritorio -->
 <div class="fab" data-fab>
   <div class="fab__panel" data-fab-panel hidden>
+    <button class="fab__panel-close" aria-label="Cerrar" data-fab-close>✕</button>
     <p class="fab__txt">¿Quieres saber qué programa encaja mejor con tu equipo?</p>
     <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--primary btn--sm">
       <img src="/assets/icons/whatsapp.svg" alt="" width="18" height="18" class="wa-icon" />
@@ -43,6 +44,7 @@ import { WHATSAPP } from '../data/site';
     gap: 14px;
   }
   .fab__panel {
+    position: relative;
     width: 300px;
     background: #fff;
     border: 1px solid var(--line);
@@ -53,12 +55,34 @@ import { WHATSAPP } from '../data/site';
     flex-direction: column;
     gap: 10px;
   }
+  .fab__panel-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 15px;
+    color: var(--text-sec);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    line-height: 1;
+    padding: 0;
+  }
+  .fab__panel-close:hover {
+    background: var(--surface);
+    color: var(--text);
+  }
   .fab__txt {
     font-weight: 600;
     font-size: 15px;
     color: var(--text);
     line-height: 1.4;
-    margin: 0 0 6px;
+    margin: 0 20px 6px 0;
   }
   .fab__btn {
     width: 56px;
@@ -123,22 +147,35 @@ import { WHATSAPP } from '../data/site';
   (function () {
     const toggle = document.querySelector('[data-fab-toggle]');
     const panel = document.querySelector('[data-fab-panel]');
+    const closeBtn = document.querySelector('[data-fab-close]');
     if (!toggle || !panel) return;
     const chat = toggle.querySelector('.fab__icon-chat');
     const close = toggle.querySelector('.fab__icon-close');
+
+    function openPanel() {
+      panel.removeAttribute('hidden');
+      chat.setAttribute('hidden', '');
+      close.removeAttribute('hidden');
+      toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closePanel() {
+      panel.setAttribute('hidden', '');
+      close.setAttribute('hidden', '');
+      chat.removeAttribute('hidden');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+
     toggle.addEventListener('click', function () {
-      const open = panel.hasAttribute('hidden');
-      if (open) {
-        panel.removeAttribute('hidden');
-        chat.setAttribute('hidden', '');
-        close.removeAttribute('hidden');
-        toggle.setAttribute('aria-expanded', 'true');
+      if (panel.hasAttribute('hidden')) {
+        openPanel();
       } else {
-        panel.setAttribute('hidden', '');
-        close.setAttribute('hidden', '');
-        chat.removeAttribute('hidden');
-        toggle.setAttribute('aria-expanded', 'false');
+        closePanel();
       }
     });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closePanel);
+    }
   })();
 </script>

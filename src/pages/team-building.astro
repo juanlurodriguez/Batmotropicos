@@ -1,42 +1,53 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
-import { teamBuilding, EXTRA_NOTE } from '../data/teamBuilding';
+import { teamBuilding, EXTRA_NOTE, GROUP_LABELS } from '../data/teamBuilding';
 import { BONIF_NOTE } from '../data/catalogo';
+
+const groups: Array<TeamBuildingExperience['group']> = ['cohesion', 'activo', 'evento'];
+
+type TeamBuildingExperience = import('../data/teamBuilding').TeamBuildingExperience;
+
+const byGroup = (g: TeamBuildingExperience['group']) => teamBuilding.filter((e) => e.group === g);
 ---
 
 <BaseLayout
   title="Team building y experiencias de cohesión"
-  description="Experiencias de team building para empresas: cohesión, comunicación y energía de equipo. Dinámicas adaptadas a cada plantilla, presenciales y a medida."
+  description="Experiencias de team building para empresas: cohesión, actividades deportivas, eventos corporativos y celebraciones. Dinámicas adaptadas al equipo, presenciales y a medida."
   path="/team-building"
 >
   <section class="section">
     <div class="wrap">
       <div class="reveal" style="max-width:760px">
         <p class="eyebrow">Team building</p>
-        <h1 class="h2" style="font-size:38px">Experiencias que activan y conectan equipos</h1>
+        <h1 class="h2" style="font-size:38px">Experiencias que activan, conectan y hacen equipo</h1>
         <p class="lead">
-          Dinámicas de cohesión diseñadas para romper la rutina, mejorar la comunicación y reforzar
-          el sentido de pertenencia. Cada experiencia se adapta al tamaño, la condición física y los
-          objetivos del equipo.
+          Desde dinámicas de cohesión hasta eventos de empresa con producción completa. Cada experiencia
+          se diseña en función del tamaño del grupo, el momento de la organización y los objetivos
+          que RRHH quiere trabajar.
         </p>
       </div>
 
-      <div class="tb">
-        {
-          teamBuilding.map((e) => (
-            <article class="tb__card card card--accent reveal">
-              <div class="tb__top">
-                <h2 class="tb__title">{e.name}</h2>
-                <span class="tb__dur">{e.dur}</span>
-              </div>
-              <span class="badge tb__obj">{e.objetivo}</span>
-              <p class="card-text tb__desc">{e.desc}</p>
-              {e.extra && <p class="note tb__extra">{EXTRA_NOTE}</p>}
-            </article>
-          ))
-        }
-      </div>
+      {
+        groups.map((g) => (
+          <div class="tb-group">
+            <h2 class="tb-group__title reveal">{GROUP_LABELS[g]}</h2>
+            <div class="tb">
+              {byGroup(g).map((e) => (
+                <article class="tb__card card card--accent reveal">
+                  <div class="tb__top">
+                    <h3 class="tb__title">{e.name}</h3>
+                    <span class="tb__dur">{e.dur}</span>
+                  </div>
+                  <span class="badge tb__obj">{e.objetivo}</span>
+                  <p class="card-text tb__desc">{e.desc}</p>
+                  {e.extra && <p class="note tb__extra">{EXTRA_NOTE}</p>}
+                </article>
+              ))}
+            </div>
+          </div>
+        ))
+      }
 
       <p class="note reveal" style="margin-top:24px; max-width:740px">{BONIF_NOTE}</p>
     </div>
@@ -44,15 +55,27 @@ import { BONIF_NOTE } from '../data/catalogo';
 
   <CTASection
     eyebrow="Diseñamos tu experiencia"
-    title="¿Quieres una jornada a medida para tu equipo?"
-    text="Cuéntanos cuántos sois y qué buscáis (clima, energía, creatividad…) y te proponemos la experiencia que mejor encaje."
+    title="Cuéntanos qué necesita el equipo"
+    text="Cada propuesta parte de cero: cuántos sois, qué momento vive el equipo y qué quieres conseguir. Te proponemos la experiencia que mejor encaja."
     primaryLabel="Solicitar propuesta de team building"
   />
 </BaseLayout>
 
 <style>
+  .tb-group {
+    margin-top: 48px;
+  }
+  .tb-group__title {
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    margin: 0 0 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
   .tb {
-    margin-top: 32px;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
@@ -70,7 +93,7 @@ import { BONIF_NOTE } from '../data/catalogo';
   }
   .tb__title {
     font-weight: 700;
-    font-size: 19px;
+    font-size: 18px;
     color: var(--text);
     margin: 0;
     line-height: 1.3;
@@ -90,6 +113,7 @@ import { BONIF_NOTE } from '../data/catalogo';
   }
   .tb__desc {
     font-size: 15px;
+    flex: 1;
   }
   .tb__extra {
     margin-top: 12px;

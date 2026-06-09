@@ -4,39 +4,58 @@ import CTASection from '../components/CTASection.astro';
 import { BONIF_NOTE } from '../data/catalogo';
 
 const pasos = [
-  ['Revisamos el encaje', 'Comprobamos qué acciones de tu plan pueden encajar con el crédito formativo disponible de la empresa.'],
-  ['Preparamos la documentación', 'Elaboramos la documentación conforme a la normativa vigente para la gestión de la bonificación.'],
-  ['Gestionamos los plazos', 'Te acompañamos en comunicaciones y plazos para que todo quede en regla.'],
-  ['Impartimos y justificamos', 'Ejecutamos la formación y dejamos la justificación documental ordenada.'],
+  ['Revisamos el encaje', 'Analizamos qué acciones del plan pueden ajustarse al crédito formativo disponible de la empresa y qué requisitos aplican en cada caso.'],
+  ['Preparamos la documentación', 'Elaboramos la documentación necesaria conforme a la normativa vigente para la gestión de la bonificación: grupos, plazos y modalidades.'],
+  ['Gestionamos los plazos', 'Te acompañamos en las comunicaciones y los plazos para que todo quede en regla antes de iniciar la formación.'],
+  ['Impartimos y justificamos', 'Ejecutamos la formación y entregamos la justificación documental ordenada, lista para su gestión.'],
 ];
 
 const faqs = [
-  ['¿La formación es gratis?', 'No. La formación tiene un coste. Lo que ocurre es que muchas acciones pueden bonificarse a través del crédito formativo del que dispone la empresa, lo que reduce su coste neto, siempre sujeto a crédito, modalidad, plazos y cumplimiento de requisitos.'],
-  ['¿Qué es el crédito FUNDAE?', 'Es el crédito formativo del que dispone cada empresa para la formación de sus personas trabajadoras. Su importe depende de las cotizaciones y de otros factores de cada empresa.'],
-  ['¿Sois partner oficial de FUNDAE?', 'No. Batmotrópicos no es un organismo oficial ni partner de FUNDAE. Te ayudamos a revisar el encaje y a preparar la documentación conforme a la normativa vigente.'],
-  ['¿Todas las acciones se pueden bonificar?', 'No necesariamente. La bonificación depende del tipo de acción, su modalidad y el cumplimiento de los requisitos. Algunas experiencias (como ciertos team building o servicios wellness) pueden ser solo parcialmente bonificables o no serlo.'],
+  [
+    '¿La formación tiene coste?',
+    'Sí. Toda formación tiene un coste real. Lo que ocurre es que muchas acciones pueden bonificarse a través del crédito formativo del que dispone cada empresa, lo que reduce — o en algunos casos elimina — el coste neto para la organización. Depende siempre del crédito disponible, la modalidad, los plazos y el cumplimiento de los requisitos normativos.',
+  ],
+  [
+    '¿Puede llegar a coste cero para la empresa?',
+    'En determinados casos sí. Cuando la empresa dispone de crédito formativo suficiente y la acción formativa cumple todos los requisitos — modalidad, número de participantes, plazos y documentación —, la bonificación puede cubrir el coste total de la formación. No es una garantía ni aplica a todas las acciones, pero es una posibilidad real que revisamos contigo desde el primer momento.',
+  ],
+  [
+    '¿Qué es el crédito FUNDAE?',
+    'Es el crédito formativo del que dispone cada empresa para la formación de sus personas trabajadoras. Su importe depende de las cotizaciones a la Seguridad Social del ejercicio anterior y de otros factores propios de cada organización. No es ilimitado: a mayor crédito y menor número de acciones, mayor posibilidad de bonificación.',
+  ],
+  [
+    '¿Trabajáis directamente con FUNDAE?',
+    'Batmotrópicos no es un organismo oficial ni actúa como entidad organizadora acreditada ante FUNDAE. Trabajamos con los procesos establecidos para ayudarte a revisar el encaje de cada acción y a preparar la documentación conforme a la normativa vigente.',
+  ],
+  [
+    '¿Todas las acciones pueden bonificarse?',
+    'No. La bonificación depende del tipo de acción, su modalidad y el cumplimiento de los requisitos. Algunas experiencias —como ciertos formatos de team building o servicios wellness— pueden ser solo parcialmente bonificables o no serlo. Lo aclaramos antes de proponer cualquier plan.',
+  ],
 ];
 ---
 
 <BaseLayout
   title="Formación bonificable FUNDAE"
-  description="Cómo funciona la bonificación FUNDAE para formación de empresa. Revisamos el encaje y preparamos la documentación conforme a la normativa vigente. Sin promesas de gratuidad."
+  description="Cómo funciona la bonificación FUNDAE para formación de empresa. Revisamos el encaje, preparamos la documentación y acompañamos el proceso. Sin promesas de gratuidad."
   path="/fundae"
 >
   <section class="section">
     <div class="wrap">
       <div class="reveal card card--accent fundae__hero">
-        <p class="eyebrow">Bonificación</p>
-        <h1 class="h2" style="font-size:34px">Formación bonificable a través del crédito FUNDAE</h1>
-        <p class="lead" style="margin-bottom:18px">{BONIF_NOTE}</p>
+        <p class="eyebrow">Bonificación FUNDAE</p>
+        <h1 class="h2" style="font-size:34px">La formación tiene un coste. En muchos casos, puede bonificarse.</h1>
+        <p class="lead" style="margin-bottom:18px">
+          {BONIF_NOTE} En algunos casos, cuando el crédito es suficiente y se cumplen todos los
+          requisitos, el coste neto para la empresa puede llegar a cero.
+        </p>
         <p class="note" style="max-width:740px">
-          Batmotrópicos no es un organismo oficial ni partner de FUNDAE: te ayudamos a revisar el
-          encaje y a preparar la documentación conforme a la normativa vigente.
+          Batmotrópicos no actúa como entidad acreditada ante FUNDAE: te ayudamos a revisar el
+          encaje de cada acción y a preparar la documentación conforme a la normativa vigente.
         </p>
         <div class="fundae__badges">
-          <span class="badge">FUNDAE</span>
           <span class="badge">Crédito formativo</span>
           <span class="badge">Documentación gestionada</span>
+          <span class="badge">Sin promesas de gratuidad</span>
         </div>
       </div>
     </div>
@@ -47,7 +66,11 @@ const faqs = [
     <div class="wrap">
       <div class="reveal" style="max-width:740px">
         <p class="eyebrow">Cómo lo gestionamos</p>
-        <h2 class="h2">Te acompañamos en todo el proceso</h2>
+        <h2 class="h2">Un proceso claro, sin sorpresas</h2>
+        <p class="lead">
+          Desde la revisión inicial hasta la justificación documental: acompañamos cada paso para que
+          RRHH no tenga que gestionar nada por separado.
+        </p>
       </div>
       <ol class="steps">
         {
@@ -70,7 +93,7 @@ const faqs = [
     <div class="wrap">
       <div class="reveal" style="max-width:740px">
         <p class="eyebrow">Preguntas frecuentes</p>
-        <h2 class="h2">Lo que conviene tener claro</h2>
+        <h2 class="h2">Lo que conviene tener claro antes de empezar</h2>
       </div>
       <div class="faq">
         {
@@ -88,7 +111,7 @@ const faqs = [
   <CTASection
     eyebrow="Empieza por aquí"
     title="¿Quieres saber qué parte de tu plan puede bonificarse?"
-    text="Cuéntanos qué tienes en mente y revisamos contigo el posible encaje en el crédito formativo de tu empresa."
+    text="Cuéntanos qué tienes en mente y revisamos contigo el posible encaje en el crédito formativo de tu empresa. Sin compromiso y con claridad desde el primer momento."
     primaryLabel="Consultar el encaje FUNDAE"
   />
 </BaseLayout>
@@ -130,6 +153,7 @@ const faqs = [
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
   .steps__title {
     font-weight: 700;

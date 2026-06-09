@@ -96,6 +96,34 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     </div>
   </section>
 
+  <!-- REEL VISUAL -->
+  <section class="section section--reel">
+    <div class="wrap reel__wrap">
+      <div class="reel__text reveal">
+        <p class="eyebrow">Así trabajamos</p>
+        <h2 class="h2">Formación y bienestar aplicados al entorno real de trabajo.</h2>
+        <p class="lead">
+          Sin actividades desconectadas del puesto ni dinámicas que no se trasladan al día a día.
+          Cada intervención parte de un diagnóstico real y se mide en resultados concretos.
+        </p>
+        <a href="/que-hacemos" class="btn btn--outline" style="margin-top:22px">Conocer la metodología <span class="arrow">→</span></a>
+      </div>
+      <div class="reel__media reveal">
+        <video
+          id="hero-reel"
+          class="reel__video"
+          src="/assets/video/hero-reel.mp4"
+          muted
+          loop
+          playsinline
+          preload="none"
+          controls
+          aria-label="Sesión presencial de formación y bienestar laboral para equipos de empresa"
+        ></video>
+      </div>
+    </div>
+  </section>
+
   <!-- QUÉ HACEMOS -->
   <section class="section">
     <div class="wrap">
@@ -279,6 +307,43 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     </div>
   </section>
 
+  <!-- PROGRAMAS PREMIUM -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal">
+        <p class="eyebrow">Programas</p>
+        <h2 class="h2">Una estructura para cada tipo de empresa</h2>
+        <p class="lead">
+          Desde una acción puntual hasta un programa anual integral. Cada nivel de compromiso tiene
+          su propia estructura, su seguimiento y su medición de resultados.
+        </p>
+      </div>
+      <div class="progs reveal">
+        <div class="progs__item card card--accent">
+          <span class="progs__tag">Continuidad</span>
+          <h3 class="progs__title">Plan Semestral</h3>
+          <p class="progs__meta">6 acciones · 6 meses · 1 acción mensual</p>
+          <p class="card-text">Una intervención mensual con hilo conductor, seguimiento trimestral y memoria de resultados al cierre. Para empresas que quieren empezar con estructura y sin sobredimensionar.</p>
+        </div>
+        <div class="progs__item card card--accent progs__item--featured">
+          <span class="progs__tag progs__tag--light">Más contratado</span>
+          <h3 class="progs__title">Plan Anual</h3>
+          <p class="progs__meta">12 acciones · 12 meses · evaluación semestral</p>
+          <p class="card-text">Programa completo con una acción mensual, evaluación a mitad de año y propuesta de continuidad basada en resultados. Una sola interlocución para todo el año.</p>
+        </div>
+        <div class="progs__item card card--accent">
+          <span class="progs__tag">Integral</span>
+          <h3 class="progs__title">Plan Integral Anual</h3>
+          <p class="progs__meta">Formación + bienestar + team building + medición</p>
+          <p class="card-text">El programa más completo: diagnóstico inicial, diseño a medida, ejecución de acciones de formación, bienestar y cohesión, y medición de impacto al cierre. Para empresas con visión de medio plazo.</p>
+        </div>
+      </div>
+      <div class="reveal" style="margin-top:28px">
+        <a href="/contacto" class="btn btn--primary">Solicitar propuesta de programa <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </section>
+
   <!-- MÉTODO -->
   <section class="section section--soft">
     <div class="wrap">
@@ -305,6 +370,18 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
 
   <CTASection />
 </BaseLayout>
+
+<script is:inline>
+  (function () {
+    var v = document.getElementById('hero-reel');
+    if (!v) return;
+    if (window.matchMedia('(min-width: 980px)').matches) {
+      v.removeAttribute('controls');
+      v.setAttribute('preload', 'metadata');
+      v.play().catch(function () {});
+    }
+  })();
+</script>
 
 <style>
   /* Hero */
@@ -435,6 +512,71 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     letter-spacing: 0.02em;
   }
 
+  /* Reel visual — mobile first */
+  .section--reel {
+    background: var(--surface);
+  }
+  .reel__wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .reel__video {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 9 / 16;
+    border-radius: 8px;
+    background: #000;
+    margin: 0 auto;
+  }
+
+  /* Programas premium */
+  .progs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 32px;
+  }
+  .progs__item {
+    padding: 28px 26px;
+    display: flex;
+    flex-direction: column;
+  }
+  .progs__item--featured {
+    border-color: var(--green);
+    box-shadow: 0 0 0 1px var(--green);
+  }
+  .progs__tag {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin-bottom: 14px;
+  }
+  .progs__tag--light {
+    color: #fff;
+    background: var(--green);
+    padding: 3px 10px;
+    border-radius: 30px;
+  }
+  .progs__title {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.25;
+  }
+  .progs__meta {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--green);
+    margin: 0 0 16px;
+    letter-spacing: 0.02em;
+  }
+
   /* Qué hacemos — 3 líneas principales */
   .qh-main {
     display: grid;
@@ -556,13 +698,14 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
   .real-block__media {
     border-bottom: 1px solid var(--line);
     overflow: hidden;
+    height: 300px;
   }
   .real-block__img {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: 100%;
     object-fit: cover;
-    object-position: center 45%;
+    object-position: center 32%;
   }
   .real-block__body {
     padding: 28px 24px;
@@ -599,13 +742,17 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
     flex-direction: column;
     gap: 28px;
   }
+  .reconoc__media {
+    overflow: hidden;
+    border-radius: 4px;
+    height: 280px;
+  }
   .reconoc__img {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
+    height: 100%;
     object-fit: cover;
-    object-position: center top;
-    border-radius: 4px;
+    object-position: center 55%;
   }
   .reconoc__text .lead {
     margin-bottom: 0;
@@ -750,6 +897,30 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
 
   /* Responsive */
   @media (max-width: 980px) {
+    .progs {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (min-width: 980px) {
+    .reel__wrap {
+      flex-direction: row;
+      align-items: center;
+      gap: 72px;
+    }
+    .reel__text {
+      flex: 1.3;
+    }
+    .reel__media {
+      flex: 0.7;
+      display: flex;
+      justify-content: center;
+    }
+    .reel__video {
+      max-width: 260px;
+      margin: 0;
+    }
+  }
+  @media (max-width: 980px) {
     .hero__grid {
       grid-template-columns: 1fr;
       gap: 36px;
@@ -809,10 +980,11 @@ const proceso = ['Diagnóstico', 'Diseño', 'Bonificación', 'Ejecución', 'Medi
       flex-shrink: 0;
       border-bottom: none;
       border-right: 1px solid var(--line);
+      height: auto;
     }
     .real-block__img {
       height: 100%;
-      aspect-ratio: unset;
+      min-height: 400px;
     }
     .real-block__body {
       padding: 36px 40px;
