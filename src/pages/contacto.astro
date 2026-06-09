@@ -8,95 +8,141 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
   description="Solicita tu diagnóstico 360º. Cuéntanos sobre tu equipo y te preparamos una propuesta personalizada de formación y bienestar corporativo en 48 horas."
   path="/contacto"
 >
-  <section class="section">
+  <section class="section section--contact">
     <div class="wrap">
-      <div class="reveal" style="max-width:760px">
+      <div class="reveal" style="max-width:680px">
         <p class="eyebrow">Contacto</p>
         <h1 class="h2" style="font-size:38px">Solicita tu diagnóstico</h1>
         <p class="lead">
-          Cuéntanos quién eres y qué necesitas. Te preparamos una propuesta personalizada en 48
-          horas, sin compromiso.
+          Cuéntanos quién eres y qué necesita tu equipo. Te preparamos una propuesta
+          personalizada en 48 horas, sin compromiso.
         </p>
       </div>
 
-      <div class="contact">
-        <!-- Formulario -->
+      <div class="cpage">
+        <!-- Formulario principal -->
         <div class="reveal">
-          <form class="form" id="contact-form" novalidate>
-            <div class="form__row">
-              <div class="field">
-                <label for="nombre">Nombre</label>
-                <input type="text" id="nombre" name="nombre" required autocomplete="name" />
-              </div>
-              <div class="field">
-                <label for="empresa">Empresa</label>
-                <input type="text" id="empresa" name="empresa" required autocomplete="organization" />
-              </div>
-            </div>
+          <form id="contact-form" novalidate>
 
-            <div class="form__row">
-              <div class="field">
-                <label for="telefono">Teléfono</label>
-                <input type="tel" id="telefono" name="telefono" required autocomplete="tel" />
-              </div>
-              <div class="field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required autocomplete="email" />
+            <!-- Nombre + Empresa -->
+            <div class="cf-card">
+              <div class="cf-row">
+                <div class="field">
+                  <label for="nombre">Nombre</label>
+                  <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required autocomplete="name" />
+                </div>
+                <div class="field">
+                  <label for="empresa">Empresa</label>
+                  <input type="text" id="empresa" name="empresa" placeholder="Nombre de la empresa" required autocomplete="organization" />
+                </div>
               </div>
             </div>
 
-            <div class="field">
-              <label for="trabajadores">Número aproximado de trabajadores</label>
-              <select id="trabajadores" name="trabajadores" required>
-                <option value="">Selecciona…</option>
-                {SIZES.map((s) => <option value={s}>{s}</option>)}
-              </select>
+            <!-- Teléfono + Email -->
+            <div class="cf-card">
+              <div class="cf-row">
+                <div class="field">
+                  <label for="telefono">Teléfono</label>
+                  <input type="tel" id="telefono" name="telefono" placeholder="600 000 000" required autocomplete="tel" />
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" placeholder="empresa@correo.com" required autocomplete="email" />
+                </div>
+              </div>
             </div>
 
-            <div class="field">
-              <label for="necesidad">Qué necesitas</label>
-              <select id="necesidad" name="necesidad" required>
-                <option value="">Selecciona…</option>
-                {NEEDS.map((n) => <option value={n}>{n}</option>)}
-              </select>
+            <!-- Nº trabajadores -->
+            <div class="cf-card">
+              <p class="cf-card__label">Número aproximado de trabajadores</p>
+              <div class="cf-opts">
+                {SIZES.map((s) => (
+                  <label class="opt-item">
+                    <input type="radio" name="trabajadores" value={s} required />
+                    <span>{s}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
-            <!-- Honeypot anti-spam (oculto) -->
+            <!-- Qué necesitas -->
+            <div class="cf-card">
+              <p class="cf-card__label">Qué necesitas</p>
+              <div class="cf-opts">
+                {NEEDS.map((n) => (
+                  <label class="opt-item">
+                    <input type="radio" name="necesidad" value={n} required />
+                    <span>{n}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <!-- Mensaje opcional -->
+            <div class="cf-card">
+              <div class="field">
+                <label for="mensaje">Mensaje <span class="opt-label">(opcional)</span></label>
+                <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos algo más sobre el equipo, el momento de la empresa o lo que tienes en mente…" rows="4"></textarea>
+              </div>
+            </div>
+
+            <!-- Privacidad -->
+            <div class="cf-card cf-card--privacy">
+              <label class="priv-item">
+                <input type="checkbox" name="privacidad" id="privacidad" required />
+                <span>
+                  He leído y acepto el tratamiento de mis datos según la
+                  <a href="/privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
+                  Los datos se usarán únicamente para contactar contigo sobre tu solicitud.
+                </span>
+              </label>
+            </div>
+
+            <!-- Honeypot anti-spam -->
             <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
 
-            <div class="field">
+            <div class="cf-submit">
               <button type="submit" class="btn btn--primary" data-submit>
                 Solicitar diagnóstico <span class="arrow">→</span>
               </button>
-              <p class="form__error" data-error hidden>
+              <p class="cf-error" data-error hidden>
                 No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
               </p>
             </div>
+
           </form>
 
-          <!-- Mensaje de éxito -->
-          <div class="ok card card--accent" data-success hidden>
-            <h2 class="card-title" style="font-size:19px">Solicitud registrada</h2>
-            <p class="card-text">
+          <!-- Estado de éxito -->
+          <div class="cf-ok card card--accent" data-success hidden>
+            <p class="eyebrow" style="margin-bottom:10px">Solicitud registrada</p>
+            <p class="card-text" style="font-size:16px">
               Gracias. Te contactaremos en menos de 48 horas con una propuesta a medida.
             </p>
           </div>
         </div>
 
-        <!-- Datos de contacto -->
+        <!-- Aside: datos de contacto -->
         <aside class="reveal">
-          <div class="card info">
-            <h2 class="card-title">Datos de contacto</h2>
-            <div class="info__list">
-              <div class="info__name">{contacto.nombre}</div>
-              <div><a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a></div>
-              <div><a href={`mailto:${contacto.email}`}>{contacto.email}</a></div>
-              <div class="info__muted">{contacto.ubicacion}</div>
-              <div><a href={contacto.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn: {contacto.linkedinLabel}</a></div>
+          <div class="card cinfo">
+            <p class="eyebrow" style="margin-bottom:14px">Contacto directo</p>
+            <div class="cinfo__list">
+              <p class="cinfo__name">{contacto.nombre}</p>
+              <p><a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a></p>
+              <p><a href={`mailto:${contacto.email}`}>{contacto.email}</a></p>
+              <p class="cinfo__muted">{contacto.ubicacion}</p>
+              <p><a href={contacto.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a></p>
             </div>
-            <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--sm info__wa">
+            <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--outline btn--sm cinfo__wa">
               Escribir por WhatsApp
             </a>
+          </div>
+
+          <div class="card cinfo" style="margin-top:16px">
+            <p class="eyebrow" style="margin-bottom:10px">Formulario de valoración</p>
+            <p class="card-text" style="font-size:14px; margin-bottom:14px">
+              ¿Ya hicisteis una formación? Comparte tu experiencia y ayúdanos a mejorar.
+            </p>
+            <a href="/valoracion-formacion" class="btn btn--outline btn--sm">Valorar una formación <span class="arrow">→</span></a>
           </div>
         </aside>
       </div>
@@ -105,18 +151,36 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
 </BaseLayout>
 
 <style>
-  .contact {
+  .section--contact {
+    padding-bottom: 100px;
+  }
+  .cpage {
     display: grid;
-    grid-template-columns: 1.25fr 1fr;
+    grid-template-columns: 1.3fr 1fr;
     gap: 48px;
     margin-top: 36px;
+    align-items: start;
   }
-  .form {
+
+  /* Cards del formulario */
+  form {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 14px;
   }
-  .form__row {
+  .cf-card {
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .cf-card__label {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text);
+    margin: 0 0 14px;
+  }
+  .cf-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 18px;
@@ -126,30 +190,122 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
     flex-direction: column;
   }
   .field label {
-    font-weight: 500;
+    font-weight: 600;
     font-size: 13px;
-    color: var(--text-sec);
-    margin-bottom: 6px;
-  }
-  .field input,
-  .field select {
-    font-family: var(--font);
-    font-size: 15px;
     color: var(--text);
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    background: #fff;
+    margin-bottom: 7px;
+  }
+  .opt-label {
+    font-weight: 400;
+    color: var(--text-sec);
+    font-size: 12px;
+  }
+  .field input[type="text"],
+  .field input[type="tel"],
+  .field input[type="email"],
+  .field textarea {
+    font-family: var(--font);
+    font-size: 14.5px;
+    color: var(--text);
+    padding: 11px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
     outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
   }
   .field input:focus,
-  .field select:focus {
+  .field textarea:focus {
     border-color: var(--green);
+    background: #fff;
   }
   .field input:invalid:not(:placeholder-shown) {
     border-color: #b00020;
   }
+
+  /* Option items (radio) */
+  .cf-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .opt-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg-soft);
+    user-select: none;
+  }
+  .opt-item:hover {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .opt-item.selected {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .opt-item input[type="radio"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .opt-item span {
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  /* Privacidad */
+  .cf-card--privacy {
+    background: var(--bg-soft);
+    border-style: dashed;
+  }
+  .priv-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .priv-item input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .priv-item span {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.55;
+  }
+  .priv-item a {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* Submit */
+  .cf-submit {
+    margin-top: 6px;
+  }
+  .cf-error {
+    color: #b00020;
+    font-size: 13.5px;
+    margin: 10px 0 0;
+  }
+  .cf-ok {
+    padding: 28px 24px;
+  }
+
+  /* Honeypot */
   .hp {
     position: absolute;
     left: -9999px;
@@ -157,46 +313,43 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
     height: 1px;
     opacity: 0;
   }
-  .form__error {
-    color: #b00020;
-    font-size: 13.5px;
-    margin: 10px 0 0;
-  }
-  .ok {
-    padding: 30px 26px;
-  }
 
-  .info {
-    padding: 26px 24px;
+  /* Aside */
+  .cinfo {
+    padding: 22px 20px;
   }
-  .info__list {
-    font-size: 15px;
+  .cinfo__list {
+    margin-bottom: 18px;
+  }
+  .cinfo__list p {
+    font-size: 14.5px;
     color: var(--text);
-    line-height: 2;
+    margin: 0 0 6px;
+    line-height: 1.5;
   }
-  .info__name {
+  .cinfo__name {
     font-weight: 600;
   }
-  .info__muted {
-    color: var(--text-sec);
+  .cinfo__muted {
+    color: var(--text-sec) !important;
   }
-  .info__list a {
-    text-decoration: none;
+  .cinfo__list a {
     color: var(--green);
+    text-decoration: none;
+    font-weight: 500;
   }
-  .info__list a[href^='tel']:first-child,
-  .info__list div:nth-child(2) a {
-    color: var(--text);
-  }
-  .info__wa {
-    margin-top: 20px;
+  .cinfo__wa {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
   }
 
   @media (max-width: 880px) {
-    .contact {
+    .cpage {
       grid-template-columns: 1fr;
+      gap: 28px;
     }
-    .form__row {
+    .cf-row {
       grid-template-columns: 1fr;
     }
   }
@@ -204,69 +357,89 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
 
 <script is:inline>
   (function () {
-    // ── CONFIGURA AQUÍ EL WEBHOOK (Make / n8n / Airtable) ──
-    // Pega la URL del webhook. Si se deja vacía, el formulario
-    // mostrará el mensaje de éxito sin realizar la petición (modo demo).
-    const WEBHOOK_URL = '';
+    // ── CONFIGURA AQUÍ EL WEBHOOK (Make / n8n → Airtable "Leads comerciales") ──
+    // Pega la URL del webhook. Si está vacía, modo demo: muestra éxito sin enviar.
+    const CONTACT_WEBHOOK_URL = '';
 
     const form = document.getElementById('contact-form');
     if (!form) return;
-    const success = document.querySelector('[data-success]');
+    const successEl = document.querySelector('[data-success]');
     const errorEl = document.querySelector('[data-error]');
     const submitBtn = document.querySelector('[data-submit]');
+
+    // Highlight radio selections visually
+    form.addEventListener('change', function (e) {
+      if (e.target.type === 'radio') {
+        const name = e.target.name;
+        document.querySelectorAll('input[name="' + name + '"]').forEach(function (inp) {
+          inp.closest('.opt-item').classList.remove('selected');
+        });
+        e.target.closest('.opt-item').classList.add('selected');
+      }
+    });
 
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       if (errorEl) errorEl.hidden = true;
 
-      // Validación nativa
       if (!form.checkValidity()) {
         form.reportValidity();
         return;
       }
 
-      // Honeypot: si está relleno, es un bot → simulamos éxito sin enviar
-      const data = Object.fromEntries(new FormData(form).entries());
+      const raw = new FormData(form);
+      const data = Object.fromEntries(raw.entries());
+
+      // Honeypot
       if (data._gotcha) {
-        form.hidden = true;
-        if (success) success.hidden = false;
+        showSuccess();
         return;
       }
       delete data._gotcha;
 
       const payload = {
-        ...data,
+        tipo: 'contacto-comercial',
+        nombre: data.nombre || '',
+        empresa: data.empresa || '',
+        telefono: data.telefono || '',
+        email: data.email || '',
+        trabajadores: data.trabajadores || '',
+        necesidad: data.necesidad || '',
+        mensaje: data.mensaje || '',
+        privacidad: !!data.privacidad,
         origen: 'web-batmotropicos',
         pagina: window.location.pathname,
         enviadoEn: new Date().toISOString(),
       };
 
-      const finish = function () {
-        form.hidden = true;
-        if (success) success.hidden = false;
-        success && success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      };
-
-      if (!WEBHOOK_URL) {
-        finish();
+      if (!CONTACT_WEBHOOK_URL) {
+        showSuccess();
         return;
       }
 
       try {
         if (submitBtn) submitBtn.setAttribute('disabled', '');
-        const res = await fetch(WEBHOOK_URL, {
+        const res = await fetch(CONTACT_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
         if (!res.ok) throw new Error('HTTP ' + res.status);
-        finish();
+        showSuccess();
       } catch (err) {
-        console.error('Envío del formulario:', err);
+        console.error('Envío formulario contacto:', err);
         if (errorEl) errorEl.hidden = false;
       } finally {
         if (submitBtn) submitBtn.removeAttribute('disabled');
       }
     });
+
+    function showSuccess() {
+      form.hidden = true;
+      if (successEl) {
+        successEl.hidden = false;
+        successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
   })();
 </script>

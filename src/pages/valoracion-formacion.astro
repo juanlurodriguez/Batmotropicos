@@ -1,0 +1,976 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Valoración post-formación · Batmotrópicos"
+  description="Comparte tu experiencia sobre la formación recibida. Tu valoración nos ayuda a mejorar cada sesión y cuidar mejor a los equipos."
+  path="/valoracion-formacion"
+>
+  <!-- Sticky progress bar -->
+  <div class="vf-progress" id="vf-progress">
+    <div class="vf-progress__inner wrap">
+      <span class="vf-progress__label" id="vf-label">Datos básicos</span>
+      <div class="vf-progress__track">
+        <div class="vf-progress__fill" id="vf-fill"></div>
+      </div>
+      <span class="vf-progress__count" id="vf-count">1 / 6</span>
+    </div>
+  </div>
+
+  <div class="vf-wrap">
+
+    <!-- ── SECCIÓN 1: DATOS BÁSICOS ── -->
+    <div class="vf-section active" data-section="1">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 1 de 6</p>
+        <h2 class="vf-title">Datos básicos</h2>
+        <p class="vf-desc">Cuéntanos qué formación has recibido y cuándo.</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿En qué empresa trabajas?</p>
+        <input type="text" id="q_empresa" placeholder="Nombre de la empresa" />
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué formación o actividad has realizado?</p>
+        <div class="vf-opts">
+          {[
+            'Espalda sana y prevención de lesiones',
+            'Pausas activas y autocuidado físico',
+            'Gestión del estrés',
+            'Comunicación y trabajo en equipo',
+            'Alimentación saludable',
+            'Team building / cohesión de equipo',
+            'Fisioterapia in company',
+            'Yoga / stretching / movilidad',
+            'Otra',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="radio" name="formacion" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Fecha aproximada de la formación</p>
+        <input type="date" id="q_fecha" />
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--primary" data-next="1">Siguiente <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN 2: VALORACIÓN ── -->
+    <div class="vf-section" data-section="2">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 2 de 6</p>
+        <h2 class="vf-title">Valoración de la formación</h2>
+        <p class="vf-desc">Del 1 al 5 — sé sincero/a, nos ayuda a mejorar.</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Valoración general de la formación</p>
+        <div class="vf-scale" data-key="general">
+          {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+        </div>
+        <div class="vf-scale-labels"><span>Muy mejorable</span><span>Excelente</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Utilidad para tu trabajo diario</p>
+        <div class="vf-scale" data-key="utilidad">
+          {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+        </div>
+        <div class="vf-scale-labels"><span>Nada útil</span><span>Muy útil</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Calidad del contenido</p>
+        <div class="vf-scale" data-key="contenido">
+          {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+        </div>
+        <div class="vf-scale-labels"><span>Poco útil</span><span>Muy bien adaptado</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Dinamismo de la sesión</p>
+        <div class="vf-scale" data-key="dinamismo">
+          {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+        </div>
+        <div class="vf-scale-labels"><span>Poco dinámica</span><span>Muy práctica</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Cómo valorarías al formador?</p>
+        <div class="vf-subgroup">
+          {[
+            ['form_claridad', 'Claridad al explicar'],
+            ['form_dominio',  'Dominio del tema'],
+            ['form_cercania', 'Cercanía con el grupo'],
+            ['form_practico', 'Capacidad para hacerlo práctico'],
+          ].map(([key, label]) => (
+            <div class="vf-subgroup__item">
+              <p class="vf-subgroup__label">{label}</p>
+              <div class="vf-scale" data-key={key}>
+                {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Crees que podrás aplicar algo de lo aprendido?</p>
+        <div class="vf-opts">
+          {[
+            'Sí, claramente',
+            'Sí, alguna cosa concreta',
+            'No estoy seguro/a',
+            'No, no lo veo aplicable',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="radio" name="aplicabilidad" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--outline" data-prev="2">← Atrás</button>
+        <button class="btn btn--primary" data-next="2">Siguiente <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN 3: IMPACTO Y MEJORA ── -->
+    <div class="vf-section" data-section="3">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 3 de 6</p>
+        <h2 class="vf-title">Impacto y mejora</h2>
+        <p class="vf-desc">Tu opinión nos ayuda a mejorar de verdad.</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿En qué crees que puede ayudarte esta formación?</p>
+        <div class="vf-opts">
+          {[
+            'Reducir molestias físicas',
+            'Prevenir lesiones',
+            'Gestionar mejor el estrés',
+            'Mejorar la comunicación con compañeros',
+            'Tener más energía durante la jornada',
+            'Mejorar el clima del equipo',
+            'Sentirme más cuidado/a por la empresa',
+            'Desconectar y sentirme mejor en el trabajo',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="impacto" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué parte te ha parecido más útil?</p>
+        <textarea id="q_mas_util" placeholder="Lo que más te ha servido, lo que recuerdas mejor…" rows="3"></textarea>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué has echado en falta?</p>
+        <p class="vf-hint">¿Algo que te habría gustado ver, practicar o trabajar con más profundidad?</p>
+        <textarea id="q_en_falta" placeholder="Sé sincero/a, nos ayuda a mejorar…" rows="3"></textarea>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué mejorarías para próximas formaciones?</p>
+        <textarea id="q_mejora" placeholder="Cualquier sugerencia es bienvenida…" rows="3"></textarea>
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--outline" data-prev="3">← Atrás</button>
+        <button class="btn btn--primary" data-next="3">Siguiente <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN 4: NECESIDADES DEL EQUIPO ── -->
+    <div class="vf-section" data-section="4">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 4 de 6</p>
+        <h2 class="vf-title">Necesidades del equipo</h2>
+        <p class="vf-desc">Esta parte nos ayuda a entender qué necesita tu equipo de verdad.</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué crees que necesita más tu equipo ahora mismo?</p>
+        <div class="vf-opts">
+          {[
+            'Espalda, cuello y molestias físicas',
+            'Pausas activas durante la jornada',
+            'Respiración consciente y gestión del estrés',
+            'Mejor comunicación interna',
+            'Motivación y clima laboral',
+            'Liderazgo de encargados o responsables',
+            'Cohesión de equipo',
+            'Actividades deportivas',
+            'Fisioterapia in company',
+            'Alimentación y energía en el trabajo',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="necesidades" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué servicio te gustaría que tu empresa ofreciera de forma recurrente?</p>
+        <div class="vf-opts">
+          {[
+            'Fisioterapia in company',
+            'Pausas activas semanales',
+            'Yoga en el lugar de trabajo',
+            'Stretching / movilidad',
+            'Entrenamiento funcional adaptado',
+            'Respiración consciente / mindfulness',
+            'Sesiones de descarga muscular',
+            'Talleres de ergonomía',
+            'Ninguno',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="servicios_recurrentes" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Si tu empresa ofreciera fisioterapia in company, ¿te parecería útil?</p>
+        <div class="vf-opts">
+          {[
+            'Sí, muy útil',
+            'Sí, podría interesarme',
+            'No lo sé',
+            'No lo veo necesario',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="radio" name="fisio_inco" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--outline" data-prev="4">← Atrás</button>
+        <button class="btn btn--primary" data-next="4">Siguiente <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN 5: PRÓXIMAS ACTIVIDADES ── -->
+    <div class="vf-section" data-section="5">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 5 de 6</p>
+        <h2 class="vf-title">Próximas actividades</h2>
+        <p class="vf-desc">¿Qué te gustaría hacer con tu equipo?</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué actividad te gustaría que organizara tu empresa?</p>
+        <div class="vf-opts">
+          {[
+            'Torneo de pádel',
+            'Torneo deportivo (fútbol, vóley, tenis…)',
+            'Senderismo / actividad en naturaleza',
+            'Paddle surf o actividad acuática',
+            'Juegos de equipo',
+            'Risoterapia',
+            'Escape room corporativo',
+            'Yoga / stretching grupal',
+            'Wellness day',
+            'Paintball / aventura',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="actividades" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué formación te gustaría recibir en el futuro?</p>
+        <div class="vf-opts">
+          {[
+            'Inglés aplicado al trabajo',
+            'Inteligencia artificial aplicada al trabajo',
+            'Comunicación con clientes',
+            'Ventas y atención al cliente',
+            'Gestión del estrés',
+            'Liderazgo',
+            'Productividad y gestión del tiempo',
+            'Salud física y prevención de lesiones',
+            'Alimentación saludable',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="formaciones_futuras" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--outline" data-prev="5">← Atrás</button>
+        <button class="btn btn--primary" data-next="5">Siguiente <span class="arrow">→</span></button>
+      </div>
+    </div>
+
+    <!-- ── SECCIÓN 6: EXPERIENCIA GLOBAL ── -->
+    <div class="vf-section" data-section="6">
+      <div class="vf-section__head">
+        <p class="eyebrow">Sección 6 de 6</p>
+        <h2 class="vf-title">Experiencia global</h2>
+        <p class="vf-desc">Último paso. Te lo agradecemos.</p>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Valoración de la experiencia completa</p>
+        <p class="vf-hint">Formación, materiales, extras, organización y todo lo vivido.</p>
+        <div class="vf-scale" data-key="experiencia_global">
+          {[1,2,3,4,5].map((n) => <button class="vf-scale-btn" type="button" data-val={n}>{n}</button>)}
+        </div>
+        <div class="vf-scale-labels"><span>Muy mejorable</span><span>Excelente</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Qué extras te han aportado más valor? <span class="vf-opt-tag">(opcional)</span></p>
+        <div class="vf-opts">
+          {[
+            'Diploma',
+            'Material práctico',
+            'Pack de autocuidado (bandas, pistola, bola…)',
+            'Vídeo / filmmaker',
+            'Dinámicas de grupo',
+            'Cercanía del formador',
+            'No he recibido extras',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="checkbox" name="extras" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Recomendarías esta formación? (0–10)</p>
+        <div class="vf-nps" id="vf-nps">
+          {[0,1,2,3,4,5,6,7,8,9,10].map((n) => (
+            <button class="vf-nps-btn" type="button" data-val={n}>{n}</button>
+          ))}
+        </div>
+        <div class="vf-scale-labels"><span>No la recomendaría</span><span>La recomendaría totalmente</span></div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Déjanos una frase sobre tu experiencia <span class="vf-opt-tag">(opcional)</span></p>
+        <p class="vf-hint">Puede aparecer en nuestros informes o materiales.</p>
+        <textarea id="q_testimonio" placeholder="Tu experiencia en pocas palabras…" rows="3"></textarea>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">¿Autorizas a usar tu comentario?</p>
+        <div class="vf-opts">
+          {[
+            'Sí, de forma anónima',
+            'Sí, con mi nombre',
+            'No',
+          ].map((v) => (
+            <label class="vf-opt-item">
+              <input type="radio" name="autorizacion" value={v} />
+              <span>{v}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div class="vf-card">
+        <p class="vf-q">Nombre y apellidos <span class="vf-opt-tag">(opcional)</span></p>
+        <input type="text" id="q_nombre" placeholder="Tu nombre, si quieres dejarlo" />
+      </div>
+
+      <!-- Privacidad -->
+      <div class="vf-card vf-card--priv">
+        <label class="vf-priv">
+          <input type="checkbox" id="vf_privacidad" required />
+          <span>
+            He leído y acepto el tratamiento de mis datos según la
+            <a href="/privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
+            Los datos se usarán para mejorar las formaciones y podrán incluirse en informes internos de Batmotrópicos.
+          </span>
+        </label>
+      </div>
+
+      <div class="vf-nav">
+        <button class="btn btn--outline" data-prev="6">← Atrás</button>
+        <button class="btn btn--primary" id="vf-submit">Enviar valoración <span class="arrow">→</span></button>
+      </div>
+      <p class="vf-error" id="vf-error" hidden>
+        No se ha podido enviar. Inténtalo de nuevo o contacta con nosotros directamente.
+      </p>
+    </div>
+
+    <!-- ── GRACIAS ── -->
+    <div class="vf-section vf-thanks" data-section="thanks" id="vf-thanks">
+      <div class="vf-thanks__icon">🙌</div>
+      <h2 class="vf-thanks__title">Muchas gracias</h2>
+      <p class="vf-thanks__text">
+        Tu valoración nos ayuda a mejorar cada formación y a seguir cuidando a los equipos que lo dan todo.
+      </p>
+      <div class="card vf-thanks__card">
+        <p style="font-size:14px; color:var(--text-sec); line-height:1.6">
+          <strong style="color:var(--text)">Batmotrópicos · Juan Luis Rodríguez Ávila</strong><br />
+          Bienestar corporativo y fisioterapia<br />
+          <a href="tel:+34640761701" style="color:var(--green); font-weight:600">640 761 701</a>
+          &nbsp;·&nbsp;
+          <a href="mailto:contacto@juanlurodriguez.com" style="color:var(--green); font-weight:600">contacto@juanlurodriguez.com</a>
+        </p>
+      </div>
+      <a href="/" class="btn btn--outline" style="margin-top:24px">Volver al inicio</a>
+    </div>
+
+  </div><!-- /vf-wrap -->
+</BaseLayout>
+
+<style>
+  /* ── Layout ── */
+  .vf-wrap {
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 0 16px 80px;
+  }
+
+  /* ── Progress bar ── */
+  .vf-progress {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 12px 0 10px;
+  }
+  .vf-progress__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .vf-progress__label {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: var(--green);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .vf-progress__track {
+    flex: 1;
+    height: 5px;
+    background: var(--line);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .vf-progress__fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.35s ease;
+    width: 0%;
+  }
+  .vf-progress__count {
+    font-size: 11.5px;
+    color: var(--text-sec);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── Section ── */
+  .vf-section {
+    display: none;
+    animation: vfFadeIn 0.28s ease;
+  }
+  .vf-section.active { display: block; }
+
+  @keyframes vfFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .vf-section__head {
+    padding: 28px 0 8px;
+    margin-bottom: 6px;
+  }
+  .vf-section__head .eyebrow {
+    margin-bottom: 6px;
+  }
+  .vf-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+    margin: 0 0 8px;
+  }
+  .vf-desc {
+    font-size: 14px;
+    color: var(--text-sec);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* ── Cards ── */
+  .vf-card {
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    padding: 18px;
+    margin-bottom: 12px;
+  }
+  .vf-card--priv {
+    background: var(--bg-soft);
+    border-style: dashed;
+  }
+  .vf-q {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text);
+    line-height: 1.4;
+    margin: 0 0 14px;
+  }
+  .vf-opt-tag {
+    font-weight: 400;
+    color: var(--text-sec);
+    font-size: 12px;
+  }
+  .vf-hint {
+    font-size: 12px;
+    color: var(--text-sec);
+    margin: -8px 0 12px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── Inputs ── */
+  .vf-card input[type="text"],
+  .vf-card input[type="date"],
+  .vf-card textarea {
+    width: 100%;
+    font-family: var(--font);
+    font-size: 14px;
+    color: var(--text);
+    padding: 11px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.15s;
+    resize: vertical;
+  }
+  .vf-card input:focus,
+  .vf-card textarea:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+
+  /* ── Option items ── */
+  .vf-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .vf-opt-item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.13s;
+    background: var(--bg-soft);
+    user-select: none;
+  }
+  .vf-opt-item:hover {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .vf-opt-item.selected {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .vf-opt-item input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--green);
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .vf-opt-item span {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  /* ── Scale 1–5 ── */
+  .vf-scale {
+    display: flex;
+    gap: 8px;
+  }
+  .vf-scale-btn {
+    flex: 1;
+    height: 44px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.13s;
+  }
+  .vf-scale-btn:hover {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .vf-scale-btn.selected {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  .vf-scale-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  .vf-scale-labels span {
+    font-size: 11px;
+    color: var(--text-sec);
+  }
+
+  /* ── Subgroup (formador) ── */
+  .vf-subgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .vf-subgroup__label {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    margin: 0 0 6px;
+  }
+
+  /* ── NPS ── */
+  .vf-nps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 6px;
+  }
+  .vf-nps-btn {
+    width: 42px;
+    height: 42px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
+    font-family: var(--font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.13s;
+  }
+  .vf-nps-btn:hover {
+    border-color: var(--green);
+    background: #e8f2e8;
+  }
+  .vf-nps-btn.selected {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  /* ── Privacy ── */
+  .vf-priv {
+    display: flex;
+    gap: 11px;
+    align-items: flex-start;
+    cursor: pointer;
+  }
+  .vf-priv input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--green);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .vf-priv span {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    line-height: 1.55;
+  }
+  .vf-priv a {
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* ── Nav ── */
+  .vf-nav {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0 8px;
+  }
+  .vf-nav .btn--primary { flex: 1; }
+
+  /* ── Error ── */
+  .vf-error {
+    color: #b00020;
+    font-size: 13.5px;
+    margin: 6px 0 0;
+  }
+
+  /* ── Thanks ── */
+  .vf-thanks {
+    text-align: center;
+    padding: 48px 20px 24px;
+  }
+  .vf-thanks__icon {
+    font-size: 52px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .vf-thanks__title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green);
+    margin: 0 0 12px;
+  }
+  .vf-thanks__text {
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.65;
+    max-width: 400px;
+    margin: 0 auto 24px;
+  }
+  .vf-thanks__card {
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 18px;
+    text-align: left;
+  }
+</style>
+
+<script is:inline>
+(function () {
+  // ── CONFIGURA AQUÍ EL WEBHOOK (Make / n8n → Airtable "Valoraciones post-formación") ──
+  // Pega la URL del webhook. Si está vacía, modo demo: muestra éxito sin enviar.
+  const POST_FORMACION_WEBHOOK_URL = '';
+
+  const TOTAL = 6;
+  const LABELS = [
+    'Datos básicos',
+    'Valoración de la formación',
+    'Impacto y mejora',
+    'Necesidades del equipo',
+    'Próximas actividades',
+    'Experiencia y testimonio',
+  ];
+
+  const scaleValues = {};
+  let npsValue = null;
+  let currentSection = 1;
+
+  function setProgress(n) {
+    const pct = ((n - 1) / TOTAL) * 100;
+    document.getElementById('vf-fill').style.width = pct + '%';
+    document.getElementById('vf-label').textContent = LABELS[n - 1] || '';
+    document.getElementById('vf-count').textContent = n + ' / ' + TOTAL;
+  }
+
+  function showSection(n) {
+    document.querySelectorAll('.vf-section').forEach(function (s) {
+      s.classList.remove('active');
+    });
+    var target = document.querySelector('[data-section="' + n + '"]');
+    if (target) {
+      target.classList.add('active');
+      currentSection = n;
+      if (n !== 'thanks') setProgress(n);
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Scale buttons 1–5
+  document.querySelectorAll('.vf-scale').forEach(function (scale) {
+    scale.addEventListener('click', function (e) {
+      var btn = e.target.closest('.vf-scale-btn');
+      if (!btn) return;
+      var key = scale.dataset.key;
+      var val = parseInt(btn.dataset.val, 10);
+      scale.querySelectorAll('.vf-scale-btn').forEach(function (b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      scaleValues[key] = val;
+    });
+  });
+
+  // NPS buttons
+  var npsContainer = document.getElementById('vf-nps');
+  if (npsContainer) {
+    npsContainer.addEventListener('click', function (e) {
+      var btn = e.target.closest('.vf-nps-btn');
+      if (!btn) return;
+      npsContainer.querySelectorAll('.vf-nps-btn').forEach(function (b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+      npsValue = parseInt(btn.dataset.val, 10);
+    });
+  }
+
+  // Radio / checkbox visual highlight
+  document.addEventListener('change', function (e) {
+    if (e.target.type === 'radio') {
+      var name = e.target.name;
+      document.querySelectorAll('input[name="' + name + '"]').forEach(function (inp) {
+        inp.closest('.vf-opt-item').classList.remove('selected');
+      });
+      e.target.closest('.vf-opt-item').classList.add('selected');
+    }
+    if (e.target.type === 'checkbox') {
+      if (e.target.closest('.vf-opt-item')) {
+        e.target.closest('.vf-opt-item').classList.toggle('selected', e.target.checked);
+      }
+    }
+  });
+
+  // Next / Prev buttons
+  document.addEventListener('click', function (e) {
+    var nextBtn = e.target.closest('[data-next]');
+    var prevBtn = e.target.closest('[data-prev]');
+    if (nextBtn) {
+      var from = parseInt(nextBtn.dataset.next, 10);
+      if (from < TOTAL) showSection(from + 1);
+    }
+    if (prevBtn) {
+      var from2 = parseInt(prevBtn.dataset.prev, 10);
+      if (from2 > 1) showSection(from2 - 1);
+    }
+  });
+
+  // Submit
+  var submitBtn = document.getElementById('vf-submit');
+  var errorEl = document.getElementById('vf-error');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', async function () {
+      if (errorEl) errorEl.hidden = true;
+
+      var privCheck = document.getElementById('vf_privacidad');
+      if (privCheck && !privCheck.checked) {
+        privCheck.reportValidity();
+        return;
+      }
+
+      function getRadio(name) {
+        var el = document.querySelector('input[name="' + name + '"]:checked');
+        return el ? el.value : '';
+      }
+      function getCheckboxes(name) {
+        return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(function (i) { return i.value; });
+      }
+      function getField(id) {
+        var el = document.getElementById(id);
+        return el ? (el.value || '') : '';
+      }
+
+      var payload = {
+        tipo: 'post-formacion',
+        empresa: getField('q_empresa'),
+        formacion: getRadio('formacion'),
+        fecha: getField('q_fecha'),
+        valoracion: {
+          general: scaleValues['general'] || null,
+          utilidad: scaleValues['utilidad'] || null,
+          contenido: scaleValues['contenido'] || null,
+          dinamismo: scaleValues['dinamismo'] || null,
+          formador: {
+            claridad: scaleValues['form_claridad'] || null,
+            dominio: scaleValues['form_dominio'] || null,
+            cercania: scaleValues['form_cercania'] || null,
+            practico: scaleValues['form_practico'] || null,
+          },
+        },
+        aplicabilidad: getRadio('aplicabilidad'),
+        impacto: getCheckboxes('impacto'),
+        mas_util: getField('q_mas_util'),
+        en_falta: getField('q_en_falta'),
+        mejora: getField('q_mejora'),
+        necesidades: getCheckboxes('necesidades'),
+        servicios_recurrentes: getCheckboxes('servicios_recurrentes'),
+        fisio_inco: getRadio('fisio_inco'),
+        actividades: getCheckboxes('actividades'),
+        formaciones_futuras: getCheckboxes('formaciones_futuras'),
+        experiencia_global: scaleValues['experiencia_global'] || null,
+        extras: getCheckboxes('extras'),
+        nps: npsValue,
+        testimonio: getField('q_testimonio'),
+        autorizacion: getRadio('autorizacion'),
+        nombre: getField('q_nombre'),
+        privacidad: privCheck ? privCheck.checked : false,
+        origen: 'web-batmotropicos',
+        pagina: window.location.pathname,
+        enviadoEn: new Date().toISOString(),
+      };
+
+      if (!POST_FORMACION_WEBHOOK_URL) {
+        showThanks();
+        return;
+      }
+
+      try {
+        submitBtn.setAttribute('disabled', '');
+        var res = await fetch(POST_FORMACION_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        showThanks();
+      } catch (err) {
+        console.error('Envío valoración post-formación:', err);
+        if (errorEl) errorEl.hidden = false;
+      } finally {
+        submitBtn.removeAttribute('disabled');
+      }
+    });
+  }
+
+  function showThanks() {
+    document.querySelectorAll('.vf-section').forEach(function (s) { s.classList.remove('active'); });
+    var thanks = document.getElementById('vf-thanks');
+    if (thanks) {
+      thanks.classList.add('active');
+    }
+    var progress = document.getElementById('vf-progress');
+    if (progress) progress.style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Init
+  setProgress(1);
+})();
+</script>
