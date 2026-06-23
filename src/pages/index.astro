@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
-import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
@@ -357,19 +356,15 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
         </p>
       </div>
       <div class="reconoc__media">
-        <figure class="plaque" aria-label="Placa de reconocimiento interno de compromiso con el bienestar laboral">
-          <span class="plaque__stud plaque__stud--tl" aria-hidden="true"></span>
-          <span class="plaque__stud plaque__stud--tr" aria-hidden="true"></span>
-          <span class="plaque__stud plaque__stud--bl" aria-hidden="true"></span>
-          <span class="plaque__stud plaque__stud--br" aria-hidden="true"></span>
-          <div class="plaque__inner">
-            <span class="plaque__mark" aria-hidden="true"><Icon size={36} /></span>
-            <p class="plaque__eyebrow">Reconocimiento interno</p>
-            <p class="plaque__headline">Empresa comprometida con el bienestar de su equipo</p>
-            <span class="plaque__rule" aria-hidden="true"></span>
-            <p class="plaque__brand">Batmotrópicos · Health Services</p>
-          </div>
-        </figure>
+        <img
+          src="/assets/icons/mockup_placa_empresa_saludable_web.jpg"
+          alt="Placa de metacrilato de Batmotrópicos que reconoce a la empresa por implementar un programa de formación en salud física y mental para sus trabajadores"
+          class="reconoc__plaque-img"
+          width="1800"
+          height="1087"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </div>
   </section>
@@ -1227,94 +1222,14 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     margin-top: 8px !important;
   }
 
-  /* Placa de reconocimiento — mockup metacrilato premium (CSS, sin imagen) */
-  .plaque {
-    position: relative;
-    margin: 0;
+  /* Placa de reconocimiento — imagen real "Empresa Saludable" */
+  .reconoc__plaque-img {
+    display: block;
     width: 100%;
-    max-width: 420px;
-    aspect-ratio: 7 / 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 34px 30px;
-    border-radius: 14px;
-    border: 1px solid rgba(26, 92, 26, 0.18);
-    background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(244, 246, 244, 0.7) 55%, rgba(232, 242, 232, 0.6)),
-      linear-gradient(135deg, rgba(26, 92, 26, 0.12), rgba(30, 122, 30, 0.03));
-    box-shadow:
-      0 22px 50px rgba(18, 63, 18, 0.18),
-      0 2px 6px rgba(0, 0, 0, 0.06),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9),
-      inset 0 0 0 6px rgba(255, 255, 255, 0.4);
-    backdrop-filter: blur(2px);
-  }
-  /* Reflejo diagonal del metacrilato */
-  .plaque::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: linear-gradient(118deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0) 40%);
-    pointer-events: none;
-  }
-  /* Tornillos / separadores de montaje */
-  .plaque__stud {
-    position: absolute;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: radial-gradient(circle at 34% 30%, #fbfcfb, #c1c5c1 68%, #8d928d);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), inset 0 0 1px rgba(0, 0, 0, 0.3);
-  }
-  .plaque__stud--tl { top: 13px; left: 13px; }
-  .plaque__stud--tr { top: 13px; right: 13px; }
-  .plaque__stud--bl { bottom: 13px; left: 13px; }
-  .plaque__stud--br { bottom: 13px; right: 13px; }
-  .plaque__inner {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 11px;
-  }
-  .plaque__mark {
-    opacity: 0.92;
-    margin-bottom: 2px;
-  }
-  .plaque__eyebrow {
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--green-accent);
-    margin: 0;
-  }
-  .plaque__headline {
-    font-weight: 700;
-    font-size: 17px;
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    color: var(--green-dark);
-    margin: 0;
-    max-width: 300px;
-  }
-  .plaque__rule {
-    width: 42px;
-    height: 2px;
-    border-radius: 2px;
-    background: var(--green);
-    opacity: 0.55;
-  }
-  .plaque__brand {
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--text-sec);
-    margin: 0;
+    max-width: 480px;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
   }
 
   /* Juan Luis teaser */

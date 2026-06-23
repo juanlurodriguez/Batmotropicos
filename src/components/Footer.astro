@@ -26,8 +26,23 @@ const year = new Date().getFullYear();
         <span aria-hidden="true"> · </span>
         <a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a>
       </div>
-      <div>
-        <a href={contacto.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <div class="ft__social">
+        <a
+          href={contacto.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="ft__linkedin"
+          aria-label={`LinkedIn de ${contacto.nombre}`}
+        >
+          <img
+            src="/assets/icons/linkedin.png"
+            alt="LinkedIn"
+            width="2212"
+            height="540"
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
       </div>
     </div>
   </div>
@@ -97,6 +112,24 @@ const year = new Date().getFullYear();
   }
   .ft__contact a:hover {
     color: var(--green);
+  }
+  .ft__social {
+    margin-top: 8px;
+  }
+  .ft__linkedin {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 6px;
+    transition: opacity 0.16s ease, background 0.16s ease;
+  }
+  .ft__linkedin img {
+    display: block;
+    height: 18px;
+    width: auto;
+  }
+  .ft__linkedin:hover {
+    opacity: 0.8;
   }
   .ft__legal {
     display: flex;
