@@ -123,8 +123,75 @@ export const catalogo: CatalogCategory[] = [
     ],
   },
   {
-    id: 'programas',
+    id: 'salud-practica',
     letter: 'F',
+    tab: 'Salud práctica',
+    title: 'Salud práctica y prevención en la empresa',
+    desc: 'Formaciones prácticas para mejorar la seguridad, el autocuidado y la cultura sanitaria dentro de los equipos. Programas de salud preventiva y respuesta básica que ayudan a actuar mejor ante situaciones cotidianas, reforzar el autocuidado y construir una cultura corporativa más segura, saludable y responsable. Adaptables al sector, al tamaño del equipo, a los riesgos habituales del puesto y a las necesidades de cada empresa.',
+    bonif: 'Bonificable según crédito y requisitos',
+    // ──────────────────────────────────────────────────────────────
+    // NOTA INTERNA (no visible en la web). Las acciones de esta área
+    // se agrupan internamente en tres bloques. Las etiquetas y las
+    // descripciones largas se reservan para propuestas comerciales;
+    // no se muestran en la tarjeta para mantener la homogeneidad del
+    // catálogo. Toda la oferta se presenta bajo la marca Batmotrópicos.
+    //
+    // Bloque 1 · Urgencias y primeros auxilios
+    //   - RCP y manejo del DEA → actuar ante una parada cardiorrespiratoria
+    //     con maniobras básicas de RCP y uso del desfibrilador externo
+    //     automático. Tags: Primeros auxilios · Emergencias · DEA · Seguridad laboral
+    //   - Primeros auxilios: los primeros 5 minutos → atragantamientos,
+    //     desmayos, lipotimias, convulsiones y emergencias básicas.
+    //     Tags: Emergencias laborales · Respuesta inmediata · Seguridad · Prevención
+    //   - Cuidado de heridas y quemaduras → heridas leves, cortes, rozaduras
+    //     y quemaduras habituales. Tags: Heridas · Quemaduras · Botiquín · Actuación básica
+    //   - Taller de vendajes funcionales → vendajes para proteger articulaciones
+    //     y actuar ante torceduras y lesiones leves.
+    //     Tags: Vendajes · Lesiones leves · Prevención musculoesquelética · Autocuidado
+    //
+    // Bloque 2 · Constantes vitales y autocuidado
+    //   - Taller de constantes vitales: entiende tu cuerpo → medir e interpretar
+    //     de forma básica frecuencia cardiaca, tensión, saturación de oxígeno…
+    //     Tags: Constantes vitales · Autocuidado · Salud preventiva · Educación sanitaria
+    //   - Salud cardiovascular: conoce tus números → presión, colesterol, azúcar,
+    //     alimentación, ejercicio y factores de riesgo.
+    //     Tags: Salud cardiovascular · Prevención · Hábitos saludables · Rendimiento
+    //   - Educación farmacéutica y botiquín en la empresa → uso responsable de
+    //     medicamentos y gestión del botiquín. Tags: Botiquín · Medicación responsable · Seguridad · Cultura sanitaria
+    //   - Higiene del sueño para el rendimiento laboral → calidad del descanso y
+    //     su impacto en energía, concentración y rendimiento.
+    //     Tags: Descanso · Rendimiento · Salud mental · Hábitos saludables
+    //
+    // Bloque 3 · Inclusión sanitaria y patologías en la empresa
+    //   - El compañero medicado: seguridad y apoyo → actuar con prudencia y
+    //     respeto ante situaciones médicas, sin invadir la privacidad.
+    //     Tags: Inclusión · Seguridad · Apoyo · Cultura sanitaria
+    //   - Alfabetización sanitaria básica → comprender información médica básica
+    //     y tomar decisiones responsables. Tags: Educación sanitaria · Autocuidado · Prevención · Salud laboral
+    //   - Acompañamiento al paciente oncológico en el entorno laboral →
+    //     sensibilización, empatía, comunicación cuidadosa e inclusión.
+    //     Tags: Inclusión · Sensibilización · Apoyo emocional · Cultura corporativa
+    //
+    // Formación corporativa de prevención, sensibilización y autocuidado.
+    // No constituye asistencia médica, consulta sanitaria ni diagnóstico clínico.
+    // ──────────────────────────────────────────────────────────────
+    items: [
+      { name: 'RCP y manejo del DEA', dur: 'Sesión' },
+      { name: 'Primeros auxilios: los primeros 5 minutos', dur: 'Sesión' },
+      { name: 'Cuidado de heridas y quemaduras', dur: 'Sesión' },
+      { name: 'Taller de vendajes funcionales', dur: 'Sesión' },
+      { name: 'Taller de constantes vitales: entiende tu cuerpo', dur: 'Sesión' },
+      { name: 'Salud cardiovascular: conoce tus números', dur: 'Sesión' },
+      { name: 'Educación farmacéutica y botiquín en la empresa', dur: 'Sesión' },
+      { name: 'Higiene del sueño para el rendimiento laboral', dur: 'Sesión' },
+      { name: 'El compañero medicado: seguridad y apoyo', dur: 'Sesión' },
+      { name: 'Alfabetización sanitaria básica', dur: 'Sesión' },
+      { name: 'Acompañamiento al paciente oncológico en el entorno laboral', dur: 'Sesión' },
+    ],
+  },
+  {
+    id: 'programas',
+    letter: 'G',
     tab: 'Programas',
     title: 'Programas y estructuras de contratación',
     desc: 'Estructuras diseñadas para dar profundidad y continuidad al trabajo de bienestar en la empresa. Desde una acción puntual hasta un programa integral a lo largo del año.',
