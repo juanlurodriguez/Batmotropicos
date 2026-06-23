@@ -190,8 +190,89 @@ export const catalogo: CatalogCategory[] = [
     ],
   },
   {
-    id: 'programas',
+    id: 'socorrismo-acuatica',
     letter: 'G',
+    tab: 'Seguridad acuática',
+    title: 'Socorrismo y seguridad acuática',
+    desc: 'Formaciones orientadas a reforzar la seguridad en espacios acuáticos, instalaciones deportivas, hoteles, piscinas y entornos donde la prevención y la actuación rápida pueden marcar la diferencia. Especialmente indicadas para instalaciones que necesitan cumplir requisitos de seguridad en espacios acuáticos según la normativa aplicable.',
+    bonif: 'Bonificable según crédito y requisitos',
+    // ──────────────────────────────────────────────────────────────
+    // NOTA INTERNA (no visible). Descripciones y etiquetas reservadas
+    // para propuestas comerciales; la tarjeta solo muestra el nombre y
+    // el formato, para mantener la homogeneidad del catálogo. Toda la
+    // oferta se presenta bajo la marca Batmotrópicos.
+    //   - Socorrismo y primeros auxilios acuáticos → prevención, vigilancia
+    //     y actuación ante emergencias en piscina o entorno acuático.
+    //     Tags: Socorrismo · Seguridad acuática · Piscinas · Emergencias
+    //   - Reciclaje y actualización en socorrismo → actualizar conocimientos,
+    //     revisar protocolos y reforzar competencias de rescate y primeros
+    //     auxilios acuáticos. Tags: Reciclaje profesional · Socorrismo · Seguridad · Protocolos
+    //   - Seguridad en piscinas e instalaciones acuáticas → prevención de
+    //     riesgos, organización de espacios y actuación ante incidentes en
+    //     piscinas, hoteles, gimnasios y clubes deportivos.
+    //     Tags: Piscinas · Prevención · Instalaciones acuáticas · Seguridad
+    //   - Primeros auxilios aplicados al entorno acuático → caídas, golpes,
+    //     cortes, atragantamientos, desmayos, ahogamientos y emergencias.
+    //     Tags: Primeros auxilios · Entorno acuático · Emergencias · Prevención
+    //
+    // Prudencia normativa: no se presenta como obligatoria para todas las
+    // empresas; dirigida a instalaciones que deben cumplir requisitos de
+    // seguridad en espacios acuáticos según la normativa aplicable.
+    // ──────────────────────────────────────────────────────────────
+    items: [
+      { name: 'Socorrismo y primeros auxilios acuáticos', dur: 'Jornada' },
+      { name: 'Reciclaje y actualización en socorrismo', dur: 'Sesión' },
+      { name: 'Seguridad en piscinas e instalaciones acuáticas', dur: 'Sesión' },
+      { name: 'Primeros auxilios aplicados al entorno acuático', dur: 'Sesión' },
+    ],
+  },
+  {
+    id: 'bienestar-financiero',
+    letter: 'H',
+    tab: 'Bienestar financiero',
+    title: 'Bienestar financiero en la empresa',
+    desc: 'El bienestar de los equipos no depende solo de la salud física o mental: cómo cada persona gestiona su economía, entiende su nómina y afronta sus decisiones financieras influye en su tranquilidad, concentración y rendimiento. Formación de carácter educativo para reducir el estrés económico y mejorar la organización personal. No constituye asesoramiento financiero, fiscal ni de inversión personalizado.',
+    bonif: 'Bonificable según crédito y requisitos',
+    // ──────────────────────────────────────────────────────────────
+    // NOTA INTERNA (no visible). Enfoque estrictamente educativo: educación
+    // financiera, reducción del estrés económico, organización personal,
+    // prevención de errores y bienestar laboral. NO asesoramiento personalizado,
+    // NO recomendación de productos ni inversiones, NO promesas de rentabilidad.
+    //   - Bienestar financiero para empleados → mejorar la relación con la
+    //     economía personal, reducir estrés financiero y ganar claridad.
+    //     Tags: Bienestar financiero · Educación financiera · Salud mental · Rendimiento
+    //   - Educación financiera básica en la empresa → ingresos, gastos, ahorro,
+    //     deuda, inflación, planificación y decisiones responsables.
+    //     Tags: Finanzas personales · Ahorro · Planificación · Autocuidado
+    //   - Gestión del estrés financiero → cómo las preocupaciones económicas
+    //     afectan al bienestar y al desempeño; herramientas para recuperar control.
+    //     Tags: Estrés financiero · Salud mental · Productividad · Autocontrol
+    //   - Entiende tu nómina y organiza tu economía → nómina, retenciones, neto,
+    //     gastos recurrentes y organización mensual.
+    //     Tags: Nómina · Finanzas personales · Organización económica · Educación laboral
+    //   - Ahorro, deuda y planificación financiera saludable → presupuesto, ahorro
+    //     progresivo, control de deuda y objetivos económicos.
+    //     Tags: Ahorro · Deuda · Presupuesto · Hábitos financieros
+    //   - Prevención de fraudes y decisiones financieras responsables → riesgos
+    //     habituales, fraudes, decisiones impulsivas y errores comunes.
+    //     Tags: Prevención de fraudes · Finanzas responsables · Seguridad económica · Educación financiera
+    //
+    // Texto prudente disponible para fichas/propuestas: "Contenido formativo de
+    // carácter educativo. No constituye asesoramiento financiero, fiscal ni de
+    // inversión personalizado."
+    // ──────────────────────────────────────────────────────────────
+    items: [
+      { name: 'Bienestar financiero para empleados', dur: 'Sesión' },
+      { name: 'Educación financiera básica en la empresa', dur: 'Sesión' },
+      { name: 'Gestión del estrés financiero', dur: 'Sesión' },
+      { name: 'Entiende tu nómina y organiza tu economía', dur: 'Sesión' },
+      { name: 'Ahorro, deuda y planificación financiera saludable', dur: 'Sesión' },
+      { name: 'Prevención de fraudes y decisiones financieras responsables', dur: 'Sesión' },
+    ],
+  },
+  {
+    id: 'programas',
+    letter: 'I',
     tab: 'Programas',
     title: 'Programas y estructuras de contratación',
     desc: 'Estructuras diseñadas para dar profundidad y continuidad al trabajo de bienestar en la empresa. Desde una acción puntual hasta un programa integral a lo largo del año.',
