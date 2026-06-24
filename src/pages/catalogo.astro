@@ -5,22 +5,122 @@ import CTASection from '../components/CTASection.astro';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
 const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
+
+// Selector de necesidad → lleva al cliente al bloque que resuelve su problema.
+// [etiqueta, descripción corta, destino (ancla o página), icono SVG interior]
+const needs: [string, string, string, string][] = [
+  [
+    'Reducir molestias físicas y fatiga',
+    'Dolor de espalda, cuello, posturas mantenidas o carga física.',
+    '#salud-fisica',
+    '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+  ],
+  [
+    'Bajar el estrés y el desgaste',
+    'Presión, cansancio mental y agotamiento del equipo.',
+    '#salud-mental',
+    '<path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M17.7 7.7A2.5 2.5 0 1 1 19.5 12H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>',
+  ],
+  [
+    'Mejorar el clima y unir al equipo',
+    'Comunicación, cohesión, pertenencia y conexión.',
+    '#team-building',
+    '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>',
+  ],
+  [
+    'Reforzar la seguridad y la prevención',
+    'Primeros auxilios, RCP, salud práctica y entornos seguros.',
+    '#salud-practica',
+    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  ],
+  [
+    'Aprovechar el crédito FUNDAE',
+    'Saber qué formación puede bonificarse y cómo.',
+    '/fundae',
+    '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
+  ],
+  [
+    'Crear un plan anual de bienestar',
+    'Una estrategia continua, no una acción aislada.',
+    '#programas',
+    '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  ],
+];
+
+// Soluciones por objetivo → paquetes orientados a una meta concreta.
+// [nombre, para quién, ancla del área relacionada]
+const solutions: [string, string, string][] = [
+  ['Plan Salud Física Laboral', 'Para equipos con dolor, fatiga, posturas mantenidas o carga física.', '#salud-fisica'],
+  ['Plan Estrés y Rendimiento', 'Para equipos con presión, cansancio mental o problemas de comunicación.', '#salud-mental'],
+  ['Plan Cohesión y Cultura', 'Para empresas que quieren mejorar clima, pertenencia y conexión.', '#team-building'],
+  ['Plan Bienestar Anual', 'Para empresas que quieren una estrategia continua, no una acción aislada.', '#programas'],
+];
 ---
 
 <BaseLayout
-  title="Catálogo de formación y bienestar"
-  description="Catálogo de formación bonificable FUNDAE para empresas: salud física y mental, primeros auxilios y RCP/DEA, salud preventiva y autocuidado, socorrismo y seguridad acuática en hoteles y piscinas, bienestar financiero y educación financiera para empleados, formación técnica obligatoria, team building y wellness in company."
+  title="Catálogo de soluciones de bienestar para empresas"
+  description="Mapa de soluciones de bienestar corporativo y formación bonificable FUNDAE para empresas: salud física y mental, primeros auxilios y RCP/DEA, salud preventiva, socorrismo, bienestar financiero, formación técnica obligatoria, team building y wellness in company."
   path="/catalogo"
 >
   <section class="section">
     <div class="wrap">
-      <div class="reveal" style="max-width:760px">
+      <!-- Hero -->
+      <div class="reveal" style="max-width:780px">
         <p class="eyebrow">Catálogo</p>
-        <h1 class="h2" style="font-size:38px">Todo lo que necesita un equipo, en un catálogo</h1>
+        <h1 class="h2" style="font-size:38px">Encuentra la acción de bienestar que encaja con tu equipo</h1>
         <p class="lead">
-          {totalItems} acciones de formación, bienestar, cohesión y servicios wellness organizadas
-          por áreas. Busca una acción concreta o explora por categoría.
+          No es un listado para leer entero. Dinos qué necesita tu equipo y te llevamos directo a lo
+          que encaja — o explora las {totalItems} acciones organizadas por área.
         </p>
+      </div>
+
+      <div data-browse>
+        <!-- 1 · Selector de necesidad -->
+        <div class="reveal" style="margin-top:46px">
+          <h2 class="h2 block-title">¿Qué necesita ahora tu equipo?</h2>
+          <p class="block-sub">Elige el punto de partida y te llevamos a las acciones que encajan.</p>
+        </div>
+        <div class="needs reveal">
+          {
+            needs.map(([label, desc, href, icon]) => (
+              <a href={href} class="need-card">
+                <span class="need-card__ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icon} />
+                </span>
+                <span class="need-card__label">{label}</span>
+                <span class="need-card__desc">{desc}</span>
+                <span class="need-card__arrow" aria-hidden="true">→</span>
+              </a>
+            ))
+          }
+        </div>
+
+        <!-- 2 · Soluciones por objetivo -->
+        <div class="reveal" style="margin-top:52px">
+          <h2 class="h2 block-title">Soluciones por objetivo</h2>
+          <p class="block-sub">Paquetes pensados para una meta concreta. Los ajustamos a tu equipo en la propuesta.</p>
+        </div>
+        <div class="sols reveal">
+          {
+            solutions.map(([name, who, anchor]) => (
+              <div class="sol-card">
+                <span class="sol-card__tag">Solución</span>
+                <h3 class="sol-card__name">{name}</h3>
+                <p class="sol-card__desc">{who}</p>
+                <div class="sol-card__cta">
+                  <a href="/contacto" class="btn btn--primary btn--sm">Solicitar propuesta <span class="arrow">→</span></a>
+                  <a href={anchor} class="sol-card__link">Ver acciones</a>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- 3 · Catálogo completo por áreas -->
+      <div class="reveal" style="margin-top:56px">
+        <h2 class="h2 block-title">Explora el catálogo completo</h2>
+        <p class="block-sub">{totalItems} acciones por área. Busca una concreta o salta a una categoría.</p>
       </div>
 
       <!-- Buscador -->
@@ -59,21 +159,170 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
       </div>
 
       <p class="note reveal" style="margin-top:24px; max-width:740px">{BONIF_NOTE}</p>
+      <p class="reveal" style="margin-top:10px">
+        <a href="/fundae" class="cta-inline">¿Quieres saber qué parte puede bonificarse? Revisar FUNDAE <span class="arrow">→</span></a>
+      </p>
     </div>
   </section>
 
   <CTASection
-    eyebrow="¿No sabes qué elegir?"
-    title="Empieza por el Diagnóstico 360º"
+    eyebrow="No elijas a ciegas"
+    title="Empezamos con un diagnóstico 360º"
     text="Detectamos las prioridades reales del equipo y te proponemos un plan a medida combinando las áreas que mejor encajen."
   />
 </BaseLayout>
 
 <style>
+  /* Encabezados de bloque */
+  .block-title {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  .block-sub {
+    font-size: 15px;
+    color: var(--text-sec);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 640px;
+  }
+
+  /* 1 · Selector de necesidad */
+  .needs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 20px;
+  }
+  .need-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 22px 20px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+  }
+  .need-card:hover {
+    border-color: var(--green);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+  .need-card__ico {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .need-card__ico svg {
+    width: 22px;
+    height: 22px;
+  }
+  .need-card__label {
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .need-card__desc {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.5;
+  }
+  .need-card__arrow {
+    position: absolute;
+    top: 22px;
+    right: 20px;
+    color: var(--green);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+  .need-card:hover .need-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* 2 · Soluciones por objetivo */
+  .sols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .sol-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 26px 24px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .sol-card__tag {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+  }
+  .sol-card__name {
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .sol-card__desc {
+    font-size: 14.5px;
+    color: var(--text-sec);
+    line-height: 1.6;
+    margin: 0;
+    flex-grow: 1;
+  }
+  .sol-card__cta {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .sol-card__link {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .sol-card__link:hover {
+    text-decoration: underline;
+  }
+
+  [data-browse][hidden] {
+    display: none;
+  }
+
+  /* CTA contextual en línea */
+  .cta-inline {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .cta-inline:hover {
+    text-decoration: underline;
+  }
+
+  /* Buscador */
   .search {
     position: relative;
     max-width: 440px;
-    margin-top: 30px;
+    margin-top: 20px;
     color: var(--text-sec);
   }
   .search svg {
@@ -90,7 +339,7 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
     width: 100%;
     padding: 12px 14px 12px 42px;
     border: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 7px;
     background: #fff;
     outline: none;
   }
@@ -102,7 +351,7 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 22px;
+    margin-top: 18px;
   }
   .chip {
     font-weight: 500;
@@ -125,7 +374,7 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
   }
 
   .cats {
-    margin-top: 30px;
+    margin-top: 28px;
     display: flex;
     flex-direction: column;
     gap: 24px;
@@ -136,11 +385,37 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
   .cats__item[hidden] {
     display: none;
   }
+  .cats__item:target {
+    animation: catFlash 1.6s ease;
+  }
+  @keyframes catFlash {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(26, 92, 26, 0); }
+    20% { box-shadow: 0 0 0 3px rgba(26, 92, 26, 0.18); }
+  }
 
   .search-empty {
     margin-top: 24px;
     font-size: 15px;
     color: var(--text-sec);
+  }
+
+  /* Anclas de selector y soluciones también respetan el header sticky */
+  [id] { scroll-margin-top: 90px; }
+
+  @media (min-width: 640px) {
+    .needs {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 760px) {
+    .sols {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (min-width: 980px) {
+    .needs {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
   }
 </style>
 
@@ -149,9 +424,12 @@ const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
     const input = document.getElementById('catalog-search');
     const cats = Array.from(document.querySelectorAll('[data-category]'));
     const empty = document.querySelector('[data-empty]');
+    const browse = document.querySelector('[data-browse]');
     if (!input) return;
     input.addEventListener('input', function () {
       const q = input.value.trim().toLowerCase();
+      // Mientras se busca, ocultamos el selector y las soluciones para centrar el foco.
+      if (browse) browse.hidden = !!q;
       let visible = 0;
       cats.forEach(function (cat) {
         const match = !q || (cat.getAttribute('data-text') || '').includes(q);
