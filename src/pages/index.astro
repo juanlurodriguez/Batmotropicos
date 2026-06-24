@@ -1264,16 +1264,18 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
   }
   .jl-teaser__media {
     width: 100%;
-    height: 280px;
+    max-width: 360px;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border-radius: 6px;
+    border-radius: 10px;
+    margin: 0 auto;
   }
   .jl-teaser__img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center top;
+    object-position: center 22%;
   }
 
   /* Desktop 2-col for real-block and reconocimiento */
@@ -1317,9 +1319,11 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
       gap: 56px;
     }
     .jl-teaser__media {
-      width: 320px;
-      height: 360px;
+      width: 360px;
+      max-width: 360px;
+      aspect-ratio: 4 / 5;
       flex-shrink: 0;
+      margin: 0;
     }
     .jl-teaser__body {
       flex: 1;
