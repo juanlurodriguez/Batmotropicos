@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
-import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 
 const steps = [
@@ -152,16 +151,21 @@ const steps = [
           laboral o experiencias de cohesión.
         </p>
         <p class="note" style="margin:0 0 24px; max-width:520px">
-          Reconocimiento interno de compromiso con el bienestar laboral. No constituye una
-          certificación oficial externa.
+          Muchas de estas acciones pueden realizarse a través del crédito formativo FUNDAE, siempre
+          sujeto al crédito disponible y al cumplimiento de los requisitos aplicables.
         </p>
         <a href="/contacto" class="btn btn--primary">Implantar un programa <span class="arrow">→</span></a>
       </div>
-      <div class="reveal card card--accent recog">
-        <div class="recog__mark">
-          <Icon size={64} />
-        </div>
-        <span class="recog__label">Empresa Saludable · Batmotrópicos</span>
+      <div class="reveal recog">
+        <img
+          src="/assets/icons/mockup_placa_empresa_saludable_web.jpg"
+          alt="Placa Empresa Saludable Batmotrópicos para empresas que realizan formación en bienestar corporativo."
+          class="recog__img"
+          width="1800"
+          height="1087"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </div>
   </section>
@@ -260,28 +264,17 @@ const steps = [
   }
 
   .recog {
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-    text-align: center;
-  }
-  .recog__mark {
-    width: 120px;
-    height: 120px;
-    border-radius: 120px;
-    border: 2px solid var(--green);
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .recog__label {
-    font-weight: 600;
-    font-size: 12.5px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--green);
+  .recog__img {
+    display: block;
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
   }
 
   /* Juan Luis */
