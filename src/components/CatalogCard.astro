@@ -4,12 +4,28 @@ import { EXTRA_NOTE } from '../data/teamBuilding';
 
 interface Props {
   category: CatalogCategory;
+  /** Abrir el acordeón por defecto (la primera área). */
+  open?: boolean;
 }
-const { category } = Astro.props;
+const { category, open = false } = Astro.props;
+
+// Etiqueta corta de tipo de área (no inventa nada: deriva del id de la categoría).
+const KIND: Record<string, string> = {
+  'salud-fisica': 'Formación',
+  'salud-mental': 'Formación',
+  'tecnica-obligatoria': 'Formación',
+  'salud-practica': 'Formación',
+  'socorrismo-acuatica': 'Formación',
+  'bienestar-financiero': 'Formación',
+  'team-building': 'Team building',
+  'wellness-in-company': 'Wellness',
+  'programas': 'Programas',
+};
+const kind = KIND[category.id] ?? 'Formación';
 ---
 
-<article class="cat card card--accent">
-  <header class="cat__head">
+<details class="cat card card--accent" open={open}>
+  <summary class="cat__head">
     <div class="cat__heading">
       <span class="cat__letter" aria-hidden="true">{category.letter}</span>
       <div>
@@ -17,45 +33,66 @@ const { category } = Astro.props;
         <p class="cat__desc">{category.desc}</p>
       </div>
     </div>
-    <span class="bonif-badge">{category.bonif}</span>
-  </header>
+    <div class="cat__meta">
+      <span class="cat__kind">{kind}</span>
+      <span class="bonif-badge">{category.bonif}</span>
+      <span class="cat__chevron" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+    </div>
+  </summary>
 
-  <ul class="cat__items">
-    {
-      category.items.map((item) => (
-        <li class="cat__item">
-          <div class="cat__item-main">
-            <span class="cat__item-name">{item.name}</span>
-            {item.note && <span class="cat__item-note">{item.note}</span>}
-            {item.extra && <span class="cat__item-extra">{EXTRA_NOTE}</span>}
-          </div>
-          {item.dur && <span class="cat__item-dur">{item.dur}</span>}
-        </li>
-      ))
-    }
-  </ul>
+  <div class="cat__body">
+    <ul class="cat__items">
+      {
+        category.items.map((item) => (
+          <li class="cat__item">
+            <div class="cat__item-main">
+              <span class="cat__item-name">{item.name}</span>
+              {item.note && <span class="cat__item-note">{item.note}</span>}
+              {item.extra && <span class="cat__item-extra">{EXTRA_NOTE}</span>}
+            </div>
+            {item.dur && <span class="cat__item-dur">{item.dur}</span>}
+          </li>
+        ))
+      }
+    </ul>
 
-  <a href="/contacto" class="btn btn--outline btn--sm cat__cta">
-    Solicitar propuesta de esta área <span class="arrow">→</span>
-  </a>
-</article>
+    <a href="/contacto" class="btn btn--outline btn--sm cat__cta">
+      Solicitar propuesta de esta área <span class="arrow">→</span>
+    </a>
+  </div>
+</details>
 
 <style>
   .cat {
-    padding: 30px 30px 28px;
+    padding: 0;
+    overflow: hidden;
   }
+  /* Cabecera = summary clicable */
   .cat__head {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 18px;
     flex-wrap: wrap;
-    margin-bottom: 18px;
+    padding: 26px 30px;
+    cursor: pointer;
+    list-style: none;
+    transition: background 0.16s ease;
+  }
+  .cat__head::-webkit-details-marker {
+    display: none;
+  }
+  .cat__head:hover {
+    background: var(--surface);
   }
   .cat__heading {
     display: flex;
     gap: 14px;
     align-items: flex-start;
+    flex: 1;
+    min-width: 0;
   }
   .cat__letter {
     flex-shrink: 0;
@@ -84,6 +121,41 @@ const { category } = Astro.props;
     margin: 0;
     max-width: 560px;
   }
+  .cat__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .cat__kind {
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-sec);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 4px 11px;
+    white-space: nowrap;
+  }
+  .cat__chevron {
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+  .cat__chevron svg {
+    width: 20px;
+    height: 20px;
+  }
+  .cat[open] .cat__chevron {
+    transform: rotate(180deg);
+  }
+
+  .cat__body {
+    padding: 0 30px 28px;
+  }
   .cat__items {
     list-style: none;
     margin: 0;
@@ -111,9 +183,6 @@ const { category } = Astro.props;
     color: var(--text);
     line-height: 1.4;
   }
-  .cat__item:hover .cat__item-name {
-    color: var(--green);
-  }
   .cat__item-note {
     font-size: 13px;
     color: var(--text-sec);
@@ -138,11 +207,24 @@ const { category } = Astro.props;
   }
 
   @media (max-width: 720px) {
-    .cat {
-      padding: 24px 20px;
+    .cat__head {
+      padding: 22px 20px;
+    }
+    .cat__body {
+      padding: 0 20px 24px;
     }
     .cat__items {
       grid-template-columns: 1fr;
+    }
+    .cat__desc {
+      font-size: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cat__chevron,
+    .cat__head {
+      transition: none;
     }
   }
 </style>

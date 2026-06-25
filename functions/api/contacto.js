@@ -53,7 +53,9 @@ export async function onRequestPost(context) {
     'Mensaje': String(data.mensaje || '').trim(),
     'Página origen': data.pagina || '',
     'Estado lead': 'Nuevo',
-    'Fuente': 'Web formulario',
+    // Fuente opcional: el formulario normal no la envía (→ "Web formulario");
+    // el diagnóstico del catálogo manda "Quiz catálogo".
+    'Fuente': data.fuente || 'Web formulario',
   };
   // No enviamos claves vacías/undefined (evita errores en campos select).
   for (const k of Object.keys(fields)) {

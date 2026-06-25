@@ -6,35 +6,35 @@ import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
 const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
 
-// Selector de necesidad → lleva al cliente al bloque que resuelve su problema.
+// Selector de necesidad → lleva al cliente a la parte que resuelve su problema.
 // [etiqueta, descripción corta, destino (ancla o página), icono SVG interior]
 const needs: [string, string, string, string][] = [
   [
-    'Reducir molestias físicas y fatiga',
+    'Reducir molestias físicas o fatiga laboral',
     'Dolor de espalda, cuello, posturas mantenidas o carga física.',
     '#salud-fisica',
     '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
   ],
   [
-    'Bajar el estrés y el desgaste',
-    'Presión, cansancio mental y agotamiento del equipo.',
+    'Bajar estrés, presión o desgaste mental',
+    'Tensión sostenida, cansancio mental y agotamiento del equipo.',
     '#salud-mental',
     '<path d="M9.6 4.6A2 2 0 1 1 11 8H2"/><path d="M17.7 7.7A2.5 2.5 0 1 1 19.5 12H2"/><path d="M12.6 19.4A2 2 0 1 0 14 16H2"/>',
   ],
   [
-    'Mejorar el clima y unir al equipo',
-    'Comunicación, cohesión, pertenencia y conexión.',
+    'Mejorar clima, comunicación y cohesión',
+    'No sabes por dónde empezar — te orientamos con un diagnóstico.',
+    '#diagnostico',
+    '<path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5Z"/>',
+  ],
+  [
+    'Activar una jornada de equipo o team building',
+    'Experiencias para conectar, activar y unir al equipo.',
     '#team-building',
     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>',
   ],
   [
-    'Reforzar la seguridad y la prevención',
-    'Primeros auxilios, RCP, salud práctica y entornos seguros.',
-    '#salud-practica',
-    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
-  ],
-  [
-    'Aprovechar el crédito FUNDAE',
+    'Aprovechar el crédito FUNDAE si encaja',
     'Saber qué formación puede bonificarse y cómo.',
     '/fundae',
     '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/>',
@@ -50,40 +50,112 @@ const needs: [string, string, string, string][] = [
 // Soluciones por objetivo → paquetes orientados a una meta concreta.
 // [nombre, para quién, ancla del área relacionada]
 const solutions: [string, string, string][] = [
-  ['Plan Salud Física Laboral', 'Para equipos con dolor, fatiga, posturas mantenidas o carga física.', '#salud-fisica'],
-  ['Plan Estrés y Rendimiento', 'Para equipos con presión, cansancio mental o problemas de comunicación.', '#salud-mental'],
-  ['Plan Cohesión y Cultura', 'Para empresas que quieren mejorar clima, pertenencia y conexión.', '#team-building'],
-  ['Plan Bienestar Anual', 'Para empresas que quieren una estrategia continua, no una acción aislada.', '#programas'],
+  ['Salud Física Laboral', 'Para equipos con molestias, fatiga, posturas mantenidas, carga física o dolor recurrente.', '#salud-fisica'],
+  ['Estrés y Rendimiento', 'Para equipos con presión, cansancio mental, dificultad para desconectar o comunicación mejorable.', '#salud-mental'],
+  ['Cohesión y Cultura', 'Para empresas que quieren mejorar el clima, la pertenencia y la conexión entre personas.', '#team-building'],
+  ['Bienestar Anual', 'Para empresas que no quieren acciones aisladas, sino una estrategia continua durante el año.', '#programas'],
+];
+
+// Diagnóstico interactivo (pasos 1-5; el paso 6 es el contacto).
+const quizSteps: { key: string; multi: boolean; title: string; help: string; options: string[] }[] = [
+  {
+    key: 'preocupacion',
+    multi: false,
+    title: '¿Cuál es la principal preocupación con tu equipo ahora mismo?',
+    help: 'Elige la opción que más se acerque a vuestra situación.',
+    options: [
+      'Molestias físicas, fatiga o dolor recurrente',
+      'Estrés, presión o desgaste mental',
+      'Clima frío o falta de cohesión',
+      'Rotación, desmotivación o falta de pertenencia',
+      'Tenemos crédito FUNDAE sin aprovechar',
+      'No sabemos por dónde empezar',
+    ],
+  },
+  {
+    key: 'senales',
+    multi: true,
+    title: '¿Qué señales estáis viendo?',
+    help: 'Puedes marcar varias.',
+    options: [
+      'Más cansancio del habitual',
+      'Quejas físicas o molestias',
+      'Comunicación interna mejorable',
+      'Equipo poco conectado',
+      'Dificultad para retener talento',
+      'Faltan iniciativas de bienestar',
+      'No hay señales graves, queremos prevenir',
+    ],
+  },
+  {
+    key: 'accion',
+    multi: false,
+    title: '¿Qué tipo de acción crees que encajaría?',
+    help: 'Es una orientación inicial; lo afinamos contigo.',
+    options: [
+      'Formación bonificable',
+      'Jornada de team building',
+      'Servicio recurrente in company',
+      'Plan anual de bienestar',
+      'Algo puntual para empezar',
+      'Necesito orientación',
+    ],
+  },
+  {
+    key: 'participantes',
+    multi: false,
+    title: '¿A cuántas personas afectaría?',
+    help: 'Un número aproximado nos vale.',
+    options: ['1 a 9', '10 a 25', '26 a 50', '51 a 100', 'Más de 100', 'No lo sé todavía'],
+  },
+  {
+    key: 'prioridad',
+    multi: false,
+    title: '¿En qué momento estáis?',
+    help: 'Sin compromiso: nos ayuda a priorizar.',
+    options: [
+      'Queremos activarlo pronto',
+      'Valorarlo este trimestre',
+      'Estamos explorando opciones',
+      'Depende del presupuesto',
+      'Depende de si puede bonificarse',
+    ],
+  },
 ];
 ---
 
 <BaseLayout
   title="Catálogo de soluciones de bienestar para empresas"
-  description="Mapa de soluciones de bienestar corporativo y formación bonificable FUNDAE para empresas: salud física y mental, primeros auxilios y RCP/DEA, salud preventiva, socorrismo, bienestar financiero, formación técnica obligatoria, team building y wellness in company."
+  description="Mapa de soluciones de bienestar corporativo y formación bonificable FUNDAE para empresas: salud física y mental, primeros auxilios y RCP/DEA, salud preventiva, socorrismo, bienestar financiero, formación técnica obligatoria, team building y wellness in company. Haz el diagnóstico y te orientamos."
   path="/catalogo"
 >
   <section class="section">
     <div class="wrap">
       <!-- Hero -->
-      <div class="reveal" style="max-width:780px">
-        <p class="eyebrow">Catálogo</p>
-        <h1 class="h2" style="font-size:38px">Encuentra la acción de bienestar que encaja con tu equipo</h1>
+      <div class="reveal" style="max-width:820px">
+        <p class="eyebrow">Catálogo · Mapa de soluciones</p>
+        <h1 class="h2" style="font-size:38px">Dinos qué le pasa a tu equipo y te ayudamos a elegir</h1>
         <p class="lead">
-          No es un listado para leer entero. Dinos qué necesita tu equipo y te llevamos directo a lo
-          que encaja — o explora las {totalItems} acciones organizadas por área.
+          No hace falta leer las {totalItems} acciones. Parte de la necesidad real del equipo —
+          física, mental, de cohesión o de continuidad— y te llevamos directo a lo que encaja. Y si
+          no lo tienes claro, haz el diagnóstico y te orientamos.
         </p>
+        <div class="hero-cta reveal">
+          <a href="#diagnostico" class="btn btn--primary" data-scroll>Hacer el diagnóstico <span class="arrow">→</span></a>
+          <a href="#explorar" class="btn btn--outline" data-scroll>Explorar el catálogo</a>
+        </div>
       </div>
 
       <div data-browse>
         <!-- 1 · Selector de necesidad -->
-        <div class="reveal" style="margin-top:46px">
+        <div class="reveal" style="margin-top:50px">
           <h2 class="h2 block-title">¿Qué necesita ahora tu equipo?</h2>
-          <p class="block-sub">Elige el punto de partida y te llevamos a las acciones que encajan.</p>
+          <p class="block-sub">Elige el punto de partida y te llevamos a lo que mejor encaja.</p>
         </div>
         <div class="needs reveal">
           {
             needs.map(([label, desc, href, icon]) => (
-              <a href={href} class="need-card">
+              <a href={href} class="need-card" data-scroll>
                 <span class="need-card__ico" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={icon} />
                 </span>
@@ -96,20 +168,20 @@ const solutions: [string, string, string][] = [
         </div>
 
         <!-- 2 · Soluciones por objetivo -->
-        <div class="reveal" style="margin-top:52px">
+        <div class="reveal" style="margin-top:56px">
           <h2 class="h2 block-title">Soluciones por objetivo</h2>
-          <p class="block-sub">Paquetes pensados para una meta concreta. Los ajustamos a tu equipo en la propuesta.</p>
+          <p class="block-sub">Planes pensados para una meta concreta. Los ajustamos a tu equipo en la propuesta.</p>
         </div>
         <div class="sols reveal">
           {
             solutions.map(([name, who, anchor]) => (
               <div class="sol-card">
-                <span class="sol-card__tag">Solución</span>
+                <span class="sol-card__tag">Plan</span>
                 <h3 class="sol-card__name">{name}</h3>
                 <p class="sol-card__desc">{who}</p>
                 <div class="sol-card__cta">
                   <a href="/contacto" class="btn btn--primary btn--sm">Solicitar propuesta <span class="arrow">→</span></a>
-                  <a href={anchor} class="sol-card__link">Ver acciones</a>
+                  <a href={anchor} class="sol-card__link" data-scroll>Ver acciones relacionadas</a>
                 </div>
               </div>
             ))
@@ -117,10 +189,116 @@ const solutions: [string, string, string][] = [
         </div>
       </div>
 
-      <!-- 3 · Catálogo completo por áreas -->
-      <div class="reveal" style="margin-top:56px">
+      <!-- 3 · Diagnóstico comercial interactivo -->
+      <div id="diagnostico" class="dx reveal">
+        <div class="dx__intro">
+          <p class="eyebrow">Diagnóstico en 1 minuto</p>
+          <h2 class="h2 block-title">Cuéntanos cómo está tu equipo y te orientamos</h2>
+          <p class="block-sub">
+            Cinco preguntas rápidas. No hay resultado automático: con tus respuestas preparamos una
+            recomendación personalizada y te contactamos. Sin compromiso.
+          </p>
+        </div>
+
+        <div class="dx__card">
+          <!-- Progreso -->
+          <div class="dx__progress" aria-hidden="true">
+            <div class="dx__progress-fill" id="dx-fill"></div>
+          </div>
+          <p class="dx__count" id="dx-count" aria-live="polite">Paso 1 de 6</p>
+
+          <!-- Pasos 1-5 -->
+          {
+            quizSteps.map((step, i) => (
+              <div class="dx-step" data-step={i + 1} hidden={i !== 0}>
+                <h3 class="dx-step__title">{step.title}</h3>
+                <p class="dx-step__help">{step.help}</p>
+                <div class="dx-opts" data-key={step.key} data-multi={step.multi ? 'true' : 'false'} role="group" aria-label={step.title}>
+                  {step.options.map((opt) => (
+                    <button type="button" class="dx-opt" data-val={opt}>
+                      <span class="dx-opt__tick" aria-hidden="true"></span>
+                      <span>{opt}</span>
+                    </button>
+                  ))}
+                </div>
+                <div class="dx-nav">
+                  {i > 0 && <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>}
+                  <button type="button" class="btn btn--primary btn--sm dx-next" data-next>Siguiente <span class="arrow">→</span></button>
+                </div>
+              </div>
+            ))
+          }
+
+          <!-- Paso 6 · Contacto -->
+          <div class="dx-step" data-step="6" hidden>
+            <h3 class="dx-step__title">¿A dónde te enviamos la recomendación?</h3>
+            <p class="dx-step__help">Te contactamos personalmente para orientarte sobre la opción más adecuada.</p>
+            <form id="dx-form" novalidate>
+              <div class="dx-grid">
+                <div class="dx-field">
+                  <label for="dx-nombre">Nombre</label>
+                  <input type="text" id="dx-nombre" name="nombre" placeholder="Tu nombre" required autocomplete="name" />
+                </div>
+                <div class="dx-field">
+                  <label for="dx-empresa">Empresa</label>
+                  <input type="text" id="dx-empresa" name="empresa" placeholder="Nombre de la empresa" required autocomplete="organization" />
+                </div>
+                <div class="dx-field">
+                  <label for="dx-email">Email</label>
+                  <input type="email" id="dx-email" name="email" placeholder="empresa@correo.com" required autocomplete="email" />
+                </div>
+                <div class="dx-field">
+                  <label for="dx-telefono">Teléfono</label>
+                  <input type="tel" id="dx-telefono" name="telefono" placeholder="600 000 000" required autocomplete="tel" />
+                </div>
+                <div class="dx-field dx-field--full">
+                  <label for="dx-cargo">Cargo o responsabilidad <span class="dx-opt-tag">(opcional)</span></label>
+                  <input type="text" id="dx-cargo" name="cargo" placeholder="Ej. Dirección, RRHH, responsable de equipo" autocomplete="organization-title" />
+                </div>
+                <div class="dx-field dx-field--full">
+                  <label for="dx-mensaje">Mensaje adicional <span class="dx-opt-tag">(opcional)</span></label>
+                  <textarea id="dx-mensaje" name="mensaje" rows="3" placeholder="Algo más que debamos saber sobre el equipo o el momento de la empresa…"></textarea>
+                </div>
+              </div>
+
+              <label class="dx-priv">
+                <input type="checkbox" id="dx-privacidad" name="privacidad" required />
+                <span>
+                  He leído y acepto el tratamiento de mis datos según la
+                  <a href="/privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
+                  Los datos se usarán únicamente para contactar contigo sobre tu consulta.
+                </span>
+              </label>
+
+              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="dx-hp" aria-hidden="true" />
+
+              <div class="dx-nav">
+                <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+                <button type="submit" class="btn btn--primary dx-submit" data-dx-submit>Enviar y recibir recomendación <span class="arrow">→</span></button>
+              </div>
+              <p class="dx-error" data-dx-error hidden>
+                No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
+              </p>
+            </form>
+          </div>
+
+          <!-- Éxito -->
+          <div class="dx-thanks" id="dx-thanks" hidden>
+            <span class="dx-thanks__ico" aria-hidden="true">✓</span>
+            <h3 class="dx-thanks__title">Gracias, lo tenemos</h3>
+            <p class="dx-thanks__text">
+              Hemos recibido tus respuestas. Te contactaremos para orientarte sobre la opción más
+              adecuada para tu equipo, sin compromiso.
+            </p>
+            <a href="/" class="btn btn--outline btn--sm">Volver al inicio</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 · Catálogo completo por áreas -->
+      <div id="explorar" class="reveal" style="margin-top:60px">
         <h2 class="h2 block-title">Explora el catálogo completo</h2>
-        <p class="block-sub">{totalItems} acciones por área. Busca una concreta o salta a una categoría.</p>
+        <p class="block-sub">{totalItems} acciones por área. Despliega la que te interese, busca una concreta o salta a una categoría.</p>
       </div>
 
       <!-- Buscador -->
@@ -140,19 +318,19 @@ const solutions: [string, string, string][] = [
 
       <!-- Chips de categorías -->
       <nav class="chips reveal" aria-label="Categorías del catálogo">
-        {catalogo.map((c) => <a href={`#${c.id}`} class="chip"><span aria-hidden="true">{c.letter}</span> {c.tab}</a>)}
+        {catalogo.map((c) => <a href={`#${c.id}`} class="chip" data-scroll><span aria-hidden="true">{c.letter}</span> {c.tab}</a>)}
       </nav>
 
       <p class="search-empty" data-empty hidden>
         No encontramos acciones para tu búsqueda. Prueba otra palabra o explora por categoría.
       </p>
 
-      <!-- Categorías -->
+      <!-- Categorías (acordeones) -->
       <div class="cats">
         {
-          catalogo.map((c) => (
-            <div id={c.id} class="cats__item reveal" data-category data-text={(c.title + ' ' + c.tab + ' ' + c.items.map((i) => i.name + ' ' + (i.note ?? '')).join(' ')).toLowerCase()}>
-              <CatalogCard category={c} />
+          catalogo.map((c, i) => (
+            <div id={c.id} class="cats__item reveal" data-category data-text={(c.title + ' ' + c.tab + ' ' + c.items.map((it) => it.name + ' ' + (it.note ?? '')).join(' ')).toLowerCase()}>
+              <CatalogCard category={c} open={i === 0} />
             </div>
           ))
         }
@@ -170,20 +348,29 @@ const solutions: [string, string, string][] = [
     title="Empezamos con un diagnóstico 360º"
     text="Detectamos las prioridades reales del equipo y te proponemos un plan a medida combinando las áreas que mejor encajen."
   />
+
+  <!-- CTA sticky (no tapa WhatsApp: desktop abajo-izquierda, móvil sobre la barra) -->
+  <a href="#diagnostico" class="dx-sticky" id="dx-sticky" data-scroll aria-label="Hacer el diagnóstico del catálogo">
+    <span class="dx-sticky__txt">¿No sabes qué elegir?</span>
+    <span class="dx-sticky__btn">Hacer diagnóstico</span>
+  </a>
 </BaseLayout>
 
 <style>
   /* Encabezados de bloque */
-  .block-title {
-    font-size: 24px;
-    margin-bottom: 8px;
-  }
+  .block-title { font-size: 24px; margin-bottom: 8px; }
   .block-sub {
     font-size: 15px;
     color: var(--text-sec);
     line-height: 1.6;
     margin: 0;
-    max-width: 640px;
+    max-width: 660px;
+  }
+  .hero-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 26px;
   }
 
   /* 1 · Selector de necesidad */
@@ -205,238 +392,427 @@ const solutions: [string, string, string][] = [
     text-decoration: none;
     transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
   }
-  .need-card:hover {
+  .need-card:hover,
+  .need-card:focus-visible {
     border-color: var(--green);
     box-shadow: var(--shadow-soft);
     transform: translateY(-2px);
+    outline: none;
   }
   .need-card__ico {
-    width: 44px;
-    height: 44px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: var(--green-soft);
     color: var(--green);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
   }
-  .need-card__ico svg {
-    width: 22px;
-    height: 22px;
-  }
-  .need-card__label {
-    font-weight: 700;
-    font-size: 16px;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .need-card__desc {
-    font-size: 13px;
-    color: var(--text-sec);
-    line-height: 1.5;
-  }
+  .need-card__ico svg { width: 22px; height: 22px; }
+  .need-card__label { font-weight: 700; font-size: 16px; color: var(--text); line-height: 1.3; }
+  .need-card__desc { font-size: 13px; color: var(--text-sec); line-height: 1.5; }
   .need-card__arrow {
-    position: absolute;
-    top: 22px;
-    right: 20px;
-    color: var(--green);
-    opacity: 0;
-    transform: translateX(-4px);
+    position: absolute; top: 22px; right: 20px;
+    color: var(--green); opacity: 0; transform: translateX(-4px);
     transition: opacity 0.16s ease, transform 0.16s ease;
   }
-  .need-card:hover .need-card__arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  .need-card:hover .need-card__arrow,
+  .need-card:focus-visible .need-card__arrow { opacity: 1; transform: translateX(0); }
 
   /* 2 · Soluciones por objetivo */
-  .sols {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin-top: 20px;
-  }
+  .sols { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
   .sol-card {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    display: flex; flex-direction: column; gap: 10px;
     padding: 26px 24px;
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: var(--radius);
   }
-  .sol-card__tag {
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--green-accent);
-  }
-  .sol-card__name {
-    font-weight: 700;
-    font-size: 19px;
-    color: var(--text);
-    margin: 0;
-    line-height: 1.25;
-  }
-  .sol-card__desc {
-    font-size: 14.5px;
-    color: var(--text-sec);
-    line-height: 1.6;
-    margin: 0;
-    flex-grow: 1;
-  }
-  .sol-card__cta {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-top: 6px;
-    flex-wrap: wrap;
-  }
-  .sol-card__link {
-    font-weight: 600;
-    font-size: 13.5px;
-    color: var(--green);
-    text-decoration: none;
-  }
-  .sol-card__link:hover {
-    text-decoration: underline;
-  }
+  .sol-card__tag { font-weight: 600; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--green-accent); }
+  .sol-card__name { font-weight: 700; font-size: 19px; color: var(--text); margin: 0; line-height: 1.25; }
+  .sol-card__desc { font-size: 14.5px; color: var(--text-sec); line-height: 1.6; margin: 0; flex-grow: 1; }
+  .sol-card__cta { display: flex; align-items: center; gap: 18px; margin-top: 6px; flex-wrap: wrap; }
+  .sol-card__link { font-weight: 600; font-size: 13.5px; color: var(--green); text-decoration: none; }
+  .sol-card__link:hover { text-decoration: underline; }
 
-  [data-browse][hidden] {
-    display: none;
-  }
+  [data-browse][hidden] { display: none; }
+  .cta-inline { font-weight: 600; font-size: 14px; color: var(--green); text-decoration: none; }
+  .cta-inline:hover { text-decoration: underline; }
 
-  /* CTA contextual en línea */
-  .cta-inline {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--green);
-    text-decoration: none;
-  }
-  .cta-inline:hover {
-    text-decoration: underline;
-  }
-
-  /* Buscador */
-  .search {
-    position: relative;
-    max-width: 440px;
-    margin-top: 20px;
-    color: var(--text-sec);
-  }
-  .search svg {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-  .search input {
-    font-family: var(--font);
-    font-size: 15px;
-    color: var(--text);
-    width: 100%;
-    padding: 12px 14px 12px 42px;
-    border: 1px solid var(--line);
-    border-radius: 7px;
+  /* 3 · Diagnóstico interactivo */
+  .dx { margin-top: 60px; }
+  .dx__intro { max-width: 680px; margin-bottom: 22px; }
+  .dx__card {
     background: #fff;
-    outline: none;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--green);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 28px 28px 26px;
+    max-width: 720px;
   }
-  .search input:focus {
-    border-color: var(--green);
+  .dx__progress { height: 5px; background: var(--line); border-radius: 5px; overflow: hidden; }
+  .dx__progress-fill {
+    height: 100%; width: 16.6%; background: var(--green); border-radius: 5px;
+    transition: width 0.35s ease;
+  }
+  .dx__count { font-size: 12px; color: var(--text-sec); margin: 10px 0 18px; font-weight: 500; }
+
+  .dx-step { animation: dxFade 0.28s ease; }
+  .dx-step[hidden] { display: none; }
+  @keyframes dxFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .dx-step__title { font-weight: 700; font-size: 19px; color: var(--text); line-height: 1.3; margin: 0 0 6px; }
+  .dx-step__help { font-size: 13.5px; color: var(--text-sec); margin: 0 0 16px; line-height: 1.5; }
+
+  .dx-opts { display: grid; grid-template-columns: 1fr; gap: 9px; }
+  .dx-opt {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%; text-align: left;
+    padding: 13px 15px;
+    border: 1.5px solid var(--line);
+    border-radius: 9px;
+    background: var(--bg-soft);
+    font-family: var(--font); font-size: 14.5px; color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.14s ease, background 0.14s ease;
+  }
+  .dx-opt:hover { border-color: var(--green); background: #e8f2e8; }
+  .dx-opt__tick {
+    flex-shrink: 0; width: 20px; height: 20px;
+    border: 1.5px solid var(--line); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.14s ease, background 0.14s ease;
+  }
+  .dx-opt.selected { border-color: var(--green); background: #e8f2e8; }
+  .dx-opt.selected .dx-opt__tick { border-color: var(--green); background: var(--green); }
+  .dx-opt.selected .dx-opt__tick::after {
+    content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff;
   }
 
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
+  .dx-nav { display: flex; gap: 10px; margin-top: 22px; }
+  .dx-nav .dx-next, .dx-nav .dx-submit { margin-left: auto; }
+
+  /* Paso contacto */
+  .dx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .dx-field { display: flex; flex-direction: column; }
+  .dx-field--full { grid-column: 1 / -1; }
+  .dx-field label { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 7px; }
+  .dx-opt-tag { font-weight: 400; color: var(--text-sec); font-size: 12px; }
+  .dx-field input, .dx-field textarea {
+    font-family: var(--font); font-size: 14.5px; color: var(--text);
+    padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 7px;
+    background: var(--bg-soft); outline: none; transition: border-color 0.15s ease; resize: vertical;
   }
-  .chip {
-    font-weight: 500;
-    font-size: 13.5px;
-    color: var(--text);
+  .dx-field input:focus, .dx-field textarea:focus { border-color: var(--green); background: #fff; }
+  .dx-priv { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; margin-top: 18px; }
+  .dx-priv input { width: 17px; height: 17px; accent-color: var(--green); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+  .dx-priv span { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
+  .dx-priv a { color: var(--green); font-weight: 600; }
+  .dx-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .dx-error { color: #b00020; font-size: 13.5px; margin: 10px 0 0; }
+
+  .dx-thanks { text-align: center; padding: 22px 10px 8px; }
+  .dx-thanks[hidden] { display: none; }
+  .dx-thanks__ico {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--green-soft); color: var(--green);
+    font-size: 24px; font-weight: 700; margin-bottom: 14px;
+  }
+  .dx-thanks__title { font-weight: 700; font-size: 22px; color: var(--green); margin: 0 0 10px; }
+  .dx-thanks__text { font-size: 14.5px; color: var(--text-sec); line-height: 1.65; max-width: 420px; margin: 0 auto 20px; }
+
+  /* CTA sticky */
+  .dx-sticky {
+    position: fixed;
+    z-index: 65;
+    left: 22px; bottom: 22px;
+    display: inline-flex; align-items: center; gap: 12px;
+    padding: 12px 14px 12px 18px;
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 100px;
-    padding: 9px 16px;
+    box-shadow: var(--shadow-hover);
     text-decoration: none;
-    white-space: nowrap;
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
-  .chip span {
-    opacity: 0.6;
-    margin-right: 4px;
+  .dx-sticky__txt { font-weight: 600; font-size: 13.5px; color: var(--text); }
+  .dx-sticky__btn {
+    font-weight: 600; font-size: 13.5px; color: #fff;
+    background: var(--green); border-radius: 100px; padding: 8px 14px;
   }
-  .chip:hover {
-    border-color: var(--green);
-    color: var(--green);
-  }
+  .dx-sticky.is-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
 
-  .cats {
-    margin-top: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
+  /* Buscador */
+  .search { position: relative; max-width: 440px; margin-top: 20px; color: var(--text-sec); }
+  .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+  .search input {
+    font-family: var(--font); font-size: 15px; color: var(--text);
+    width: 100%; padding: 12px 14px 12px 42px;
+    border: 1px solid var(--line); border-radius: 7px; background: #fff; outline: none;
   }
-  .cats__item {
-    scroll-margin-top: 90px;
-  }
-  .cats__item[hidden] {
-    display: none;
-  }
-  .cats__item:target {
-    animation: catFlash 1.6s ease;
-  }
-  @keyframes catFlash {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(26, 92, 26, 0); }
-    20% { box-shadow: 0 0 0 3px rgba(26, 92, 26, 0.18); }
-  }
+  .search input:focus { border-color: var(--green); }
 
-  .search-empty {
-    margin-top: 24px;
-    font-size: 15px;
-    color: var(--text-sec);
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .chip {
+    font-weight: 500; font-size: 13.5px; color: var(--text);
+    background: #fff; border: 1px solid var(--line); border-radius: 100px;
+    padding: 9px 16px; text-decoration: none; white-space: nowrap;
   }
+  .chip span { opacity: 0.6; margin-right: 4px; }
+  .chip:hover { border-color: var(--green); color: var(--green); }
 
-  /* Anclas de selector y soluciones también respetan el header sticky */
+  .cats { margin-top: 28px; display: flex; flex-direction: column; gap: 16px; }
+  .cats__item { scroll-margin-top: 90px; }
+  .cats__item[hidden] { display: none; }
+
+  .search-empty { margin-top: 24px; font-size: 15px; color: var(--text-sec); }
+
   [id] { scroll-margin-top: 90px; }
 
   @media (min-width: 640px) {
-    .needs {
-      grid-template-columns: 1fr 1fr;
-    }
+    .needs { grid-template-columns: 1fr 1fr; }
   }
   @media (min-width: 760px) {
-    .sols {
-      grid-template-columns: 1fr 1fr;
-    }
+    .sols { grid-template-columns: 1fr 1fr; }
   }
   @media (min-width: 980px) {
-    .needs {
-      grid-template-columns: 1fr 1fr 1fr;
+    .needs { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  /* Móvil: el sticky se coloca SOBRE la barra inferior (no tapa WhatsApp) */
+  @media (max-width: 880px) {
+    .dx-sticky {
+      left: 12px; right: 12px; bottom: 68px;
+      justify-content: space-between;
     }
+  }
+  @media (max-width: 460px) {
+    .dx-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dx-step, .dx__progress-fill, .dx-sticky, .need-card { animation: none; transition: none; }
   }
 </style>
 
 <script is:inline>
   (function () {
-    const input = document.getElementById('catalog-search');
+    // ── Scroll suave para anclas internas ──
+    document.querySelectorAll('a[data-scroll]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        const href = a.getAttribute('href') || '';
+        if (href.charAt(0) !== '#') return;
+        const target = document.getElementById(href.slice(1));
+        if (!target) return;
+        e.preventDefault();
+        openCategory(href.slice(1));
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.replaceState(null, '', href);
+      });
+    });
+
+    // ── Acordeones: abrir/cerrar por defecto y al buscar ──
     const cats = Array.from(document.querySelectorAll('[data-category]'));
+    const isDesktop = window.matchMedia('(min-width: 980px)');
+
+    function applyDefaultAccordion() {
+      cats.forEach(function (cat, i) {
+        const det = cat.querySelector('details');
+        if (!det) return;
+        det.open = isDesktop.matches ? true : i === 0;
+      });
+    }
+    function openCategory(id) {
+      const cat = document.getElementById(id);
+      if (!cat) return;
+      const det = cat.querySelector('details');
+      if (det) det.open = true;
+    }
+    applyDefaultAccordion();
+    isDesktop.addEventListener('change', applyDefaultAccordion);
+
+    // Abrir la categoría si se llega con hash directo
+    if (location.hash) openCategory(location.hash.slice(1));
+    window.addEventListener('hashchange', function () {
+      if (location.hash) openCategory(location.hash.slice(1));
+    });
+
+    // ── Buscador (mantiene comportamiento + abre áreas con resultados) ──
+    const input = document.getElementById('catalog-search');
     const empty = document.querySelector('[data-empty]');
     const browse = document.querySelector('[data-browse]');
-    if (!input) return;
-    input.addEventListener('input', function () {
-      const q = input.value.trim().toLowerCase();
-      // Mientras se busca, ocultamos el selector y las soluciones para centrar el foco.
-      if (browse) browse.hidden = !!q;
-      let visible = 0;
-      cats.forEach(function (cat) {
-        const match = !q || (cat.getAttribute('data-text') || '').includes(q);
-        cat.hidden = !match;
-        if (match) visible++;
+    if (input) {
+      input.addEventListener('input', function () {
+        const q = input.value.trim().toLowerCase();
+        if (browse) browse.hidden = !!q;
+        let visible = 0;
+        cats.forEach(function (cat) {
+          const match = !q || (cat.getAttribute('data-text') || '').includes(q);
+          cat.hidden = !match;
+          const det = cat.querySelector('details');
+          if (det && q) det.open = match;
+          if (match) visible++;
+        });
+        if (!q) applyDefaultAccordion();
+        if (empty) empty.hidden = visible !== 0;
       });
-      if (empty) empty.hidden = visible !== 0;
+    }
+
+    // ── CTA sticky: ocultar cuando el diagnóstico está en pantalla ──
+    const sticky = document.getElementById('dx-sticky');
+    const dxSection = document.getElementById('diagnostico');
+    if (sticky && dxSection && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          sticky.classList.toggle('is-hidden', en.isIntersecting);
+        });
+      }, { threshold: 0.18 });
+      obs.observe(dxSection);
+    }
+
+    // ── Diagnóstico interactivo (quiz multi-paso) ──
+    const TOTAL = 6;
+    const answers = {};
+    let current = 1;
+    const fill = document.getElementById('dx-fill');
+    const count = document.getElementById('dx-count');
+    const steps = Array.from(document.querySelectorAll('.dx-step'));
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function showStep(n) {
+      steps.forEach(function (s) {
+        s.hidden = parseInt(s.getAttribute('data-step'), 10) !== n;
+      });
+      current = n;
+      if (fill) fill.style.width = (n / TOTAL) * 100 + '%';
+      if (count) count.textContent = 'Paso ' + n + ' de ' + TOTAL;
+    }
+
+    // Selección de opciones
+    document.querySelectorAll('.dx-opts').forEach(function (group) {
+      const key = group.getAttribute('data-key');
+      const multi = group.getAttribute('data-multi') === 'true';
+      group.addEventListener('click', function (e) {
+        const btn = e.target.closest('.dx-opt');
+        if (!btn) return;
+        const val = btn.getAttribute('data-val');
+        if (multi) {
+          btn.classList.toggle('selected');
+          answers[key] = Array.from(group.querySelectorAll('.dx-opt.selected')).map(function (b) {
+            return b.getAttribute('data-val');
+          });
+        } else {
+          group.querySelectorAll('.dx-opt').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          answers[key] = val;
+          // Avance suave en preguntas de respuesta única
+          const stepEl = group.closest('.dx-step');
+          const stepN = parseInt(stepEl.getAttribute('data-step'), 10);
+          if (stepN < TOTAL) {
+            window.setTimeout(function () {
+              if (current === stepN) showStep(stepN + 1);
+            }, reduceMotion ? 0 : 240);
+          }
+        }
+      });
     });
+
+    // Navegación Atrás / Siguiente
+    document.querySelectorAll('[data-prev]').forEach(function (b) {
+      b.addEventListener('click', function () { if (current > 1) showStep(current - 1); });
+    });
+    document.querySelectorAll('[data-next]').forEach(function (b) {
+      b.addEventListener('click', function () { if (current < TOTAL) showStep(current + 1); });
+    });
+
+    // Mapeo del rango de participantes al campo Airtable "Nº trabajadores"
+    function mapWorkers(v) {
+      switch (v) {
+        case '1 a 9': return '1–10';
+        case '10 a 25': return '11–50';
+        case '26 a 50': return '11–50';
+        case '51 a 100': return '51–200';
+        case 'Más de 100': return 'Más de 200';
+        default: return '';
+      }
+    }
+
+    function buildSummary(form) {
+      const cargo = (form.cargo.value || '').trim();
+      const extra = (form.mensaje.value || '').trim();
+      const senales = Array.isArray(answers.senales) ? answers.senales.join(', ') : '';
+      return [
+        'Diagnóstico interactivo del catálogo',
+        '',
+        '• Preocupación principal: ' + (answers.preocupacion || '—'),
+        '• Señales detectadas: ' + (senales || '—'),
+        '• Tipo de acción que encajaría: ' + (answers.accion || '—'),
+        '• Nº de participantes: ' + (answers.participantes || '—'),
+        '• Prioridad: ' + (answers.prioridad || '—'),
+        '• Cargo: ' + (cargo || '—'),
+        '• Mensaje adicional: ' + (extra || '—'),
+      ].join('\n');
+    }
+
+    // Envío al endpoint seguro existente
+    const CONTACT_WEBHOOK_URL = '/api/contacto';
+    const form = document.getElementById('dx-form');
+    const errorEl = document.querySelector('[data-dx-error]');
+    const submitBtn = document.querySelector('[data-dx-submit]');
+    const thanks = document.getElementById('dx-thanks');
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (errorEl) errorEl.hidden = true;
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+
+        const raw = new FormData(form);
+        const data = Object.fromEntries(raw.entries());
+        if (data._gotcha) { showThanks(); return; }
+
+        const payload = {
+          tipo: 'diagnostico-catalogo',
+          nombre: data.nombre || '',
+          empresa: data.empresa || '',
+          email: data.email || '',
+          telefono: data.telefono || '',
+          trabajadores: mapWorkers(answers.participantes),
+          necesidad: 'Diagnóstico interactivo catálogo',
+          mensaje: buildSummary(form),
+          fuente: 'Quiz catálogo',
+          privacidad: !!data.privacidad,
+          origen: 'web-batmotropicos',
+          pagina: '/catalogo',
+          enviadoEn: new Date().toISOString(),
+        };
+
+        if (!CONTACT_WEBHOOK_URL) { showThanks(); return; }
+        try {
+          if (submitBtn) submitBtn.setAttribute('disabled', '');
+          const res = await fetch(CONTACT_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          showThanks();
+        } catch (err) {
+          console.error('Envío diagnóstico catálogo:', err);
+          if (errorEl) errorEl.hidden = false;
+        } finally {
+          if (submitBtn) submitBtn.removeAttribute('disabled');
+        }
+      });
+    }
+
+    function showThanks() {
+      steps.forEach(function (s) { s.hidden = true; });
+      const prog = document.querySelector('.dx__progress');
+      if (prog) prog.style.display = 'none';
+      if (count) count.style.display = 'none';
+      if (thanks) thanks.hidden = false;
+      if (sticky) sticky.classList.add('is-hidden');
+      if (thanks) thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   })();
 </script>
