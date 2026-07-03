@@ -287,10 +287,15 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
             <span class="dx-thanks__ico" aria-hidden="true">✓</span>
             <h3 class="dx-thanks__title">Gracias, lo tenemos</h3>
             <p class="dx-thanks__text">
-              Hemos recibido tus respuestas. Te contactaremos para orientarte sobre la opción más
-              adecuada para tu equipo, sin compromiso.
+              Hemos recibido tus respuestas. Si quieres avanzar más rápido, puedes reservar una
+              llamada breve para revisar qué opción encaja mejor con tu equipo.
             </p>
-            <a href="/" class="btn btn--outline btn--sm">Volver al inicio</a>
+            <div class="dx-thanks__cta">
+              <a href="https://cal.eu/batmotropicos/diagnostico" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
+                Reservar llamada de diagnóstico <span class="arrow">→</span>
+              </a>
+              <a href="#explorar" class="btn btn--outline btn--sm" data-scroll>Volver al catálogo</a>
+            </div>
           </div>
         </div>
       </div>
@@ -518,7 +523,8 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
     font-size: 24px; font-weight: 700; margin-bottom: 14px;
   }
   .dx-thanks__title { font-weight: 700; font-size: 22px; color: var(--green); margin: 0 0 10px; }
-  .dx-thanks__text { font-size: 14.5px; color: var(--text-sec); line-height: 1.65; max-width: 420px; margin: 0 auto 20px; }
+  .dx-thanks__text { font-size: 14.5px; color: var(--text-sec); line-height: 1.65; max-width: 420px; margin: 0 auto 22px; }
+  .dx-thanks__cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
   /* CTA sticky */
   .dx-sticky {
