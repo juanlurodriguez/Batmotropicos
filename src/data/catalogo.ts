@@ -64,6 +64,7 @@ export const catalogo: CatalogCategory[] = [
       { name: 'Comunicación asertiva y gestión de conflictos', dur: 'Jornada' },
       { name: 'Liderazgo y gestión de equipos', dur: 'Programa' },
       { name: 'Atención al cliente, venta y negociación', dur: 'Programa' },
+      { name: 'Inglés profesional y comunicación en entornos laborales', dur: 'Según nivel' },
       { name: 'Yoga y movilidad corporativa', dur: 'Sesión' },
       { name: 'Pilates corporativo adaptado', dur: 'Sesión' },
     ],
@@ -79,7 +80,6 @@ export const catalogo: CatalogCategory[] = [
       { name: 'Inteligencia artificial, ofimática y herramientas digitales', dur: 'Programa' },
       { name: 'Productividad, gestión del tiempo y organización del trabajo', dur: 'Sesión / jornada' },
       { name: 'Ciberseguridad básica para equipos de trabajo', dur: 'Jornada' },
-      { name: 'Inglés profesional y comunicación en entornos laborales', dur: 'Según nivel' },
     ],
   },
   {
