@@ -113,6 +113,17 @@ const segs = AREAS.map((_, i) => {
     ly: +(C + lr * Math.sin(rad(mid))).toFixed(2),
   };
 });
+
+// Isotipo Batmotrópicos (corazón + rayo) — trazados de Icon.astro,
+// incrustados en el hub de la rueda. El glifo ocupa x≈191-815, y≈172-818
+// dentro de su caja 1024, con centro aproximado en (503, 495).
+const ICON_P1 =
+  'M 745 280 L 654 403 L 587 489 L 647 510 L 648 513 L 411 736 L 327 818 L 454 735 L 457 735 L 473 743 L 503 754 L 539 763 L 581 768 L 609 768 L 631 766 L 672 757 L 710 741 L 744 718 L 761 702 L 772 689 L 785 670 L 797 645 L 805 613 L 806 587 L 803 562 L 799 547 L 792 530 L 779 510 L 759 490 L 747 481 L 747 479 L 767 460 L 775 449 L 783 433 L 790 409 L 791 376 L 786 349 L 778 327 L 765 304 Z';
+const ICON_P2 =
+  'M 815 172 L 708 247 L 677 232 L 645 220 L 616 213 L 593 210 L 555 210 L 518 216 L 480 229 L 456 241 L 415 269 L 375 303 L 311 363 L 239 434 L 198 477 L 192 485 L 191 497 L 194 504 L 216 535 L 250 576 L 310 638 L 338 663 L 366 685 L 396 705 L 408 711 L 461 644 L 534 546 L 473 525 L 472 522 L 533 464 L 703 295 Z';
+const ICON_S = 0.071;
+const ICON_TX = +(C - 503 * ICON_S).toFixed(2);
+const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
 ---
 
 <div class="ww reveal">
@@ -141,10 +152,13 @@ const segs = AREAS.map((_, i) => {
           ))
         }
         <circle cx={C} cy={C} r={r - 14} class="ww-hub"></circle>
-        <text x={C} y={C - 28} class="ww-hub-eyebrow">BATMOTRÓPICOS</text>
-        <text x={C} y={C - 2} class="ww-hub-title">Bienestar</text>
-        <text x={C} y={C + 22} class="ww-hub-title">corporativo</text>
-        <text x={C} y={C + 48} class="ww-hub-sub">8 áreas estratégicas</text>
+        <g transform={`translate(${ICON_TX} ${ICON_TY}) scale(${ICON_S})`} class="ww-hub-icon" aria-hidden="true">
+          <path d={ICON_P1}></path>
+          <path d={ICON_P2}></path>
+        </g>
+        <text x={C} y={C + 4} class="ww-hub-title">Bienestar</text>
+        <text x={C} y={C + 27} class="ww-hub-title">corporativo</text>
+        <text x={C} y={C + 52} class="ww-hub-sub">8 áreas estratégicas</text>
       </svg>
       <p class="ww-hint">Pasa el cursor o haz clic en un área para ver el detalle.</p>
     </div>
@@ -223,7 +237,7 @@ const segs = AREAS.map((_, i) => {
 
 <style>
   .ww {
-    margin-top: 22px;
+    margin-top: 16px;
   }
 
   /* ── Desktop: rueda + panel ── */
@@ -233,27 +247,31 @@ const segs = AREAS.map((_, i) => {
   .ww-svg {
     display: block;
     width: 100%;
-    max-width: 440px;
+    max-width: 500px;
     margin: 0 auto;
     font-family: var(--font);
   }
-  .ww-seg {
-    fill: rgba(26, 92, 26, 0.1);
+  /* Tintas alternas dentro de la familia verde/salvia; activo en verde principal */
+  path.ww-seg {
+    fill: rgba(26, 92, 26, 0.09);
     stroke: #fff;
     stroke-width: 3;
     cursor: pointer;
     transition: fill 0.15s ease;
   }
-  .ww-seg:hover {
-    fill: rgba(26, 92, 26, 0.26);
+  path.ww-seg:nth-of-type(2n) {
+    fill: rgba(26, 92, 26, 0.17);
   }
-  .ww-seg:focus-visible {
+  path.ww-seg:hover {
+    fill: rgba(26, 92, 26, 0.3);
+  }
+  path.ww-seg:focus-visible {
     outline: none;
-    fill: rgba(26, 92, 26, 0.26);
+    fill: rgba(26, 92, 26, 0.3);
     stroke: var(--green-dark);
     stroke-width: 2;
   }
-  .ww-seg.sel {
+  path.ww-seg.sel {
     fill: var(--green);
   }
   .ww-slb {
@@ -270,13 +288,15 @@ const segs = AREAS.map((_, i) => {
     fill: #fff;
     stroke: var(--line);
   }
-  .ww-hub-eyebrow {
-    font-size: 10.5px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    fill: var(--green-accent);
-    text-anchor: middle;
+  .ww-hub-icon {
     pointer-events: none;
+  }
+  .ww-hub-icon path {
+    fill: none;
+    stroke: var(--green);
+    stroke-width: 12;
+    stroke-linejoin: round;
+    stroke-linecap: round;
   }
   .ww-hub-title {
     font-size: 19px;
@@ -296,7 +316,7 @@ const segs = AREAS.map((_, i) => {
     color: var(--text-sec);
     font-style: italic;
     text-align: center;
-    margin: 12px 0 0;
+    margin: 6px 0 0;
   }
 
   .ww-panel {
@@ -452,8 +472,8 @@ const segs = AREAS.map((_, i) => {
   @media (min-width: 980px) {
     .ww-desk {
       display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      gap: 44px;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 32px;
       align-items: center;
     }
     .ww-mobile {
