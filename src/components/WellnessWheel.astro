@@ -1,0 +1,513 @@
+---
+// ════════════════════════════════════════════════════════════
+// RUEDA DE BIENESTAR CORPORATIVO — 8 áreas estratégicas
+// Desktop: rueda SVG interactiva + panel lateral con detalle.
+// Móvil: tarjetas desplegables (sin rueda pequeña).
+// El SVG se genera en build; el JS runtime solo gestiona la selección.
+// Cero dependencias. Los CTAs usan las anclas reales del catálogo.
+// ════════════════════════════════════════════════════════════
+
+interface Area {
+  /** Número visual 01-08 */
+  n: string;
+  /** Etiqueta corta para el segmento de la rueda */
+  short: string;
+  /** Nombre completo del área */
+  name: string;
+  /** Descripción breve, una línea */
+  desc: string;
+  /** Ejemplos (máx. 5) */
+  ex: string[];
+  /** Ancla del catálogo para "Ver acciones" */
+  anchor: string;
+  /** Enlace secundario opcional dentro de la tarjeta */
+  extra?: { label: string; anchor: string };
+}
+
+const AREAS: Area[] = [
+  {
+    n: '01',
+    short: 'Salud física',
+    name: 'Salud física y ergonomía',
+    desc: 'Reduce molestias, fatiga y bajas derivadas del puesto de trabajo.',
+    ex: ['Espalda sana', 'Ergonomía', 'Posturología', 'Gestión de cargas', 'Fisioterapia in company'],
+    anchor: '#salud-fisica',
+  },
+  {
+    n: '02',
+    short: 'Movimiento',
+    name: 'Movimiento y wellness in company',
+    desc: 'Activa al equipo dentro de la jornada, sin salir de la empresa.',
+    ex: ['Yoga in company', 'Pilates', 'Movilidad', 'Pausas activas', 'Wellness point'],
+    anchor: '#wellness-in-company',
+  },
+  {
+    n: '03',
+    short: 'Salud mental',
+    name: 'Salud mental y gestión emocional',
+    desc: 'Protege el rendimiento sostenible y previene el desgaste del equipo.',
+    ex: ['Gestión del estrés', 'Gestión emocional', 'Respiración consciente', 'Mindfulness activo', 'Prevención del burnout'],
+    anchor: '#salud-mental',
+  },
+  {
+    n: '04',
+    short: 'Nutrición',
+    name: 'Nutrición, energía y hábitos saludables',
+    desc: 'Hábitos que sostienen la energía y la concentración durante la jornada.',
+    ex: ['Alimentación saludable', 'Tupper y teletrabajo', 'Energía en la jornada', 'Hidratación', 'Sueño y recuperación'],
+    anchor: '#salud-practica',
+  },
+  {
+    n: '05',
+    short: 'Cohesión',
+    name: 'Cohesión, clima y team building',
+    desc: 'Convierte grupos de personas en equipos que funcionan.',
+    ex: ['Team building', 'Dinámicas de cohesión', 'La Fábrica de Ideas', 'Risoterapia', 'Jornadas deportivas'],
+    anchor: '#team-building',
+  },
+  {
+    n: '06',
+    short: 'Liderazgo',
+    name: 'Comunicación, liderazgo y cultura',
+    desc: 'Equipos que se entienden y responsables que saben cuidar.',
+    ex: ['Comunicación efectiva', 'Liderazgo saludable', 'Gestión de conflictos', 'Feedback', 'Cultura de equipo'],
+    anchor: '#salud-mental',
+  },
+  {
+    n: '07',
+    short: 'Productividad',
+    name: 'Productividad, IA y organización del trabajo',
+    desc: 'Trabajar mejor, no más: foco, método y herramientas actuales.',
+    ex: ['Productividad personal', 'Gestión del tiempo', 'IA para empresas', 'Automatización básica', 'Desconexión digital'],
+    anchor: '#tecnica-obligatoria',
+  },
+  {
+    n: '08',
+    short: 'Cumplimiento',
+    name: 'Cumplimiento, prevención y bienestar financiero',
+    desc: 'Obligaciones cubiertas y tranquilidad para las personas.',
+    ex: ['PRL', 'Igualdad', 'Acoso laboral', 'LGTBI', 'Bienestar financiero'],
+    anchor: '#tecnica-obligatoria',
+    extra: { label: 'Bienestar financiero', anchor: '#bienestar-financiero' },
+  },
+];
+
+// Geometría de la rueda (SVG 440×440, donut de 8 segmentos)
+const C = 220;
+const R = 182;
+const r = 106;
+const GAP = 2.4;
+const rad = (a: number) => (a * Math.PI) / 180;
+const pt = (a: number, rr: number) =>
+  `${(C + rr * Math.cos(rad(a))).toFixed(2)} ${(C + rr * Math.sin(rad(a))).toFixed(2)}`;
+
+const segs = AREAS.map((_, i) => {
+  const a0 = -90 + i * 45 + GAP / 2;
+  const a1 = -90 + (i + 1) * 45 - GAP / 2;
+  const d = `M ${pt(a0, R)} A ${R} ${R} 0 0 1 ${pt(a1, R)} L ${pt(a1, r)} A ${r} ${r} 0 0 0 ${pt(a0, r)} Z`;
+  const mid = -90 + i * 45 + 22.5;
+  const lr = (R + r) / 2;
+  return {
+    d,
+    lx: +(C + lr * Math.cos(rad(mid))).toFixed(2),
+    ly: +(C + lr * Math.sin(rad(mid))).toFixed(2),
+  };
+});
+---
+
+<div class="ww reveal">
+  <!-- Desktop: rueda + panel lateral -->
+  <div class="ww-desk">
+    <div class="ww-wheelbox">
+      <svg viewBox="0 0 440 440" class="ww-svg" aria-label="Rueda con las 8 áreas del bienestar corporativo">
+        {
+          AREAS.map((a, i) => (
+            <path
+              d={segs[i].d}
+              class={`ww-seg${i === 0 ? ' sel' : ''}`}
+              data-ww-seg={i}
+              tabindex="0"
+              role="button"
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              aria-label={`${a.name} — ver detalle`}
+            />
+          ))
+        }
+        {
+          AREAS.map((a, i) => (
+            <text x={segs[i].lx} y={segs[i].ly + 4} class={`ww-slb${i === 0 ? ' on' : ''}`} data-ww-lb={i}>
+              {a.short}
+            </text>
+          ))
+        }
+        <circle cx={C} cy={C} r={r - 14} class="ww-hub"></circle>
+        <text x={C} y={C - 28} class="ww-hub-eyebrow">BATMOTRÓPICOS</text>
+        <text x={C} y={C - 2} class="ww-hub-title">Bienestar</text>
+        <text x={C} y={C + 22} class="ww-hub-title">corporativo</text>
+        <text x={C} y={C + 48} class="ww-hub-sub">8 áreas estratégicas</text>
+      </svg>
+      <p class="ww-hint">Pasa el cursor o haz clic en un área para ver el detalle.</p>
+    </div>
+
+    <div class="ww-panel" aria-live="polite">
+      {
+        AREAS.map((a, i) => (
+          <div class="ww-card" data-ww-card={i} hidden={i !== 0}>
+            <p class="ww-eyebrow">Área {a.n} · de 8</p>
+            <h3 class="ww-name">{a.name}</h3>
+            <p class="ww-desc">{a.desc}</p>
+            <div class="ww-chips">
+              {a.ex.map((e) => (
+                <span class="ww-chip">{e}</span>
+              ))}
+            </div>
+            <div class="ww-cta">
+              <a href="#diagnostico" class="btn btn--primary btn--sm" data-scroll>
+                Diagnosticar mi equipo <span class="arrow">→</span>
+              </a>
+              <a href={a.anchor} class="btn btn--outline btn--sm" data-scroll>
+                Ver acciones del catálogo
+              </a>
+              {a.extra && (
+                <a href={a.extra.anchor} class="ww-extralink" data-scroll>
+                  {a.extra.label} <span class="arrow">→</span>
+                </a>
+              )}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <!-- Móvil: tarjetas desplegables -->
+  <div class="ww-mobile">
+    {
+      AREAS.map((a, i) => (
+        <details class="ww-mi" open={i === 0}>
+          <summary class="ww-ms">
+            <span class="ww-num" aria-hidden="true">{a.n}</span>
+            <span class="ww-mt">{a.name}</span>
+            <span class="ww-chev" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </span>
+          </summary>
+          <div class="ww-mb">
+            <p class="ww-desc">{a.desc}</p>
+            <div class="ww-chips">
+              {a.ex.map((e) => (
+                <span class="ww-chip">{e}</span>
+              ))}
+            </div>
+            <div class="ww-cta">
+              <a href="#diagnostico" class="btn btn--primary btn--sm" data-scroll>
+                Diagnosticar mi equipo <span class="arrow">→</span>
+              </a>
+              <a href={a.anchor} class="btn btn--outline btn--sm" data-scroll>
+                Ver acciones del catálogo
+              </a>
+              {a.extra && (
+                <a href={a.extra.anchor} class="ww-extralink" data-scroll>
+                  {a.extra.label} <span class="arrow">→</span>
+                </a>
+              )}
+            </div>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .ww {
+    margin-top: 22px;
+  }
+
+  /* ── Desktop: rueda + panel ── */
+  .ww-desk {
+    display: none;
+  }
+  .ww-svg {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    font-family: var(--font);
+  }
+  .ww-seg {
+    fill: rgba(26, 92, 26, 0.1);
+    stroke: #fff;
+    stroke-width: 3;
+    cursor: pointer;
+    transition: fill 0.15s ease;
+  }
+  .ww-seg:hover {
+    fill: rgba(26, 92, 26, 0.26);
+  }
+  .ww-seg:focus-visible {
+    outline: none;
+    fill: rgba(26, 92, 26, 0.26);
+    stroke: var(--green-dark);
+    stroke-width: 2;
+  }
+  .ww-seg.sel {
+    fill: var(--green);
+  }
+  .ww-slb {
+    font-size: 13.5px;
+    font-weight: 600;
+    fill: var(--green-dark);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .ww-slb.on {
+    fill: #fff;
+  }
+  .ww-hub {
+    fill: #fff;
+    stroke: var(--line);
+  }
+  .ww-hub-eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    fill: var(--green-accent);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .ww-hub-title {
+    font-size: 19px;
+    font-weight: 700;
+    fill: var(--text);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .ww-hub-sub {
+    font-size: 11.5px;
+    fill: var(--text-sec);
+    text-anchor: middle;
+    pointer-events: none;
+  }
+  .ww-hint {
+    font-size: 12px;
+    color: var(--text-sec);
+    font-style: italic;
+    text-align: center;
+    margin: 12px 0 0;
+  }
+
+  .ww-panel {
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+  }
+  .ww-card {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--green);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 24px 24px 22px;
+    animation: wwFade 0.24s ease;
+  }
+  .ww-card[hidden] {
+    display: none;
+  }
+  @keyframes wwFade {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .ww-eyebrow {
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin: 0 0 8px;
+  }
+  .ww-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0 0 8px;
+  }
+  .ww-desc {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.55;
+    margin: 0 0 12px;
+  }
+  .ww-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 0 0 16px;
+  }
+  .ww-chip {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--green-dark);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 4px 10px;
+  }
+  .ww-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+  }
+  .ww-cta .btn {
+    justify-content: center;
+  }
+  .ww-extralink {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
+    text-decoration: none;
+    text-align: center;
+    padding: 2px 0;
+  }
+  .ww-extralink:hover {
+    text-decoration: underline;
+  }
+
+  /* ── Móvil: tarjetas desplegables ── */
+  .ww-mobile {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ww-mi {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .ww-ms {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    list-style: none;
+  }
+  .ww-ms::-webkit-details-marker {
+    display: none;
+  }
+  .ww-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--green);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .ww-mi[open] .ww-num {
+    background: var(--green);
+    color: #fff;
+  }
+  .ww-mt {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .ww-chev {
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    transition: transform 0.18s ease;
+  }
+  .ww-chev svg {
+    width: 18px;
+    height: 18px;
+  }
+  .ww-mi[open] .ww-chev {
+    transform: rotate(180deg);
+  }
+  .ww-mb {
+    padding: 0 16px 16px;
+  }
+
+  @media (min-width: 980px) {
+    .ww-desk {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 44px;
+      align-items: center;
+    }
+    .ww-mobile {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ww-seg,
+    .ww-num,
+    .ww-chev {
+      transition: none;
+    }
+    .ww-card {
+      animation: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var segs = document.querySelectorAll('[data-ww-seg]');
+    var labels = document.querySelectorAll('[data-ww-lb]');
+    var cards = document.querySelectorAll('[data-ww-card]');
+    if (!segs.length) return;
+
+    function select(i) {
+      segs.forEach(function (p) {
+        var on = p.getAttribute('data-ww-seg') === String(i);
+        p.classList.toggle('sel', on);
+        p.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      labels.forEach(function (t) {
+        t.classList.toggle('on', t.getAttribute('data-ww-lb') === String(i));
+      });
+      cards.forEach(function (c) {
+        c.hidden = c.getAttribute('data-ww-card') !== String(i);
+      });
+    }
+
+    segs.forEach(function (p) {
+      var i = parseInt(p.getAttribute('data-ww-seg'), 10);
+      p.addEventListener('click', function () {
+        select(i);
+      });
+      p.addEventListener('mouseenter', function () {
+        select(i);
+      });
+      p.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          select(i);
+        }
+      });
+    });
+  })();
+</script>

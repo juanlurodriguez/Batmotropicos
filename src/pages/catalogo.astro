@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CatalogCard from '../components/CatalogCard.astro';
 import CTASection from '../components/CTASection.astro';
+import WellnessWheel from '../components/WellnessWheel.astro';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
 const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
@@ -187,9 +188,19 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
             ))
           }
         </div>
+
+        <!-- 3 · Las 8 áreas del bienestar corporativo -->
+        <div class="reveal" style="margin-top:56px">
+          <h2 class="h2 block-title">Las 8 áreas del bienestar corporativo</h2>
+          <p class="block-sub">
+            El bienestar de una empresa no depende de una acción aislada. Depende de trabajar las
+            áreas que más influyen en la salud, el clima y el rendimiento del equipo.
+          </p>
+        </div>
+        <WellnessWheel />
       </div>
 
-      <!-- 3 · Diagnóstico comercial interactivo -->
+      <!-- 4 · Diagnóstico comercial interactivo -->
       <div id="diagnostico" class="dx reveal">
         <div class="dx__intro">
           <p class="eyebrow">Diagnóstico en 1 minuto</p>
@@ -300,7 +311,7 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
         </div>
       </div>
 
-      <!-- 4 · Catálogo completo por áreas -->
+      <!-- 5 · Catálogo completo por áreas -->
       <div id="explorar" class="reveal" style="margin-top:60px">
         <h2 class="h2 block-title">Explora el catálogo completo</h2>
         <p class="block-sub">{totalItems} acciones por área. Despliega la que te interese, busca una concreta o salta a una categoría.</p>
