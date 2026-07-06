@@ -53,53 +53,74 @@ export const catalogo: CatalogCategory[] = [
     id: 'salud-mental',
     letter: 'B',
     tab: 'Salud mental y habilidades',
-    title: 'Salud mental, habilidades y equilibrio',
-    desc: 'Formación para gestionar el estrés, mejorar la comunicación y sostener el rendimiento sin desgaste. Habilidades blandas con aplicación directa al entorno laboral.',
+    title: 'Salud mental, habilidades y comunicación',
+    desc: 'Formación para gestionar el estrés, comunicar mejor y liderar sin desgaste. Habilidades blandas con aplicación directa al entorno laboral.',
     bonif: 'Bonificable según crédito y requisitos',
     items: [
       { name: 'Gestión del estrés en equipos de alta exigencia', dur: 'Sesión' },
       { name: 'Regulación emocional y autocontrol', dur: 'Sesión' },
       { name: 'Técnicas de respiración y regulación del sistema nervioso', dur: 'Sesión' },
+      { name: 'Mindfulness aplicado al entorno de trabajo', dur: 'Sesión' },
       { name: 'Comunicación asertiva y gestión de conflictos', dur: 'Jornada' },
       { name: 'Liderazgo y gestión de equipos', dur: 'Programa' },
-      { name: 'Productividad sostenible y gestión del tiempo', dur: 'Sesión / jornada' },
-      { name: 'Hábitos saludables en la jornada laboral', dur: 'Sesión' },
-      { name: 'Mindfulness aplicado al entorno de trabajo', dur: 'Sesión' },
+      { name: 'Atención al cliente, venta y negociación', dur: 'Programa' },
       { name: 'Yoga y movilidad corporativa', dur: 'Sesión' },
       { name: 'Pilates corporativo adaptado', dur: 'Sesión' },
-      { name: 'Alimentación y nutrición en el trabajo', dur: 'Sesión' },
     ],
   },
   {
-    id: 'tecnica-obligatoria',
+    id: 'productividad-digital',
     letter: 'C',
-    tab: 'Técnica y obligatoria',
-    title: 'Formación técnica y obligatoria',
-    desc: 'Cumplimiento normativo y capacitación técnica, con la documentación conforme a la legislación vigente gestionada en cada paso.',
+    tab: 'Productividad y digital',
+    title: 'Productividad, IA y competencias digitales',
+    desc: 'Trabajar mejor con método y herramientas actuales: inteligencia artificial aplicada, ofimática, organización del trabajo y seguridad digital. Formación técnica, no obligatoria.',
     bonif: 'Bonificable según crédito y requisitos',
     items: [
-      { name: 'Prevención de riesgos laborales — básico y específico por puesto', dur: 'Según normativa' },
-      { name: 'Primeros auxilios, soporte vital básico y DEA', dur: 'Jornada' },
-      { name: 'Manipulación de alimentos e información sobre alérgenos', dur: 'Jornada' },
-      { name: 'Igualdad, diversidad e inclusión en la empresa', dur: 'Según plan' },
-      { name: 'Inglés profesional y comunicación en entornos laborales', dur: 'Según nivel' },
-      { name: 'Ofimática, inteligencia artificial y herramientas digitales', dur: 'Programa' },
+      { name: 'Inteligencia artificial, ofimática y herramientas digitales', dur: 'Programa' },
+      { name: 'Productividad, gestión del tiempo y organización del trabajo', dur: 'Sesión / jornada' },
       { name: 'Ciberseguridad básica para equipos de trabajo', dur: 'Jornada' },
-      { name: 'Técnicas de venta, negociación y atención al cliente', dur: 'Programa' },
+      { name: 'Inglés profesional y comunicación en entornos laborales', dur: 'Según nivel' },
+    ],
+  },
+  {
+    id: 'cumplimiento-prevencion',
+    letter: 'D',
+    tab: 'Cumplimiento y prevención',
+    title: 'Cumplimiento, prevención y emergencias',
+    desc: 'Formaciones obligatorias o preventivas para cumplir la normativa y proteger a las personas: prevención de riesgos, primeros auxilios y emergencias, seguridad acuática, igualdad y protocolos frente al acoso. Documentación conforme a la legislación vigente gestionada en cada paso.',
+    bonif: 'Bonificable según crédito y requisitos',
+    // Nota interna (no visible): LGTBI se enmarca como igualdad, no discriminación
+    // y protocolos frente al acoso en el entorno laboral — no como bienestar emocional.
+    items: [
+      { name: 'Prevención de riesgos laborales — básico y específico por puesto', dur: 'Según normativa' },
+      { name: 'Igualdad, diversidad, inclusión LGTBI y prevención del acoso laboral', dur: 'Según plan' },
+      { name: 'Manipulación de alimentos e información sobre alérgenos', dur: 'Jornada' },
+      { name: 'Primeros auxilios, soporte vital básico y DEA', dur: 'Jornada' },
+      { name: 'RCP y manejo del DEA', dur: 'Sesión' },
+      { name: 'Primeros auxilios: los primeros 5 minutos', dur: 'Sesión' },
+      { name: 'Cuidado de heridas y quemaduras', dur: 'Sesión' },
+      { name: 'Taller de vendajes funcionales', dur: 'Sesión' },
+      { name: 'Educación farmacéutica y botiquín en la empresa', dur: 'Sesión' },
+      { name: 'Socorrismo y primeros auxilios acuáticos', dur: 'Jornada' },
+      { name: 'Reciclaje y actualización en socorrismo', dur: 'Sesión' },
+      { name: 'Seguridad en piscinas e instalaciones acuáticas', dur: 'Sesión' },
+      { name: 'Primeros auxilios aplicados al entorno acuático', dur: 'Sesión' },
     ],
   },
   {
     id: 'team-building',
-    letter: 'D',
+    letter: 'E',
     tab: 'Team building',
     title: 'Team building y cohesión de equipos',
     desc: 'Experiencias de cohesión diseñadas para activar, conectar y reforzar el sentimiento de equipo. Formato adaptable al tamaño del grupo, el espacio disponible y los objetivos de la organización.',
     bonif: 'Parcialmente bonificable según estructura',
     items: [
       { name: 'Jornada de bienestar corporativo', dur: 'Medio día' },
-      { name: 'La Fábrica de Ideas — taller de innovación colaborativa', dur: 'Jornada' },
+      { name: 'Dinámicas de cohesión y activación de equipo', dur: 'Sesión' },
       { name: 'Reto de comunicación en equipo', dur: 'Sesión' },
-      { name: 'Dinámica de activación y desbloqueo', dur: 'Sesión' },
+      { name: 'La Fábrica de Ideas — taller de innovación colaborativa', dur: 'Jornada' },
+      { name: 'Escape room corporativo', dur: 'Sesión', extra: true },
+      { name: 'MasterChef corporativo, concursos de cocina y paellas', dur: 'Medio día', extra: true },
       { name: 'Pádel corporativo', dur: 'Medio día', extra: true },
       { name: 'Jornada deportiva corporativa', dur: 'Medio día', extra: true },
       { name: 'Jornada wellness outdoor', dur: 'Medio día', extra: true },
@@ -109,7 +130,7 @@ export const catalogo: CatalogCategory[] = [
   },
   {
     id: 'wellness-in-company',
-    letter: 'E',
+    letter: 'F',
     tab: 'Wellness in company',
     title: 'Servicios wellness in company',
     desc: 'Bienestar integrado en la jornada, en las instalaciones de la empresa. Incluye fisioterapia, psicología, yoga, pausas activas, movilidad y recuperación. Modelos flexibles: sesiones recurrentes, bolsa de horas mensual o copago empresa-trabajador.',
@@ -124,106 +145,20 @@ export const catalogo: CatalogCategory[] = [
   },
   {
     id: 'salud-practica',
-    letter: 'F',
-    tab: 'Salud práctica',
-    title: 'Salud práctica y prevención en la empresa',
-    desc: 'Formaciones prácticas para mejorar la seguridad, el autocuidado y la cultura sanitaria dentro de los equipos. Programas de salud preventiva y respuesta básica que ayudan a actuar mejor ante situaciones cotidianas, reforzar el autocuidado y construir una cultura corporativa más segura, saludable y responsable. Adaptables al sector, al tamaño del equipo, a los riesgos habituales del puesto y a las necesidades de cada empresa.',
-    bonif: 'Bonificable según crédito y requisitos',
-    // ──────────────────────────────────────────────────────────────
-    // NOTA INTERNA (no visible en la web). Las acciones de esta área
-    // se agrupan internamente en tres bloques. Las etiquetas y las
-    // descripciones largas se reservan para propuestas comerciales;
-    // no se muestran en la tarjeta para mantener la homogeneidad del
-    // catálogo. Toda la oferta se presenta bajo la marca Batmotrópicos.
-    //
-    // Bloque 1 · Urgencias y primeros auxilios
-    //   - RCP y manejo del DEA → actuar ante una parada cardiorrespiratoria
-    //     con maniobras básicas de RCP y uso del desfibrilador externo
-    //     automático. Tags: Primeros auxilios · Emergencias · DEA · Seguridad laboral
-    //   - Primeros auxilios: los primeros 5 minutos → atragantamientos,
-    //     desmayos, lipotimias, convulsiones y emergencias básicas.
-    //     Tags: Emergencias laborales · Respuesta inmediata · Seguridad · Prevención
-    //   - Cuidado de heridas y quemaduras → heridas leves, cortes, rozaduras
-    //     y quemaduras habituales. Tags: Heridas · Quemaduras · Botiquín · Actuación básica
-    //   - Taller de vendajes funcionales → vendajes para proteger articulaciones
-    //     y actuar ante torceduras y lesiones leves.
-    //     Tags: Vendajes · Lesiones leves · Prevención musculoesquelética · Autocuidado
-    //
-    // Bloque 2 · Constantes vitales y autocuidado
-    //   - Taller de constantes vitales: entiende tu cuerpo → medir e interpretar
-    //     de forma básica frecuencia cardiaca, tensión, saturación de oxígeno…
-    //     Tags: Constantes vitales · Autocuidado · Salud preventiva · Educación sanitaria
-    //   - Salud cardiovascular: conoce tus números → presión, colesterol, azúcar,
-    //     alimentación, ejercicio y factores de riesgo.
-    //     Tags: Salud cardiovascular · Prevención · Hábitos saludables · Rendimiento
-    //   - Educación farmacéutica y botiquín en la empresa → uso responsable de
-    //     medicamentos y gestión del botiquín. Tags: Botiquín · Medicación responsable · Seguridad · Cultura sanitaria
-    //   - Higiene del sueño para el rendimiento laboral → calidad del descanso y
-    //     su impacto en energía, concentración y rendimiento.
-    //     Tags: Descanso · Rendimiento · Salud mental · Hábitos saludables
-    //
-    // Bloque 3 · Inclusión sanitaria y patologías en la empresa
-    //   - El compañero medicado: seguridad y apoyo → actuar con prudencia y
-    //     respeto ante situaciones médicas, sin invadir la privacidad.
-    //     Tags: Inclusión · Seguridad · Apoyo · Cultura sanitaria
-    //   - Alfabetización sanitaria básica → comprender información médica básica
-    //     y tomar decisiones responsables. Tags: Educación sanitaria · Autocuidado · Prevención · Salud laboral
-    //   - Acompañamiento al paciente oncológico en el entorno laboral →
-    //     sensibilización, empatía, comunicación cuidadosa e inclusión.
-    //     Tags: Inclusión · Sensibilización · Apoyo emocional · Cultura corporativa
-    //
-    // Formación corporativa de prevención, sensibilización y autocuidado.
-    // No constituye asistencia médica, consulta sanitaria ni diagnóstico clínico.
-    // ──────────────────────────────────────────────────────────────
-    items: [
-      { name: 'RCP y manejo del DEA', dur: 'Sesión' },
-      { name: 'Primeros auxilios: los primeros 5 minutos', dur: 'Sesión' },
-      { name: 'Cuidado de heridas y quemaduras', dur: 'Sesión' },
-      { name: 'Taller de vendajes funcionales', dur: 'Sesión' },
-      { name: 'Taller de constantes vitales: entiende tu cuerpo', dur: 'Sesión' },
-      { name: 'Salud cardiovascular: conoce tus números', dur: 'Sesión' },
-      { name: 'Educación farmacéutica y botiquín en la empresa', dur: 'Sesión' },
-      { name: 'Higiene del sueño para el rendimiento laboral', dur: 'Sesión' },
-      { name: 'El compañero medicado: seguridad y apoyo', dur: 'Sesión' },
-      { name: 'Alfabetización sanitaria básica', dur: 'Sesión' },
-      { name: 'Acompañamiento al paciente oncológico en el entorno laboral', dur: 'Sesión' },
-    ],
-  },
-  {
-    id: 'socorrismo-acuatica',
     letter: 'G',
-    tab: 'Seguridad acuática',
-    title: 'Socorrismo y seguridad acuática',
-    desc: 'Formaciones orientadas a reforzar la seguridad en espacios acuáticos, instalaciones deportivas, hoteles, piscinas y entornos donde la prevención y la actuación rápida pueden marcar la diferencia. Especialmente indicadas para instalaciones que necesitan cumplir requisitos de seguridad en espacios acuáticos según la normativa aplicable.',
+    tab: 'Nutrición y autocuidado',
+    title: 'Nutrición, autocuidado y salud práctica',
+    desc: 'Hábitos de alimentación, descanso y energía que sostienen el rendimiento, junto con educación sanitaria básica para actuar mejor ante situaciones cotidianas. Formación preventiva y de autocuidado; no constituye asistencia médica ni diagnóstico clínico.',
     bonif: 'Bonificable según crédito y requisitos',
-    // ──────────────────────────────────────────────────────────────
-    // NOTA INTERNA (no visible). Descripciones y etiquetas reservadas
-    // para propuestas comerciales; la tarjeta solo muestra el nombre y
-    // el formato, para mantener la homogeneidad del catálogo. Toda la
-    // oferta se presenta bajo la marca Batmotrópicos.
-    //   - Socorrismo y primeros auxilios acuáticos → prevención, vigilancia
-    //     y actuación ante emergencias en piscina o entorno acuático.
-    //     Tags: Socorrismo · Seguridad acuática · Piscinas · Emergencias
-    //   - Reciclaje y actualización en socorrismo → actualizar conocimientos,
-    //     revisar protocolos y reforzar competencias de rescate y primeros
-    //     auxilios acuáticos. Tags: Reciclaje profesional · Socorrismo · Seguridad · Protocolos
-    //   - Seguridad en piscinas e instalaciones acuáticas → prevención de
-    //     riesgos, organización de espacios y actuación ante incidentes en
-    //     piscinas, hoteles, gimnasios y clubes deportivos.
-    //     Tags: Piscinas · Prevención · Instalaciones acuáticas · Seguridad
-    //   - Primeros auxilios aplicados al entorno acuático → caídas, golpes,
-    //     cortes, atragantamientos, desmayos, ahogamientos y emergencias.
-    //     Tags: Primeros auxilios · Entorno acuático · Emergencias · Prevención
-    //
-    // Prudencia normativa: no se presenta como obligatoria para todas las
-    // empresas; dirigida a instalaciones que deben cumplir requisitos de
-    // seguridad en espacios acuáticos según la normativa aplicable.
-    // ──────────────────────────────────────────────────────────────
     items: [
-      { name: 'Socorrismo y primeros auxilios acuáticos', dur: 'Jornada' },
-      { name: 'Reciclaje y actualización en socorrismo', dur: 'Sesión' },
-      { name: 'Seguridad en piscinas e instalaciones acuáticas', dur: 'Sesión' },
-      { name: 'Primeros auxilios aplicados al entorno acuático', dur: 'Sesión' },
+      { name: 'Alimentación y nutrición en el trabajo', dur: 'Sesión' },
+      { name: 'Hábitos saludables en la jornada laboral', dur: 'Sesión' },
+      { name: 'Higiene del sueño para el rendimiento laboral', dur: 'Sesión' },
+      { name: 'Salud cardiovascular: conoce tus números', dur: 'Sesión' },
+      { name: 'Taller de constantes vitales: entiende tu cuerpo', dur: 'Sesión' },
+      { name: 'Alfabetización sanitaria básica', dur: 'Sesión' },
+      { name: 'El compañero medicado: seguridad y apoyo', dur: 'Sesión' },
+      { name: 'Acompañamiento al paciente oncológico en el entorno laboral', dur: 'Sesión' },
     ],
   },
   {
@@ -231,36 +166,8 @@ export const catalogo: CatalogCategory[] = [
     letter: 'H',
     tab: 'Bienestar financiero',
     title: 'Bienestar financiero en la empresa',
-    desc: 'El bienestar de los equipos no depende solo de la salud física o mental: cómo cada persona gestiona su economía, entiende su nómina y afronta sus decisiones financieras influye en su tranquilidad, concentración y rendimiento. Formación de carácter educativo para reducir el estrés económico y mejorar la organización personal. No constituye asesoramiento financiero, fiscal ni de inversión personalizado.',
+    desc: 'Cómo cada persona gestiona su economía, entiende su nómina y afronta sus decisiones financieras influye en su tranquilidad, concentración y rendimiento. Formación de carácter educativo para reducir el estrés económico y mejorar la organización personal. No constituye asesoramiento financiero, fiscal ni de inversión personalizado.',
     bonif: 'Bonificable según crédito y requisitos',
-    // ──────────────────────────────────────────────────────────────
-    // NOTA INTERNA (no visible). Enfoque estrictamente educativo: educación
-    // financiera, reducción del estrés económico, organización personal,
-    // prevención de errores y bienestar laboral. NO asesoramiento personalizado,
-    // NO recomendación de productos ni inversiones, NO promesas de rentabilidad.
-    //   - Bienestar financiero para empleados → mejorar la relación con la
-    //     economía personal, reducir estrés financiero y ganar claridad.
-    //     Tags: Bienestar financiero · Educación financiera · Salud mental · Rendimiento
-    //   - Educación financiera básica en la empresa → ingresos, gastos, ahorro,
-    //     deuda, inflación, planificación y decisiones responsables.
-    //     Tags: Finanzas personales · Ahorro · Planificación · Autocuidado
-    //   - Gestión del estrés financiero → cómo las preocupaciones económicas
-    //     afectan al bienestar y al desempeño; herramientas para recuperar control.
-    //     Tags: Estrés financiero · Salud mental · Productividad · Autocontrol
-    //   - Entiende tu nómina y organiza tu economía → nómina, retenciones, neto,
-    //     gastos recurrentes y organización mensual.
-    //     Tags: Nómina · Finanzas personales · Organización económica · Educación laboral
-    //   - Ahorro, deuda y planificación financiera saludable → presupuesto, ahorro
-    //     progresivo, control de deuda y objetivos económicos.
-    //     Tags: Ahorro · Deuda · Presupuesto · Hábitos financieros
-    //   - Prevención de fraudes y decisiones financieras responsables → riesgos
-    //     habituales, fraudes, decisiones impulsivas y errores comunes.
-    //     Tags: Prevención de fraudes · Finanzas responsables · Seguridad económica · Educación financiera
-    //
-    // Texto prudente disponible para fichas/propuestas: "Contenido formativo de
-    // carácter educativo. No constituye asesoramiento financiero, fiscal ni de
-    // inversión personalizado."
-    // ──────────────────────────────────────────────────────────────
     items: [
       { name: 'Bienestar financiero para empleados', dur: 'Sesión' },
       { name: 'Educación financiera básica en la empresa', dur: 'Sesión' },
