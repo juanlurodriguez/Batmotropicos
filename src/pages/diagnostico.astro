@@ -1,0 +1,784 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// ════════════════════════════════════════════════════════════
+// EMBUDO DE DIAGNÓSTICO — /diagnostico
+// Experiencia guiada de captación: portada → 6 pasos → resultado.
+// El lead se envía a /api/contacto al completar el paso de contacto
+// (antes de mostrar el resultado), con fuente "Embudo diagnóstico".
+// JS vanilla, cero dependencias, mobile-first.
+// ════════════════════════════════════════════════════════════
+
+// Paso 1 · Dolor principal. `key` conecta con la recomendación del script.
+const PAINS: [string, string][] = [
+  ['fisico', 'Molestias físicas, fatiga o dolor recurrente'],
+  ['estres', 'Estrés, presión o desgaste mental'],
+  ['clima', 'Clima frío o falta de cohesión'],
+  ['rotacion', 'Rotación, desmotivación o falta de pertenencia'],
+  ['fundae', 'Tenemos crédito FUNDAE sin aprovechar'],
+  ['nose', 'No sabemos por dónde empezar'],
+];
+
+// Paso 2 · Señales (multiselección)
+const SIGNALS = [
+  'Más cansancio del habitual',
+  'Quejas físicas o molestias',
+  'Comunicación interna mejorable',
+  'Equipo poco conectado',
+  'Dificultad para retener talento',
+  'No hay señales graves, queremos prevenir',
+];
+
+// Paso 3 · Sector
+const SECTORS = [
+  'Hostelería y turismo',
+  'Oficina y servicios profesionales',
+  'Industria y logística',
+  'Comercio',
+  'Salud y servicios a personas',
+  'Otro sector',
+];
+
+// Paso 4 · Tamaño del equipo
+const SIZES = ['1 a 9', '10 a 25', '26 a 50', '51 a 100', 'Más de 100', 'No lo sé todavía'];
+
+// Paso 5 · Momento
+const TIMING = [
+  'Queremos activarlo pronto',
+  'Valorarlo este trimestre',
+  'Estamos explorando opciones',
+  'Depende del presupuesto',
+  'Depende de si puede bonificarse',
+];
+
+const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
+---
+
+<BaseLayout
+  title="Diagnóstico de bienestar corporativo"
+  description="Descubre qué necesita tu equipo en 2 minutos. Diagnóstico guiado de bienestar corporativo para empresas: recomendación personalizada y llamada de 20 minutos sin compromiso."
+  path="/diagnostico"
+>
+  <section class="section dg-section">
+    <div class="wrap">
+      <div class="dg-card reveal">
+        <!-- Progreso (oculto en portada y resultado) -->
+        <div class="dg-progresswrap" id="dg-progresswrap" hidden>
+          <div class="dg-progress" aria-hidden="true">
+            <div class="dg-progress-fill" id="dg-fill"></div>
+          </div>
+          <p class="dg-count" id="dg-count" aria-live="polite">Paso 1 de 6</p>
+        </div>
+
+        <!-- Paso 0 · Portada -->
+        <div class="dg-step" data-dg="0">
+          <p class="eyebrow">Diagnóstico Batmotrópicos</p>
+          <h1 class="dg-title">Descubre qué necesita tu equipo</h1>
+          <p class="dg-lead">
+            Responde a cinco preguntas rápidas sobre tu equipo y te mostramos una recomendación
+            personalizada de bienestar corporativo. Sin compromiso.
+          </p>
+          <ul class="dg-pills" aria-label="Qué incluye el diagnóstico">
+            <li>2 minutos</li>
+            <li>Sin compromiso</li>
+            <li>Recomendación personalizada</li>
+          </ul>
+          <button type="button" class="btn btn--primary dg-start" data-dg-start>
+            Empezar el diagnóstico <span class="arrow">→</span>
+          </button>
+          <p class="dg-note">Al final podrás reservar una llamada de 20 minutos conmigo, si quieres.</p>
+        </div>
+
+        <!-- Paso 1 · Dolor principal -->
+        <div class="dg-step" data-dg="1" hidden>
+          <h2 class="dg-q">¿Qué es lo que más os preocupa ahora mismo?</h2>
+          <p class="dg-help">Elige la opción que más se acerque a vuestra situación.</p>
+          <div class="dg-opts" data-key="dolor" data-multi="false" role="group" aria-label="Preocupación principal">
+            {PAINS.map(([key, label]) => (
+              <button type="button" class="dg-opt" data-val={label} data-rec={key}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+          </div>
+        </div>
+
+        <!-- Paso 2 · Señales -->
+        <div class="dg-step" data-dg="2" hidden>
+          <h2 class="dg-q">¿Qué estáis notando en el equipo?</h2>
+          <p class="dg-help">Puedes marcar varias.</p>
+          <div class="dg-opts" data-key="senales" data-multi="true" role="group" aria-label="Señales detectadas">
+            {SIGNALS.map((s) => (
+              <button type="button" class="dg-opt" data-val={s}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{s}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+            <button type="button" class="btn btn--primary btn--sm dg-next" data-next>Siguiente <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <!-- Paso 3 · Sector -->
+        <div class="dg-step" data-dg="3" hidden>
+          <h2 class="dg-q">¿En qué sector trabajáis?</h2>
+          <p class="dg-help">Nos ayuda a afinar la recomendación.</p>
+          <div class="dg-opts" data-key="sector" data-multi="false" role="group" aria-label="Sector">
+            {SECTORS.map((s) => (
+              <button type="button" class="dg-opt" data-val={s}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{s}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+          </div>
+        </div>
+
+        <!-- Paso 4 · Tamaño -->
+        <div class="dg-step" data-dg="4" hidden>
+          <h2 class="dg-q">¿A cuántas personas afectaría?</h2>
+          <p class="dg-help">Un número aproximado nos vale.</p>
+          <div class="dg-opts" data-key="tamano" data-multi="false" role="group" aria-label="Tamaño del equipo">
+            {SIZES.map((s) => (
+              <button type="button" class="dg-opt" data-val={s}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{s}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+          </div>
+        </div>
+
+        <!-- Paso 5 · Momento -->
+        <div class="dg-step" data-dg="5" hidden>
+          <h2 class="dg-q">¿En qué punto estáis?</h2>
+          <p class="dg-help">Sin compromiso: nos ayuda a priorizar.</p>
+          <div class="dg-opts" data-key="momento" data-multi="false" role="group" aria-label="Momento">
+            {TIMING.map((t) => (
+              <button type="button" class="dg-opt" data-val={t}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{t}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+          </div>
+        </div>
+
+        <!-- Paso 6 · Contacto -->
+        <div class="dg-step" data-dg="6" hidden>
+          <h2 class="dg-q">¿A quién le enviamos la recomendación?</h2>
+          <p class="dg-help">Un momento más y te muestro la recomendación para tu equipo.</p>
+          <form id="dg-form" novalidate>
+            <div class="dg-grid">
+              <div class="dg-field">
+                <label for="dg-nombre">Nombre</label>
+                <input type="text" id="dg-nombre" name="nombre" placeholder="Tu nombre" required autocomplete="name" />
+              </div>
+              <div class="dg-field">
+                <label for="dg-empresa">Empresa</label>
+                <input type="text" id="dg-empresa" name="empresa" placeholder="Nombre de la empresa" required autocomplete="organization" />
+              </div>
+              <div class="dg-field">
+                <label for="dg-email">Email</label>
+                <input type="email" id="dg-email" name="email" placeholder="empresa@correo.com" required autocomplete="email" />
+              </div>
+              <div class="dg-field">
+                <label for="dg-telefono">Teléfono</label>
+                <input type="tel" id="dg-telefono" name="telefono" placeholder="600 000 000" required autocomplete="tel" />
+              </div>
+            </div>
+
+            <label class="dg-priv">
+              <input type="checkbox" id="dg-privacidad" name="privacidad" required />
+              <span>
+                He leído y acepto el tratamiento de mis datos según la
+                <a href="/privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
+                Los datos se usarán únicamente para contactar contigo sobre tu consulta.
+              </span>
+            </label>
+
+            <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="dg-hp" aria-hidden="true" />
+
+            <div class="dg-nav">
+              <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+              <button type="submit" class="btn btn--primary dg-submit" data-dg-submit>
+                Ver mi recomendación <span class="arrow">→</span>
+              </button>
+            </div>
+            <p class="dg-error" data-dg-error hidden>
+              No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
+            </p>
+          </form>
+        </div>
+
+        <!-- Resultado -->
+        <div class="dg-step dg-result" data-dg="result" hidden>
+          <p class="eyebrow">Tu recomendación</p>
+          <h2 class="dg-res-title" id="dg-res-title">Recomendación para tu equipo</h2>
+          <p class="dg-res-why" id="dg-res-why"></p>
+
+          <div class="dg-res-box">
+            <span class="dg-res-tag">Por dónde empezar</span>
+            <p class="dg-res-plan" id="dg-res-plan"></p>
+            <ul class="dg-res-actions" id="dg-res-actions"></ul>
+          </div>
+
+          <p class="dg-res-extra" id="dg-res-extra" hidden></p>
+          <p class="dg-res-fundae" id="dg-res-fundae" hidden>
+            Muchas de estas acciones pueden tener encaje con formación bonificable: en la llamada
+            revisamos el crédito formativo disponible y si se cumplen los requisitos.
+          </p>
+
+          <div class="dg-res-cta">
+            <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" class="btn btn--primary dg-book">
+              Reservar llamada de diagnóstico <span class="arrow">→</span>
+            </a>
+            <p class="dg-res-support">
+              La llamada dura 20 minutos y se genera automáticamente con enlace de Google Meet.
+            </p>
+            <p class="dg-res-confirm">✓ Ya tenemos tus datos — te contactaré en menos de 24 h laborables.</p>
+          </div>
+
+          <a href="/catalogo" class="dg-res-quiet">Explorar el catálogo completo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .dg-section {
+    padding: 48px 0 88px;
+  }
+  .dg-card {
+    max-width: 640px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--green);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 30px 28px 28px;
+  }
+
+  /* Progreso */
+  .dg-progresswrap[hidden] { display: none; }
+  .dg-progress {
+    height: 5px;
+    background: var(--line);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .dg-progress-fill {
+    height: 100%;
+    width: 16.6%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.35s ease;
+  }
+  .dg-count {
+    font-size: 12px;
+    color: var(--text-sec);
+    margin: 10px 0 18px;
+    font-weight: 500;
+  }
+
+  /* Pasos */
+  .dg-step { animation: dgFade 0.28s ease; }
+  .dg-step[hidden] { display: none; }
+  @keyframes dgFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Portada */
+  .dg-title {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .dg-lead {
+    font-size: 15.5px;
+    color: var(--text-sec);
+    line-height: 1.65;
+    margin: 0 0 18px;
+  }
+  .dg-pills {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0 0 24px;
+    padding: 0;
+  }
+  .dg-pills li {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--green-dark);
+    background: var(--green-soft);
+    border: 1px solid rgba(26, 92, 26, 0.16);
+    border-radius: 100px;
+    padding: 6px 13px;
+  }
+  .dg-start { width: 100%; justify-content: center; }
+  .dg-note {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    margin: 14px 0 0;
+    text-align: center;
+  }
+
+  /* Preguntas */
+  .dg-q {
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0 0 6px;
+  }
+  .dg-help {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    margin: 0 0 16px;
+    line-height: 1.5;
+  }
+  .dg-opts { display: grid; grid-template-columns: 1fr; gap: 9px; }
+  .dg-opt {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+    padding: 14px 15px;
+    border: 1.5px solid var(--line);
+    border-radius: 9px;
+    background: var(--bg-soft);
+    font-family: var(--font);
+    font-size: 14.5px;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.14s ease, background 0.14s ease;
+  }
+  .dg-opt:hover { border-color: var(--green); background: #e8f2e8; }
+  .dg-opt__tick {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--line);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.14s ease, background 0.14s ease;
+  }
+  .dg-opt.selected { border-color: var(--green); background: #e8f2e8; }
+  .dg-opt.selected .dg-opt__tick { border-color: var(--green); background: var(--green); }
+  .dg-opt.selected .dg-opt__tick::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .dg-nav { display: flex; gap: 10px; margin-top: 22px; }
+  .dg-nav .dg-next, .dg-nav .dg-submit { margin-left: auto; }
+
+  /* Contacto */
+  .dg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .dg-field { display: flex; flex-direction: column; }
+  .dg-field label { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 7px; }
+  .dg-field input {
+    font-family: var(--font);
+    font-size: 14.5px;
+    color: var(--text);
+    padding: 12px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .dg-field input:focus { border-color: var(--green); background: #fff; }
+  .dg-priv { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; margin-top: 18px; }
+  .dg-priv input { width: 17px; height: 17px; accent-color: var(--green); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+  .dg-priv span { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
+  .dg-priv a { color: var(--green); font-weight: 600; }
+  .dg-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .dg-error { color: #b00020; font-size: 13.5px; margin: 10px 0 0; }
+
+  /* Resultado */
+  .dg-res-title {
+    font-weight: 700;
+    font-size: 23px;
+    line-height: 1.25;
+    color: var(--text);
+    margin: 0 0 10px;
+  }
+  .dg-res-why {
+    font-size: 14.5px;
+    color: var(--text-sec);
+    line-height: 1.65;
+    margin: 0 0 18px;
+  }
+  .dg-res-box {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 18px 18px 16px;
+    margin: 0 0 14px;
+  }
+  .dg-res-tag {
+    display: block;
+    font-weight: 600;
+    font-size: 10.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin: 0 0 6px;
+  }
+  .dg-res-plan {
+    font-weight: 700;
+    font-size: 16.5px;
+    color: var(--text);
+    margin: 0 0 10px;
+  }
+  .dg-res-actions {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .dg-res-actions li {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+  }
+  .dg-res-actions li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background: var(--green);
+  }
+  .dg-res-extra,
+  .dg-res-fundae {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.6;
+    margin: 0 0 12px;
+  }
+  .dg-res-extra[hidden],
+  .dg-res-fundae[hidden] { display: none; }
+  .dg-res-fundae { font-style: italic; }
+
+  .dg-res-cta {
+    border-top: 1px solid var(--line);
+    margin-top: 18px;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    text-align: center;
+  }
+  .dg-book { justify-content: center; }
+  .dg-res-support {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    margin: 0;
+    line-height: 1.5;
+  }
+  .dg-res-confirm {
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--green-dark);
+    margin: 6px 0 0;
+  }
+  .dg-res-quiet {
+    display: block;
+    text-align: center;
+    font-size: 12.5px;
+    color: var(--text-sec);
+    text-decoration: underline;
+    margin-top: 18px;
+  }
+  .dg-res-quiet:hover { color: var(--green); }
+
+  @media (max-width: 460px) {
+    .dg-card { padding: 24px 18px 22px; }
+    .dg-grid { grid-template-columns: 1fr; }
+    .dg-title { font-size: 26px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dg-step { animation: none; }
+    .dg-progress-fill, .dg-opt, .dg-opt__tick { transition: none; }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var TOTAL = 6;
+    var BOOKING_SHOWN = 'Sí';
+    var answers = { dolorKey: '' };
+    var current = 0;
+
+    var steps = Array.from(document.querySelectorAll('.dg-step'));
+    var progressWrap = document.getElementById('dg-progresswrap');
+    var fill = document.getElementById('dg-fill');
+    var count = document.getElementById('dg-count');
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Recomendaciones por dolor principal. Conectan con el catálogo real.
+    var RECS = {
+      fisico: {
+        area: 'Salud física, ergonomía y movimiento',
+        plan: 'Plan Salud Física Laboral',
+        why: 'Las molestias físicas y la fatiga son la primera causa de desgaste en equipos con carga física o posturas mantenidas. Se trabaja directamente en el puesto, con acciones prácticas.',
+        acciones: ['Ergonomía aplicada al puesto de trabajo', 'Prevención de molestias musculoesqueléticas', 'Fisioterapia in company'],
+      },
+      estres: {
+        area: 'Salud mental y gestión emocional',
+        plan: 'Plan Estrés y Rendimiento',
+        why: 'Cuando hay presión sostenida, lo primero es dar al equipo herramientas para regular el estrés antes de que se convierta en desgaste o rotación.',
+        acciones: ['Gestión del estrés en equipos de alta exigencia', 'Técnicas de respiración y regulación', 'Mindfulness aplicado al entorno de trabajo'],
+      },
+      clima: {
+        area: 'Cohesión y team building',
+        plan: 'Plan Cohesión y Cultura',
+        why: 'El clima no se arregla con un discurso: se trabaja con experiencias que conectan a las personas y mejoran cómo se comunican.',
+        acciones: ['Dinámicas de cohesión y activación de equipo', 'Jornada de bienestar corporativo', 'Reto de comunicación en equipo'],
+      },
+      rotacion: {
+        area: 'Cohesión y bienestar continuo',
+        plan: 'Plan de Bienestar Anual',
+        why: 'La rotación baja cuando las personas sienten que la empresa las cuida de forma sostenida, no con una acción aislada.',
+        acciones: ['Jornada de bienestar corporativo', 'Team building y dinámicas de pertenencia', 'Programa continuo de bienestar a lo largo del año'],
+      },
+      fundae: {
+        area: 'Formación bonificable',
+        plan: 'Cumplimiento formativo anual',
+        why: 'Si hay crédito formativo sin usar, el primer paso es revisarlo y valorar qué acciones cumplen los requisitos para aprovecharlo.',
+        acciones: ['Revisión del crédito formativo disponible', 'Formación en salud y bienestar con posible encaje bonificable', 'Calendario formativo anual gestionado por un solo equipo'],
+      },
+      nose: {
+        area: 'Diagnóstico 360º completo',
+        plan: 'Diagnóstico 360º',
+        why: 'Cuando el punto de partida no está claro, lo más eficaz es un diagnóstico: detectamos las prioridades reales del equipo y os proponemos un plan a medida.',
+        acciones: ['Detección de prioridades reales del equipo', 'Plan a medida combinando las áreas que encajen', 'Medición de resultados y propuesta de continuidad'],
+      },
+    };
+
+    function showStep(id) {
+      steps.forEach(function (s) {
+        s.hidden = s.getAttribute('data-dg') !== String(id);
+      });
+      current = id;
+      var numeric = typeof id === 'number' && id >= 1 && id <= TOTAL;
+      if (progressWrap) progressWrap.hidden = !numeric;
+      if (numeric) {
+        if (fill) fill.style.width = (id / TOTAL) * 100 + '%';
+        if (count) count.textContent = 'Paso ' + id + ' de ' + TOTAL;
+      }
+      var card = document.querySelector('.dg-card');
+      if (card && typeof id === 'number' && id > 0) {
+        var top = card.getBoundingClientRect().top;
+        if (top < 0) card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+
+    // Portada
+    var startBtn = document.querySelector('[data-dg-start]');
+    if (startBtn) startBtn.addEventListener('click', function () { showStep(1); });
+
+    // Opciones
+    document.querySelectorAll('.dg-opts').forEach(function (group) {
+      var key = group.getAttribute('data-key');
+      var multi = group.getAttribute('data-multi') === 'true';
+      group.addEventListener('click', function (e) {
+        var btn = e.target.closest('.dg-opt');
+        if (!btn) return;
+        if (multi) {
+          btn.classList.toggle('selected');
+          answers[key] = Array.from(group.querySelectorAll('.dg-opt.selected')).map(function (b) {
+            return b.getAttribute('data-val');
+          });
+        } else {
+          group.querySelectorAll('.dg-opt').forEach(function (b) { b.classList.remove('selected'); });
+          btn.classList.add('selected');
+          answers[key] = btn.getAttribute('data-val');
+          if (key === 'dolor') answers.dolorKey = btn.getAttribute('data-rec') || 'nose';
+          var stepEl = group.closest('.dg-step');
+          var stepN = parseInt(stepEl.getAttribute('data-dg'), 10);
+          if (stepN < TOTAL) {
+            window.setTimeout(function () {
+              if (current === stepN) showStep(stepN + 1);
+            }, reduceMotion ? 0 : 240);
+          }
+        }
+      });
+    });
+
+    // Navegación
+    document.querySelectorAll('[data-prev]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (typeof current === 'number' && current > 0) showStep(current - 1);
+      });
+    });
+    document.querySelectorAll('[data-next]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        if (typeof current === 'number' && current < TOTAL) showStep(current + 1);
+      });
+    });
+
+    // Scoring simple: momento manda; el tamaño puede subir un nivel.
+    function leadLevel() {
+      var base = 1;
+      if (answers.momento === 'Queremos activarlo pronto') base = 3;
+      else if (answers.momento === 'Valorarlo este trimestre') base = 2;
+      var big = ['26 a 50', '51 a 100', 'Más de 100'].indexOf(answers.tamano || '') !== -1;
+      if (big) base = Math.min(3, base + 1);
+      return base === 3 ? 'Caliente' : base === 2 ? 'Medio' : 'Frío';
+    }
+
+    function mapWorkers(v) {
+      switch (v) {
+        case '1 a 9': return '1–10';
+        case '10 a 25': return '11–50';
+        case '26 a 50': return '11–50';
+        case '51 a 100': return '51–200';
+        case 'Más de 100': return 'Más de 200';
+        default: return '';
+      }
+    }
+
+    function getRec() {
+      return RECS[answers.dolorKey] || RECS.nose;
+    }
+
+    function buildMessage(rec, level) {
+      var senales = Array.isArray(answers.senales) ? answers.senales.join(', ') : '';
+      return [
+        'Embudo de diagnóstico — /diagnostico',
+        '',
+        '• Dolor principal: ' + (answers.dolor || '—'),
+        '• Señales: ' + (senales || '—'),
+        '• Sector: ' + (answers.sector || '—'),
+        '• Tamaño del equipo: ' + (answers.tamano || '—'),
+        '• Momento: ' + (answers.momento || '—'),
+        '• Recomendación mostrada: ' + rec.area + ' — ' + rec.plan,
+        '• Acción recomendada: ' + rec.acciones[0],
+        '• Nivel del lead: ' + level,
+        '• CTA de reserva mostrado: ' + BOOKING_SHOWN,
+      ].join('\n');
+    }
+
+    function renderResult(rec) {
+      var empresa = (document.getElementById('dg-empresa').value || '').trim();
+      var title = document.getElementById('dg-res-title');
+      title.textContent = (empresa ? 'Para ' + empresa + ': ' : 'Para tu equipo: ') + rec.area;
+      document.getElementById('dg-res-why').textContent = rec.why;
+      document.getElementById('dg-res-plan').textContent = rec.plan;
+      var ul = document.getElementById('dg-res-actions');
+      ul.innerHTML = '';
+      rec.acciones.forEach(function (a) {
+        var li = document.createElement('li');
+        li.textContent = a;
+        ul.appendChild(li);
+      });
+      var extra = document.getElementById('dg-res-extra');
+      if (answers.sector === 'Hostelería y turismo') {
+        extra.textContent = 'Además, para hostelería existe un programa específico de prevención: ergonomía, autocuidado físico y hábitos saludables aplicados a los puestos del sector.';
+        extra.hidden = false;
+      }
+      var fundaeNote = document.getElementById('dg-res-fundae');
+      if (answers.dolorKey === 'fundae' || answers.momento === 'Depende de si puede bonificarse') {
+        fundaeNote.hidden = false;
+      }
+    }
+
+    // Envío del lead: al completar contacto, antes de mostrar el resultado.
+    var CONTACT_WEBHOOK_URL = '/api/contacto';
+    var form = document.getElementById('dg-form');
+    var errorEl = document.querySelector('[data-dg-error]');
+    var submitBtn = document.querySelector('[data-dg-submit]');
+
+    if (form) {
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        if (errorEl) errorEl.hidden = true;
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+
+        var raw = new FormData(form);
+        var data = Object.fromEntries(raw.entries());
+        var rec = getRec();
+        var level = leadLevel();
+
+        if (data._gotcha) { showResult(rec); return; }
+
+        var payload = {
+          tipo: 'embudo-diagnostico',
+          nombre: data.nombre || '',
+          empresa: data.empresa || '',
+          email: data.email || '',
+          telefono: data.telefono || '',
+          trabajadores: mapWorkers(answers.tamano),
+          necesidad: 'Diagnóstico de bienestar corporativo',
+          mensaje: buildMessage(rec, level),
+          fuente: 'Embudo diagnóstico',
+          privacidad: !!data.privacidad,
+          origen: 'web-batmotropicos',
+          pagina: '/diagnostico',
+          enviadoEn: new Date().toISOString(),
+        };
+
+        if (!CONTACT_WEBHOOK_URL) { showResult(rec); return; }
+        try {
+          if (submitBtn) submitBtn.setAttribute('disabled', '');
+          var res = await fetch(CONTACT_WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          showResult(rec);
+        } catch (err) {
+          console.error('Envío embudo diagnóstico:', err);
+          if (errorEl) errorEl.hidden = false;
+        } finally {
+          if (submitBtn) submitBtn.removeAttribute('disabled');
+        }
+      });
+    }
+
+    function showResult(rec) {
+      renderResult(rec);
+      showStep('result');
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
+
+    showStep(0);
+  })();
+</script>

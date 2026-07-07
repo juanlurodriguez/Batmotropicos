@@ -25,7 +25,7 @@ const needs: [string, string, string, string][] = [
   [
     'Mejorar clima, comunicación y cohesión',
     'No sabes por dónde empezar — te orientamos con un diagnóstico.',
-    '#diagnostico',
+    '/diagnostico',
     '<path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5Z"/>',
   ],
   [
@@ -57,72 +57,6 @@ const solutions: [string, string, string][] = [
   ['Bienestar Anual', 'Para empresas que no quieren acciones aisladas, sino una estrategia continua durante el año.', '#programas'],
 ];
 
-// Diagnóstico interactivo (pasos 1-5; el paso 6 es el contacto).
-const quizSteps: { key: string; multi: boolean; title: string; help: string; options: string[] }[] = [
-  {
-    key: 'preocupacion',
-    multi: false,
-    title: '¿Cuál es la principal preocupación con tu equipo ahora mismo?',
-    help: 'Elige la opción que más se acerque a vuestra situación.',
-    options: [
-      'Molestias físicas, fatiga o dolor recurrente',
-      'Estrés, presión o desgaste mental',
-      'Clima frío o falta de cohesión',
-      'Rotación, desmotivación o falta de pertenencia',
-      'Tenemos crédito FUNDAE sin aprovechar',
-      'No sabemos por dónde empezar',
-    ],
-  },
-  {
-    key: 'senales',
-    multi: true,
-    title: '¿Qué señales estáis viendo?',
-    help: 'Puedes marcar varias.',
-    options: [
-      'Más cansancio del habitual',
-      'Quejas físicas o molestias',
-      'Comunicación interna mejorable',
-      'Equipo poco conectado',
-      'Dificultad para retener talento',
-      'Faltan iniciativas de bienestar',
-      'No hay señales graves, queremos prevenir',
-    ],
-  },
-  {
-    key: 'accion',
-    multi: false,
-    title: '¿Qué tipo de acción crees que encajaría?',
-    help: 'Es una orientación inicial; lo afinamos contigo.',
-    options: [
-      'Formación bonificable',
-      'Jornada de team building',
-      'Servicio recurrente in company',
-      'Plan anual de bienestar',
-      'Algo puntual para empezar',
-      'Necesito orientación',
-    ],
-  },
-  {
-    key: 'participantes',
-    multi: false,
-    title: '¿A cuántas personas afectaría?',
-    help: 'Un número aproximado nos vale.',
-    options: ['1 a 9', '10 a 25', '26 a 50', '51 a 100', 'Más de 100', 'No lo sé todavía'],
-  },
-  {
-    key: 'prioridad',
-    multi: false,
-    title: '¿En qué momento estáis?',
-    help: 'Sin compromiso: nos ayuda a priorizar.',
-    options: [
-      'Queremos activarlo pronto',
-      'Valorarlo este trimestre',
-      'Estamos explorando opciones',
-      'Depende del presupuesto',
-      'Depende de si puede bonificarse',
-    ],
-  },
-];
 ---
 
 <BaseLayout
@@ -142,7 +76,7 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
           no lo tienes claro, haz el diagnóstico y te orientamos.
         </p>
         <div class="hero-cta reveal">
-          <a href="#diagnostico" class="btn btn--primary" data-scroll>Hacer el diagnóstico <span class="arrow">→</span></a>
+          <a href="/diagnostico" class="btn btn--primary">Hacer el diagnóstico <span class="arrow">→</span></a>
           <a href="#explorar" class="btn btn--outline" data-scroll>Explorar el catálogo</a>
         </div>
       </div>
@@ -201,118 +135,7 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
         </div>
       </div>
 
-      <!-- 4 · Diagnóstico comercial interactivo -->
-      <div id="diagnostico" class="dx reveal">
-        <div class="dx__intro">
-          <p class="eyebrow">Diagnóstico en 1 minuto</p>
-          <h2 class="h2 block-title">Cuéntanos cómo está tu equipo y te orientamos</h2>
-          <p class="block-sub">
-            Cinco preguntas rápidas. No hay resultado automático: con tus respuestas preparamos una
-            recomendación personalizada y te contactamos. Sin compromiso.
-          </p>
-        </div>
-
-        <div class="dx__card">
-          <!-- Progreso -->
-          <div class="dx__progress" aria-hidden="true">
-            <div class="dx__progress-fill" id="dx-fill"></div>
-          </div>
-          <p class="dx__count" id="dx-count" aria-live="polite">Paso 1 de 6</p>
-
-          <!-- Pasos 1-5 -->
-          {
-            quizSteps.map((step, i) => (
-              <div class="dx-step" data-step={i + 1} hidden={i !== 0}>
-                <h3 class="dx-step__title">{step.title}</h3>
-                <p class="dx-step__help">{step.help}</p>
-                <div class="dx-opts" data-key={step.key} data-multi={step.multi ? 'true' : 'false'} role="group" aria-label={step.title}>
-                  {step.options.map((opt) => (
-                    <button type="button" class="dx-opt" data-val={opt}>
-                      <span class="dx-opt__tick" aria-hidden="true"></span>
-                      <span>{opt}</span>
-                    </button>
-                  ))}
-                </div>
-                <div class="dx-nav">
-                  {i > 0 && <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>}
-                  <button type="button" class="btn btn--primary btn--sm dx-next" data-next>Siguiente <span class="arrow">→</span></button>
-                </div>
-              </div>
-            ))
-          }
-
-          <!-- Paso 6 · Contacto -->
-          <div class="dx-step" data-step="6" hidden>
-            <h3 class="dx-step__title">¿A dónde te enviamos la recomendación?</h3>
-            <p class="dx-step__help">Te contactamos personalmente para orientarte sobre la opción más adecuada.</p>
-            <form id="dx-form" novalidate>
-              <div class="dx-grid">
-                <div class="dx-field">
-                  <label for="dx-nombre">Nombre</label>
-                  <input type="text" id="dx-nombre" name="nombre" placeholder="Tu nombre" required autocomplete="name" />
-                </div>
-                <div class="dx-field">
-                  <label for="dx-empresa">Empresa</label>
-                  <input type="text" id="dx-empresa" name="empresa" placeholder="Nombre de la empresa" required autocomplete="organization" />
-                </div>
-                <div class="dx-field">
-                  <label for="dx-email">Email</label>
-                  <input type="email" id="dx-email" name="email" placeholder="empresa@correo.com" required autocomplete="email" />
-                </div>
-                <div class="dx-field">
-                  <label for="dx-telefono">Teléfono</label>
-                  <input type="tel" id="dx-telefono" name="telefono" placeholder="600 000 000" required autocomplete="tel" />
-                </div>
-                <div class="dx-field dx-field--full">
-                  <label for="dx-cargo">Cargo o responsabilidad <span class="dx-opt-tag">(opcional)</span></label>
-                  <input type="text" id="dx-cargo" name="cargo" placeholder="Ej. Dirección, RRHH, responsable de equipo" autocomplete="organization-title" />
-                </div>
-                <div class="dx-field dx-field--full">
-                  <label for="dx-mensaje">Mensaje adicional <span class="dx-opt-tag">(opcional)</span></label>
-                  <textarea id="dx-mensaje" name="mensaje" rows="3" placeholder="Algo más que debamos saber sobre el equipo o el momento de la empresa…"></textarea>
-                </div>
-              </div>
-
-              <label class="dx-priv">
-                <input type="checkbox" id="dx-privacidad" name="privacidad" required />
-                <span>
-                  He leído y acepto el tratamiento de mis datos según la
-                  <a href="/privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.
-                  Los datos se usarán únicamente para contactar contigo sobre tu consulta.
-                </span>
-              </label>
-
-              <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="dx-hp" aria-hidden="true" />
-
-              <div class="dx-nav">
-                <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
-                <button type="submit" class="btn btn--primary dx-submit" data-dx-submit>Enviar y recibir recomendación <span class="arrow">→</span></button>
-              </div>
-              <p class="dx-error" data-dx-error hidden>
-                No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
-              </p>
-            </form>
-          </div>
-
-          <!-- Éxito -->
-          <div class="dx-thanks" id="dx-thanks" hidden>
-            <span class="dx-thanks__ico" aria-hidden="true">✓</span>
-            <h3 class="dx-thanks__title">Gracias, lo tenemos</h3>
-            <p class="dx-thanks__text">
-              Hemos recibido tus respuestas. Si quieres avanzar más rápido, puedes reservar una
-              llamada breve para revisar qué opción encaja mejor con tu equipo.
-            </p>
-            <div class="dx-thanks__cta">
-              <a href="https://cal.eu/batmotropicos/diagnostico" target="_blank" rel="noopener noreferrer" class="btn btn--primary">
-                Reservar llamada de diagnóstico <span class="arrow">→</span>
-              </a>
-              <a href="#explorar" class="btn btn--outline btn--sm" data-scroll>Volver al catálogo</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5 · Catálogo completo por áreas -->
+      <!-- 4 · Catálogo completo por áreas -->
       <div id="explorar" class="reveal" style="margin-top:60px">
         <h2 class="h2 block-title">Explora el catálogo completo</h2>
         <p class="block-sub">{totalItems} acciones por área. Despliega la que te interese, busca una concreta o salta a una categoría.</p>
@@ -367,7 +190,7 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
   />
 
   <!-- CTA sticky (no tapa WhatsApp: desktop abajo-izquierda, móvil sobre la barra) -->
-  <a href="#diagnostico" class="dx-sticky" id="dx-sticky" data-scroll aria-label="Hacer el diagnóstico del catálogo">
+  <a href="/diagnostico" class="dx-sticky" id="dx-sticky" aria-label="Hacer el diagnóstico de bienestar corporativo">
     <span class="dx-sticky__txt">¿No sabes qué elegir?</span>
     <span class="dx-sticky__btn">Hacer diagnóstico</span>
   </a>
@@ -454,90 +277,6 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
   .cta-inline { font-weight: 600; font-size: 14px; color: var(--green); text-decoration: none; }
   .cta-inline:hover { text-decoration: underline; }
 
-  /* 3 · Diagnóstico interactivo */
-  .dx { margin-top: 44px; }
-  .dx__intro { max-width: 680px; margin-bottom: 22px; }
-  .dx__card {
-    background: #fff;
-    border: 1px solid var(--line);
-    border-top: 3px solid var(--green);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow-soft);
-    padding: 28px 28px 26px;
-    max-width: 720px;
-  }
-  .dx__progress { height: 5px; background: var(--line); border-radius: 5px; overflow: hidden; }
-  .dx__progress-fill {
-    height: 100%; width: 16.6%; background: var(--green); border-radius: 5px;
-    transition: width 0.35s ease;
-  }
-  .dx__count { font-size: 12px; color: var(--text-sec); margin: 10px 0 18px; font-weight: 500; }
-
-  .dx-step { animation: dxFade 0.28s ease; }
-  .dx-step[hidden] { display: none; }
-  @keyframes dxFade { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
-  .dx-step__title { font-weight: 700; font-size: 19px; color: var(--text); line-height: 1.3; margin: 0 0 6px; }
-  .dx-step__help { font-size: 13.5px; color: var(--text-sec); margin: 0 0 16px; line-height: 1.5; }
-
-  .dx-opts { display: grid; grid-template-columns: 1fr; gap: 9px; }
-  .dx-opt {
-    display: flex; align-items: center; gap: 12px;
-    width: 100%; text-align: left;
-    padding: 13px 15px;
-    border: 1.5px solid var(--line);
-    border-radius: 9px;
-    background: var(--bg-soft);
-    font-family: var(--font); font-size: 14.5px; color: var(--text);
-    cursor: pointer;
-    transition: border-color 0.14s ease, background 0.14s ease;
-  }
-  .dx-opt:hover { border-color: var(--green); background: #e8f2e8; }
-  .dx-opt__tick {
-    flex-shrink: 0; width: 20px; height: 20px;
-    border: 1.5px solid var(--line); border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    transition: border-color 0.14s ease, background 0.14s ease;
-  }
-  .dx-opt.selected { border-color: var(--green); background: #e8f2e8; }
-  .dx-opt.selected .dx-opt__tick { border-color: var(--green); background: var(--green); }
-  .dx-opt.selected .dx-opt__tick::after {
-    content: ''; width: 7px; height: 7px; border-radius: 50%; background: #fff;
-  }
-
-  .dx-nav { display: flex; gap: 10px; margin-top: 22px; }
-  .dx-nav .dx-next, .dx-nav .dx-submit { margin-left: auto; }
-
-  /* Paso contacto */
-  .dx-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .dx-field { display: flex; flex-direction: column; }
-  .dx-field--full { grid-column: 1 / -1; }
-  .dx-field label { font-weight: 600; font-size: 13px; color: var(--text); margin-bottom: 7px; }
-  .dx-opt-tag { font-weight: 400; color: var(--text-sec); font-size: 12px; }
-  .dx-field input, .dx-field textarea {
-    font-family: var(--font); font-size: 14.5px; color: var(--text);
-    padding: 11px 13px; border: 1.5px solid var(--line); border-radius: 7px;
-    background: var(--bg-soft); outline: none; transition: border-color 0.15s ease; resize: vertical;
-  }
-  .dx-field input:focus, .dx-field textarea:focus { border-color: var(--green); background: #fff; }
-  .dx-priv { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; margin-top: 18px; }
-  .dx-priv input { width: 17px; height: 17px; accent-color: var(--green); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
-  .dx-priv span { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
-  .dx-priv a { color: var(--green); font-weight: 600; }
-  .dx-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
-  .dx-error { color: #b00020; font-size: 13.5px; margin: 10px 0 0; }
-
-  .dx-thanks { text-align: center; padding: 22px 10px 8px; }
-  .dx-thanks[hidden] { display: none; }
-  .dx-thanks__ico {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 52px; height: 52px; border-radius: 50%;
-    background: var(--green-soft); color: var(--green);
-    font-size: 24px; font-weight: 700; margin-bottom: 14px;
-  }
-  .dx-thanks__title { font-weight: 700; font-size: 22px; color: var(--green); margin: 0 0 10px; }
-  .dx-thanks__text { font-size: 14.5px; color: var(--text-sec); line-height: 1.65; max-width: 420px; margin: 0 auto 22px; }
-  .dx-thanks__cta { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-
   /* CTA sticky */
   .dx-sticky {
     position: fixed;
@@ -557,8 +296,6 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
     font-weight: 600; font-size: 13.5px; color: #fff;
     background: var(--green); border-radius: 100px; padding: 8px 14px;
   }
-  .dx-sticky.is-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
-
   /* Buscador */
   .search { position: relative; max-width: 440px; margin-top: 20px; color: var(--text-sec); }
   .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); pointer-events: none; }
@@ -603,12 +340,8 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
       justify-content: space-between;
     }
   }
-  @media (max-width: 460px) {
-    .dx-grid { grid-template-columns: 1fr; }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .dx-step, .dx__progress-fill, .dx-sticky, .need-card { animation: none; transition: none; }
+    .dx-sticky, .need-card { animation: none; transition: none; }
   }
 </style>
 
@@ -675,162 +408,5 @@ const quizSteps: { key: string; multi: boolean; title: string; help: string; opt
       });
     }
 
-    // ── CTA sticky: ocultar cuando el diagnóstico está en pantalla ──
-    const sticky = document.getElementById('dx-sticky');
-    const dxSection = document.getElementById('diagnostico');
-    if (sticky && dxSection && 'IntersectionObserver' in window) {
-      const obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (en) {
-          sticky.classList.toggle('is-hidden', en.isIntersecting);
-        });
-      }, { threshold: 0.18 });
-      obs.observe(dxSection);
-    }
-
-    // ── Diagnóstico interactivo (quiz multi-paso) ──
-    const TOTAL = 6;
-    const answers = {};
-    let current = 1;
-    const fill = document.getElementById('dx-fill');
-    const count = document.getElementById('dx-count');
-    const steps = Array.from(document.querySelectorAll('.dx-step'));
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function showStep(n) {
-      steps.forEach(function (s) {
-        s.hidden = parseInt(s.getAttribute('data-step'), 10) !== n;
-      });
-      current = n;
-      if (fill) fill.style.width = (n / TOTAL) * 100 + '%';
-      if (count) count.textContent = 'Paso ' + n + ' de ' + TOTAL;
-    }
-
-    // Selección de opciones
-    document.querySelectorAll('.dx-opts').forEach(function (group) {
-      const key = group.getAttribute('data-key');
-      const multi = group.getAttribute('data-multi') === 'true';
-      group.addEventListener('click', function (e) {
-        const btn = e.target.closest('.dx-opt');
-        if (!btn) return;
-        const val = btn.getAttribute('data-val');
-        if (multi) {
-          btn.classList.toggle('selected');
-          answers[key] = Array.from(group.querySelectorAll('.dx-opt.selected')).map(function (b) {
-            return b.getAttribute('data-val');
-          });
-        } else {
-          group.querySelectorAll('.dx-opt').forEach(function (b) { b.classList.remove('selected'); });
-          btn.classList.add('selected');
-          answers[key] = val;
-          // Avance suave en preguntas de respuesta única
-          const stepEl = group.closest('.dx-step');
-          const stepN = parseInt(stepEl.getAttribute('data-step'), 10);
-          if (stepN < TOTAL) {
-            window.setTimeout(function () {
-              if (current === stepN) showStep(stepN + 1);
-            }, reduceMotion ? 0 : 240);
-          }
-        }
-      });
-    });
-
-    // Navegación Atrás / Siguiente
-    document.querySelectorAll('[data-prev]').forEach(function (b) {
-      b.addEventListener('click', function () { if (current > 1) showStep(current - 1); });
-    });
-    document.querySelectorAll('[data-next]').forEach(function (b) {
-      b.addEventListener('click', function () { if (current < TOTAL) showStep(current + 1); });
-    });
-
-    // Mapeo del rango de participantes al campo Airtable "Nº trabajadores"
-    function mapWorkers(v) {
-      switch (v) {
-        case '1 a 9': return '1–10';
-        case '10 a 25': return '11–50';
-        case '26 a 50': return '11–50';
-        case '51 a 100': return '51–200';
-        case 'Más de 100': return 'Más de 200';
-        default: return '';
-      }
-    }
-
-    function buildSummary(form) {
-      const cargo = (form.cargo.value || '').trim();
-      const extra = (form.mensaje.value || '').trim();
-      const senales = Array.isArray(answers.senales) ? answers.senales.join(', ') : '';
-      return [
-        'Diagnóstico interactivo del catálogo',
-        '',
-        '• Preocupación principal: ' + (answers.preocupacion || '—'),
-        '• Señales detectadas: ' + (senales || '—'),
-        '• Tipo de acción que encajaría: ' + (answers.accion || '—'),
-        '• Nº de participantes: ' + (answers.participantes || '—'),
-        '• Prioridad: ' + (answers.prioridad || '—'),
-        '• Cargo: ' + (cargo || '—'),
-        '• Mensaje adicional: ' + (extra || '—'),
-      ].join('\n');
-    }
-
-    // Envío al endpoint seguro existente
-    const CONTACT_WEBHOOK_URL = '/api/contacto';
-    const form = document.getElementById('dx-form');
-    const errorEl = document.querySelector('[data-dx-error]');
-    const submitBtn = document.querySelector('[data-dx-submit]');
-    const thanks = document.getElementById('dx-thanks');
-
-    if (form) {
-      form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        if (errorEl) errorEl.hidden = true;
-        if (!form.checkValidity()) { form.reportValidity(); return; }
-
-        const raw = new FormData(form);
-        const data = Object.fromEntries(raw.entries());
-        if (data._gotcha) { showThanks(); return; }
-
-        const payload = {
-          tipo: 'diagnostico-catalogo',
-          nombre: data.nombre || '',
-          empresa: data.empresa || '',
-          email: data.email || '',
-          telefono: data.telefono || '',
-          trabajadores: mapWorkers(answers.participantes),
-          necesidad: 'Diagnóstico interactivo catálogo',
-          mensaje: buildSummary(form),
-          fuente: 'Quiz catálogo',
-          privacidad: !!data.privacidad,
-          origen: 'web-batmotropicos',
-          pagina: '/catalogo',
-          enviadoEn: new Date().toISOString(),
-        };
-
-        if (!CONTACT_WEBHOOK_URL) { showThanks(); return; }
-        try {
-          if (submitBtn) submitBtn.setAttribute('disabled', '');
-          const res = await fetch(CONTACT_WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          showThanks();
-        } catch (err) {
-          console.error('Envío diagnóstico catálogo:', err);
-          if (errorEl) errorEl.hidden = false;
-        } finally {
-          if (submitBtn) submitBtn.removeAttribute('disabled');
-        }
-      });
-    }
-
-    function showThanks() {
-      steps.forEach(function (s) { s.hidden = true; });
-      const prog = document.querySelector('.dx__progress');
-      if (prog) prog.style.display = 'none';
-      if (count) count.style.display = 'none';
-      if (thanks) thanks.hidden = false;
-      if (sticky) sticky.classList.add('is-hidden');
-      if (thanks) thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
   })();
 </script>
