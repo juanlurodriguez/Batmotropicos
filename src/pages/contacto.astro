@@ -4,19 +4,28 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
 ---
 
 <BaseLayout
-  title="Contacto · Solicita tu diagnóstico 360º"
-  description="Solicita tu diagnóstico 360º. Cuéntanos sobre tu equipo y te preparamos una propuesta personalizada de formación y bienestar corporativo en 48 horas."
+  title="Contacto · Habla con Batmotrópicos"
+  description="Habla con Batmotrópicos: llamada, WhatsApp o formulario. Te respondemos en menos de 24 h laborables con una propuesta de formación y bienestar corporativo para tu equipo."
   path="/contacto"
 >
   <section class="section section--contact">
     <div class="wrap">
       <div class="reveal" style="max-width:680px">
         <p class="eyebrow">Contacto</p>
-        <h1 class="h2" style="font-size:38px">Solicita tu diagnóstico</h1>
+        <h1 class="h2" style="font-size:38px">Habla con Batmotrópicos</h1>
         <p class="lead">
-          Cuéntanos quién eres y qué necesita tu equipo. Te preparamos una propuesta
-          personalizada en 48 horas, sin compromiso.
+          Cuéntanos quién eres y qué necesita tu equipo. Te respondemos en menos de
+          24 h laborables, sin compromiso.
         </p>
+      </div>
+
+      <div class="cdx reveal">
+        <p class="cdx__txt">
+          ¿Quieres una recomendación personalizada? Responde 5 preguntas y te la mostramos al momento.
+        </p>
+        <a href="/diagnostico" class="btn btn--primary btn--sm">
+          Hacer el diagnóstico (2 min) <span class="arrow">→</span>
+        </a>
       </div>
 
       <div class="cpage">
@@ -103,7 +112,7 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
 
             <div class="cf-submit">
               <button type="submit" class="btn btn--primary" data-submit>
-                Solicitar diagnóstico <span class="arrow">→</span>
+                Enviar solicitud <span class="arrow">→</span>
               </button>
               <p class="cf-error" data-error hidden>
                 No se ha podido enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
@@ -116,7 +125,7 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
           <div class="cf-ok card card--accent" data-success hidden>
             <p class="eyebrow" style="margin-bottom:10px">Solicitud registrada</p>
             <p class="card-text" style="font-size:16px">
-              Gracias. Te contactaremos en menos de 48 horas con una propuesta a medida.
+              Gracias. Te contactaremos en menos de 24 h laborables con una propuesta a medida.
             </p>
           </div>
         </div>
@@ -179,6 +188,28 @@ import { contacto, WHATSAPP, NEEDS, SIZES } from '../data/site';
   .section--contact {
     padding-bottom: 100px;
   }
+  /* Banda hacia el embudo de diagnóstico */
+  .cdx {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+    background: var(--green-soft);
+    border: 1px solid rgba(26, 92, 26, 0.16);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 26px;
+    max-width: 880px;
+  }
+  .cdx__txt {
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--green-dark);
+    line-height: 1.5;
+    margin: 0;
+  }
+
   .cpage {
     display: grid;
     grid-template-columns: 1.3fr 1fr;

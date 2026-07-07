@@ -67,7 +67,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           <div class="dg-progress" aria-hidden="true">
             <div class="dg-progress-fill" id="dg-fill"></div>
           </div>
-          <p class="dg-count" id="dg-count" aria-live="polite">Paso 1 de 6</p>
+          <p class="dg-count" id="dg-count" aria-live="polite">Paso 1 de 5</p>
         </div>
 
         <!-- Paso 0 · Portada -->
@@ -75,12 +75,12 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           <p class="eyebrow">Diagnóstico Batmotrópicos</p>
           <h1 class="dg-title">Descubre qué necesita tu equipo</h1>
           <p class="dg-lead">
-            Responde a cinco preguntas rápidas sobre tu equipo y te mostramos una recomendación
-            personalizada de bienestar corporativo. Sin compromiso.
+            Responde a cinco preguntas rápidas sobre tu equipo, déjanos tus datos y te mostramos
+            una recomendación personalizada de bienestar corporativo. Sin compromiso.
           </p>
           <ul class="dg-pills" aria-label="Qué incluye el diagnóstico">
+            <li>5 preguntas + tus datos</li>
             <li>2 minutos</li>
-            <li>Sin compromiso</li>
             <li>Recomendación personalizada</li>
           </ul>
           <button type="button" class="btn btn--primary dg-start" data-dg-start>
@@ -194,8 +194,20 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
                 <input type="email" id="dg-email" name="email" placeholder="empresa@correo.com" required autocomplete="email" />
               </div>
               <div class="dg-field">
-                <label for="dg-telefono">Teléfono</label>
-                <input type="tel" id="dg-telefono" name="telefono" placeholder="600 000 000" required autocomplete="tel" />
+                <label for="dg-telefono">Teléfono <span class="dg-optional">(opcional)</span></label>
+                <input type="tel" id="dg-telefono" name="telefono" placeholder="Si prefieres que te llame" autocomplete="tel" />
+              </div>
+              <div class="dg-field dg-field--full">
+                <label for="dg-cargo">Cargo o responsabilidad</label>
+                <select id="dg-cargo" name="cargo">
+                  <option value="">— Elige una opción —</option>
+                  <option>Dirección / gerencia</option>
+                  <option>RRHH / talento</option>
+                  <option>Responsable de departamento</option>
+                  <option>Administración</option>
+                  <option>Prevención / PRL</option>
+                  <option>Otro</option>
+                </select>
               </div>
             </div>
 
@@ -226,6 +238,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         <div class="dg-step dg-result" data-dg="result" hidden>
           <p class="eyebrow">Tu recomendación</p>
           <h2 class="dg-res-title" id="dg-res-title">Recomendación para tu equipo</h2>
+          <p class="dg-res-eco" id="dg-res-eco" hidden></p>
           <p class="dg-res-why" id="dg-res-why"></p>
 
           <div class="dg-res-box">
@@ -241,6 +254,21 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </p>
 
           <div class="dg-res-cta">
+            <div class="dg-res-trust">
+              <img
+                src="/assets/img/real/juanlu.webp"
+                alt="Juan Luis Rodríguez, fundador de Batmotrópicos"
+                class="dg-res-trust__img"
+                width="1200"
+                height="1200"
+                loading="lazy"
+                decoding="async"
+              />
+              <p class="dg-res-trust__txt">
+                La llamada la hago yo, Juan Luis Rodríguez. En 20 minutos revisamos tu caso y
+                salimos con 2–3 acciones concretas que podrían encajar con tu equipo.
+              </p>
+            </div>
             <a href={BOOKING_URL} target="_blank" rel="noopener noreferrer" class="btn btn--primary dg-book">
               Reservar llamada de diagnóstico <span class="arrow">→</span>
             </a>
@@ -414,6 +442,20 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     transition: border-color 0.15s ease;
   }
   .dg-field input:focus { border-color: var(--green); background: #fff; }
+  .dg-field--full { grid-column: 1 / -1; }
+  .dg-optional { font-weight: 500; font-size: 11.5px; color: var(--text-sec); }
+  .dg-field select {
+    font-family: var(--font);
+    font-size: 14.5px;
+    color: var(--text);
+    padding: 12px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 7px;
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  .dg-field select:focus { border-color: var(--green); background: #fff; }
   .dg-priv { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; margin-top: 18px; }
   .dg-priv input { width: 17px; height: 17px; accent-color: var(--green); flex-shrink: 0; margin-top: 2px; cursor: pointer; }
   .dg-priv span { font-size: 12.5px; color: var(--text-sec); line-height: 1.55; }
@@ -429,6 +471,16 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     color: var(--text);
     margin: 0 0 10px;
   }
+  .dg-res-eco {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--green-dark);
+    line-height: 1.6;
+    margin: 0 0 10px;
+    padding-left: 14px;
+    border-left: 3px solid var(--green);
+  }
+  .dg-res-eco[hidden] { display: none; }
   .dg-res-why {
     font-size: 14.5px;
     color: var(--text-sec);
@@ -504,6 +556,31 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     text-align: center;
   }
   .dg-book { justify-content: center; }
+  .dg-res-trust {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 4px;
+  }
+  .dg-res-trust__img {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center 20%;
+  }
+  .dg-res-trust__txt {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.55;
+    margin: 0;
+  }
   .dg-res-support {
     font-size: 12.5px;
     color: var(--text-sec);
@@ -600,7 +677,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       if (progressWrap) progressWrap.hidden = !numeric;
       if (numeric) {
         if (fill) fill.style.width = (id / TOTAL) * 100 + '%';
-        if (count) count.textContent = 'Paso ' + id + ' de ' + TOTAL;
+        if (count) count.textContent = id <= 5 ? 'Paso ' + id + ' de 5' : 'Último paso';
       }
       var card = document.querySelector('.dg-card');
       if (card && typeof id === 'number' && id > 0) {
@@ -678,9 +755,9 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       return RECS[answers.dolorKey] || RECS.nose;
     }
 
-    function buildMessage(rec, level) {
+    function buildMessage(rec, level, contact) {
       var senales = Array.isArray(answers.senales) ? answers.senales.join(', ') : '';
-      return [
+      var lines = [
         'Embudo de diagnóstico — /diagnostico',
         '',
         '• Dolor principal: ' + (answers.dolor || '—'),
@@ -688,17 +765,51 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         '• Sector: ' + (answers.sector || '—'),
         '• Tamaño del equipo: ' + (answers.tamano || '—'),
         '• Momento: ' + (answers.momento || '—'),
+        '• Cargo: ' + ((contact && contact.cargo) || '—'),
         '• Recomendación mostrada: ' + rec.area + ' — ' + rec.plan,
         '• Acción recomendada: ' + rec.acciones[0],
         '• Nivel del lead: ' + level,
         '• CTA de reserva mostrado: ' + BOOKING_SHOWN,
-      ].join('\n');
+      ];
+      if (!(contact && contact.telefono)) lines.push('• Teléfono: no indicado');
+      return lines.join('\n');
+    }
+
+    // Eco de las respuestas: "Para un equipo de X en Y que está notando Z…"
+    function buildEco(rec) {
+      var parts = ['Para un equipo'];
+      if (answers.tamano && answers.tamano !== 'No lo sé todavía') {
+        parts.push('de ' + answers.tamano + ' personas');
+      }
+      if (answers.sector && answers.sector !== 'Otro sector') {
+        parts.push('de ' + answers.sector.toLowerCase());
+      }
+      var senales = (Array.isArray(answers.senales) ? answers.senales : []).filter(function (s) {
+        return s !== 'No hay señales graves, queremos prevenir';
+      });
+      if (senales.length) {
+        var lista = senales
+          .slice(0, 2)
+          .map(function (s) { return s.charAt(0).toLowerCase() + s.slice(1); })
+          .join(' y ');
+        parts.push('que está notando ' + lista);
+      } else if ((answers.senales || []).indexOf('No hay señales graves, queremos prevenir') !== -1) {
+        parts.push('que quiere prevenir antes de que aparezcan señales');
+      }
+      if (parts.length === 1) return '';
+      return parts.join(' ') + ', empezaríamos por ' + rec.area.toLowerCase() + '.';
     }
 
     function renderResult(rec) {
       var empresa = (document.getElementById('dg-empresa').value || '').trim();
       var title = document.getElementById('dg-res-title');
       title.textContent = (empresa ? 'Para ' + empresa + ': ' : 'Para tu equipo: ') + rec.area;
+      var eco = buildEco(rec);
+      var ecoEl = document.getElementById('dg-res-eco');
+      if (eco) {
+        ecoEl.textContent = eco;
+        ecoEl.hidden = false;
+      }
       document.getElementById('dg-res-why').textContent = rec.why;
       document.getElementById('dg-res-plan').textContent = rec.plan;
       var ul = document.getElementById('dg-res-actions');
@@ -746,7 +857,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           telefono: data.telefono || '',
           trabajadores: mapWorkers(answers.tamano),
           necesidad: 'Diagnóstico de bienestar corporativo',
-          mensaje: buildMessage(rec, level),
+          mensaje: buildMessage(rec, level, { cargo: (data.cargo || '').trim(), telefono: (data.telefono || '').trim() }),
           fuente: 'Embudo diagnóstico',
           privacidad: !!data.privacidad,
           origen: 'web-batmotropicos',
