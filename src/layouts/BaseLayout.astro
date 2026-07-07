@@ -53,19 +53,33 @@ const fullTitle = `${title} · ${site.name}`;
     <Footer />
     <WhatsAppWidget />
 
-    <!-- Reveal sobrio en scroll (IntersectionObserver, degrada sin JS) -->
+    <!-- Reveal sobrio en scroll (IntersectionObserver, degrada sin JS).
+         Incluye fallback por scroll: si el observer falla en algún dispositivo,
+         ningún contenido puede quedarse oculto. -->
     <script is:inline>
       (function () {
-        const els = document.querySelectorAll('.reveal');
-        if (!('IntersectionObserver' in window) || !els.length) {
-          els.forEach((el) => el.classList.add('is-visible'));
+        const els = Array.from(document.querySelectorAll('.reveal'));
+        if (!els.length) return;
+        let pending = els.slice();
+
+        function show(el) {
+          el.classList.add('is-visible');
+        }
+        function showAll() {
+          pending.forEach(show);
+          pending = [];
+          window.removeEventListener('scroll', onScroll);
+        }
+        if (!('IntersectionObserver' in window)) {
+          showAll();
           return;
         }
+
         const obs = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
               if (e.isIntersecting) {
-                e.target.classList.add('is-visible');
+                show(e.target);
                 obs.unobserve(e.target);
               }
             });
@@ -73,6 +87,32 @@ const fullTitle = `${title} · ${site.name}`;
           { threshold: 0.05, rootMargin: '0px 0px 120px 0px' }
         );
         els.forEach((el) => obs.observe(el));
+
+        // Fallback: en cada scroll, revela lo que ya está en pantalla aunque
+        // el observer no haya disparado. Se autodesactiva al terminar.
+        let ticking = false;
+        function checkPending() {
+          ticking = false;
+          pending = pending.filter(function (el) {
+            if (el.classList.contains('is-visible')) return false;
+            const top = el.getBoundingClientRect().top;
+            if (top < window.innerHeight + 120) {
+              show(el);
+              obs.unobserve(el);
+              return false;
+            }
+            return true;
+          });
+          if (!pending.length) window.removeEventListener('scroll', onScroll);
+        }
+        function onScroll() {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(checkPending);
+          }
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('load', onScroll);
       })();
     </script>
   </body>

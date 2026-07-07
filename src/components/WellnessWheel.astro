@@ -126,7 +126,9 @@ const ICON_TX = +(C - 503 * ICON_S).toFixed(2);
 const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
 ---
 
-<div class="ww reveal">
+<!-- Sin clase "reveal": esta sección es estratégica y no debe depender
+     de la animación de scroll para ser visible en ningún dispositivo. -->
+<div class="ww">
   <!-- Desktop: rueda + panel lateral -->
   <div class="ww-desk">
     <div class="ww-wheelbox">
