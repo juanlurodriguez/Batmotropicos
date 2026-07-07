@@ -71,9 +71,8 @@ const solutions: [string, string, string][] = [
         <p class="eyebrow">Catálogo · Mapa de soluciones</p>
         <h1 class="h2" style="font-size:38px">Dinos qué le pasa a tu equipo y te ayudamos a elegir</h1>
         <p class="lead">
-          No hace falta leer las {totalItems} acciones. Parte de la necesidad real del equipo —
-          física, mental, de cohesión o de continuidad— y te llevamos directo a lo que encaja. Y si
-          no lo tienes claro, haz el diagnóstico y te orientamos.
+          Parte de la necesidad real del equipo y te llevamos directo a lo que encaja. ¿No lo
+          tienes claro? Haz el diagnóstico y te orientamos.
         </p>
         <div class="hero-cta reveal">
           <a href="/diagnostico" class="btn btn--primary">Hacer el diagnóstico <span class="arrow">→</span></a>
@@ -83,7 +82,7 @@ const solutions: [string, string, string][] = [
 
       <div data-browse>
         <!-- 1 · Selector de necesidad -->
-        <div class="reveal" style="margin-top:50px">
+        <div class="reveal blk">
           <h2 class="h2 block-title">¿Qué necesita ahora tu equipo?</h2>
           <p class="block-sub">Elige el punto de partida y te llevamos a lo que mejor encaja.</p>
         </div>
@@ -103,7 +102,7 @@ const solutions: [string, string, string][] = [
         </div>
 
         <!-- 2 · Las 8 áreas del bienestar corporativo -->
-        <div class="reveal" style="margin-top:56px">
+        <div class="reveal blk">
           <p class="eyebrow">Sistema de bienestar por áreas</p>
           <h2 class="h2 block-title">Las 8 áreas del bienestar corporativo</h2>
           <p class="block-sub">
@@ -114,7 +113,7 @@ const solutions: [string, string, string][] = [
         <WellnessWheel />
 
         <!-- 3 · Soluciones por objetivo -->
-        <div class="reveal" style="margin-top:56px">
+        <div class="reveal blk">
           <h2 class="h2 block-title">Soluciones por objetivo</h2>
           <p class="block-sub">Planes pensados para una meta concreta. Los ajustamos a tu equipo en la propuesta.</p>
         </div>
@@ -136,7 +135,7 @@ const solutions: [string, string, string][] = [
       </div>
 
       <!-- 4 · Catálogo completo por áreas -->
-      <div id="explorar" class="reveal" style="margin-top:60px">
+      <div id="explorar" class="reveal blk">
         <h2 class="h2 block-title">Explora el catálogo completo</h2>
         <p class="block-sub">{totalItems} acciones por área. Despliega la que te interese, busca una concreta o salta a una categoría.</p>
       </div>
@@ -213,6 +212,16 @@ const solutions: [string, string, string][] = [
     margin-top: 26px;
   }
 
+  /* Separación entre bloques: compacta en móvil, amplia en desktop */
+  .blk {
+    margin-top: 40px;
+  }
+  @media (min-width: 760px) {
+    .blk {
+      margin-top: 56px;
+    }
+  }
+
   /* 1 · Selector de necesidad */
   .needs {
     display: grid;
@@ -257,6 +266,23 @@ const solutions: [string, string, string][] = [
   .need-card:hover .need-card__arrow,
   .need-card:focus-visible .need-card__arrow { opacity: 1; transform: translateX(0); }
 
+  /* Móvil: filas compactas (icono + título) para no enterrar la rueda */
+  @media (max-width: 639px) {
+    .needs { gap: 10px; margin-top: 16px; }
+    .need-card {
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+    }
+    .need-card__ico { width: 38px; height: 38px; }
+    .need-card__ico svg { width: 19px; height: 19px; }
+    .need-card__label { font-size: 14.5px; }
+    .need-card__desc { display: none; }
+    .need-card__arrow { position: static; opacity: 1; transform: none; }
+  }
+
   /* 2 · Soluciones por objetivo */
   .sols { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 20px; }
   .sol-card {
@@ -272,6 +298,14 @@ const solutions: [string, string, string][] = [
   .sol-card__cta { display: flex; align-items: center; gap: 18px; margin-top: 6px; flex-wrap: wrap; }
   .sol-card__link { font-weight: 600; font-size: 13.5px; color: var(--green); text-decoration: none; }
   .sol-card__link:hover { text-decoration: underline; }
+
+  /* Móvil: soluciones más compactas */
+  @media (max-width: 639px) {
+    .sols { gap: 12px; margin-top: 16px; }
+    .sol-card { padding: 18px 16px; gap: 8px; }
+    .sol-card__name { font-size: 17px; }
+    .sol-card__desc { font-size: 14px; }
+  }
 
   [data-browse][hidden] { display: none; }
   .cta-inline { font-weight: 600; font-size: 14px; color: var(--green); text-decoration: none; }
