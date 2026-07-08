@@ -2,7 +2,7 @@
 // ════════════════════════════════════════════════════════════
 // RUEDA DE BIENESTAR CORPORATIVO — 8 áreas estratégicas
 // Desktop: rueda SVG interactiva + panel lateral con detalle.
-// Móvil: tarjetas desplegables (sin rueda pequeña).
+// Móvil: rueda SVG táctil (tocar un área abre su tarjeta) + tarjetas desplegables.
 // El SVG se genera en build; el JS runtime solo gestiona la selección.
 // Cero dependencias. Los CTAs usan las anclas reales del catálogo.
 // ════════════════════════════════════════════════════════════
@@ -196,11 +196,44 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     </div>
   </div>
 
-  <!-- Móvil: tarjetas desplegables -->
+  <!-- Móvil: rueda táctil + tarjetas desplegables -->
   <div class="ww-mobile">
+    <div class="ww-mwheel">
+      <svg viewBox="0 0 440 440" class="ww-svg" aria-label="Rueda con las 8 áreas del bienestar corporativo">
+        {
+          AREAS.map((a, i) => (
+            <path
+              d={segs[i].d}
+              class={`ww-seg${i === 0 ? ' sel' : ''}`}
+              data-ww-mseg={i}
+              tabindex="0"
+              role="button"
+              aria-pressed={i === 0 ? 'true' : 'false'}
+              aria-label={`${a.name} — abrir detalle`}
+            />
+          ))
+        }
+        {
+          AREAS.map((a, i) => (
+            <text x={segs[i].lx} y={segs[i].ly + 4} class={`ww-slb ww-slb--m${i === 0 ? ' on' : ''}`} data-ww-mlb={i}>
+              {a.short}
+            </text>
+          ))
+        }
+        <circle cx={C} cy={C} r={r - 14} class="ww-hub"></circle>
+        <g transform={`translate(${ICON_TX} ${ICON_TY}) scale(${ICON_S})`} class="ww-hub-icon" aria-hidden="true">
+          <path d={ICON_P1}></path>
+          <path d={ICON_P2}></path>
+        </g>
+        <text x={C} y={C + 4} class="ww-hub-title">Bienestar</text>
+        <text x={C} y={C + 27} class="ww-hub-title">corporativo</text>
+        <text x={C} y={C + 52} class="ww-hub-sub">8 áreas estratégicas</text>
+      </svg>
+      <p class="ww-hint">Toca un área de la rueda para ver su detalle.</p>
+    </div>
     {
       AREAS.map((a, i) => (
-        <details class="ww-mi" open={i === 0}>
+        <details class="ww-mi" data-ww-mi={i} open={i === 0}>
           <summary class="ww-ms">
             <span class="ww-num" aria-hidden="true">{a.n}</span>
             <span class="ww-mt">{a.name}</span>
@@ -406,11 +439,21 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     text-decoration: underline;
   }
 
-  /* ── Móvil: tarjetas desplegables ── */
+  /* ── Móvil: rueda táctil + tarjetas desplegables ── */
   .ww-mobile {
     display: flex;
     flex-direction: column;
     gap: 10px;
+  }
+  .ww-mwheel {
+    max-width: 360px;
+    width: 100%;
+    margin: 0 auto 10px;
+  }
+  /* Etiquetas algo mayores: la rueda móvil se renderiza más pequeña.
+     14.5px es el máximo que cabe sin que "Productividad" toque el hub. */
+  .ww-slb--m {
+    font-size: 14.5px;
   }
   .ww-mi {
     background: #fff;
@@ -497,10 +540,10 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
 
 <script is:inline>
   (function () {
+    // ── Desktop: rueda + panel lateral ──
     var segs = document.querySelectorAll('[data-ww-seg]');
     var labels = document.querySelectorAll('[data-ww-lb]');
     var cards = document.querySelectorAll('[data-ww-card]');
-    if (!segs.length) return;
 
     function select(i) {
       segs.forEach(function (p) {
@@ -529,6 +572,56 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
           e.preventDefault();
           select(i);
         }
+      });
+    });
+
+    // ── Móvil: rueda táctil sincronizada con las tarjetas ──
+    var msegs = document.querySelectorAll('[data-ww-mseg]');
+    var mlabels = document.querySelectorAll('[data-ww-mlb]');
+    var mitems = document.querySelectorAll('[data-ww-mi]');
+    if (!msegs.length) return;
+
+    function mhighlight(i) {
+      msegs.forEach(function (p) {
+        var on = p.getAttribute('data-ww-mseg') === String(i);
+        p.classList.toggle('sel', on);
+        p.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      mlabels.forEach(function (t) {
+        t.classList.toggle('on', t.getAttribute('data-ww-mlb') === String(i));
+      });
+    }
+
+    function mopen(i) {
+      mhighlight(i);
+      var target = null;
+      mitems.forEach(function (d) {
+        var on = d.getAttribute('data-ww-mi') === String(i);
+        d.open = on;
+        if (on) target = d;
+      });
+      if (target && target.scrollIntoView) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    msegs.forEach(function (p) {
+      var i = parseInt(p.getAttribute('data-ww-mseg'), 10);
+      p.addEventListener('click', function () {
+        mopen(i);
+      });
+      p.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          mopen(i);
+        }
+      });
+    });
+
+    // Abrir una tarjeta a mano también resalta su área en la rueda.
+    mitems.forEach(function (d) {
+      d.addEventListener('toggle', function () {
+        if (d.open) mhighlight(parseInt(d.getAttribute('data-ww-mi'), 10));
       });
     });
   })();
