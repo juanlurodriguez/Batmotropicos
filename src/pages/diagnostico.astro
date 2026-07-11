@@ -51,6 +51,35 @@ const TIMING = [
   'Depende de si puede bonificarse',
 ];
 
+// ── Rama hotelera ──
+// Entrada directa desde /hoteles con ?hotel=1 (flujo corto específico) o
+// inserción automática si un usuario genérico elige "Hostelería y turismo".
+const HOTEL_FOCO: [string, string][] = [
+  ['equipo', 'Bienestar y formación para el equipo'],
+  ['huespedes', 'Experiencias wellness para huéspedes'],
+  ['eventos', 'Team building y eventos de empresas en el hotel'],
+  ['todo', 'Varias cosas / quiero verlo todo'],
+];
+
+const HOTEL_DEPTOS = [
+  'Housekeeping / pisos',
+  'Cocina',
+  'Sala y restauración',
+  'Recepción',
+  'Mantenimiento',
+  'Animación',
+  'Dirección y oficinas',
+];
+
+const HOTEL_ESPACIOS = [
+  'Piscina',
+  'Rooftop o terrazas',
+  'Jardines y exteriores',
+  'Gimnasio',
+  'Salas de reuniones',
+  'Spa / zona wellness',
+];
+
 const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
 ---
 
@@ -70,16 +99,16 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           <p class="dg-count" id="dg-count" aria-live="polite">Paso 1 de 5</p>
         </div>
 
-        <!-- Paso 0 · Portada -->
-        <div class="dg-step" data-dg="0">
-          <p class="eyebrow">Diagnóstico Batmotrópicos</p>
-          <h1 class="dg-title">Descubre qué necesita tu equipo</h1>
-          <p class="dg-lead">
+        <!-- Portada -->
+        <div class="dg-step" data-dg="start">
+          <p class="eyebrow" id="dg-portada-eyebrow">Diagnóstico Batmotrópicos</p>
+          <h1 class="dg-title" id="dg-portada-title">Descubre qué necesita tu equipo</h1>
+          <p class="dg-lead" id="dg-portada-lead">
             Responde a cinco preguntas rápidas sobre tu equipo, déjanos tus datos y te mostramos
             una recomendación personalizada de bienestar corporativo. Sin compromiso.
           </p>
           <ul class="dg-pills" aria-label="Qué incluye el diagnóstico">
-            <li>5 preguntas + tus datos</li>
+            <li id="dg-portada-pill">5 preguntas + tus datos</li>
             <li>2 minutos</li>
             <li>Recomendación personalizada</li>
           </ul>
@@ -89,8 +118,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           <p class="dg-note">Al final podrás reservar una llamada de 20 minutos conmigo, si quieres.</p>
         </div>
 
-        <!-- Paso 1 · Dolor principal -->
-        <div class="dg-step" data-dg="1" hidden>
+        <!-- Dolor principal -->
+        <div class="dg-step" data-dg="dolor" hidden>
           <h2 class="dg-q">¿Qué es lo que más os preocupa ahora mismo?</h2>
           <p class="dg-help">Elige la opción que más se acerque a vuestra situación.</p>
           <div class="dg-opts" data-key="dolor" data-multi="false" role="group" aria-label="Preocupación principal">
@@ -106,8 +135,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </div>
         </div>
 
-        <!-- Paso 2 · Señales -->
-        <div class="dg-step" data-dg="2" hidden>
+        <!-- Señales -->
+        <div class="dg-step" data-dg="senales" hidden>
           <h2 class="dg-q">¿Qué estáis notando en el equipo?</h2>
           <p class="dg-help">Puedes marcar varias.</p>
           <div class="dg-opts" data-key="senales" data-multi="true" role="group" aria-label="Señales detectadas">
@@ -124,8 +153,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </div>
         </div>
 
-        <!-- Paso 3 · Sector -->
-        <div class="dg-step" data-dg="3" hidden>
+        <!-- Sector -->
+        <div class="dg-step" data-dg="sector" hidden>
           <h2 class="dg-q">¿En qué sector trabajáis?</h2>
           <p class="dg-help">Nos ayuda a afinar la recomendación.</p>
           <div class="dg-opts" data-key="sector" data-multi="false" role="group" aria-label="Sector">
@@ -141,8 +170,61 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </div>
         </div>
 
-        <!-- Paso 4 · Tamaño -->
-        <div class="dg-step" data-dg="4" hidden>
+        <!-- Hotel · Foco -->
+        <div class="dg-step" data-dg="hotelFoco" hidden>
+          <h2 class="dg-q">¿Dónde quieres poner el foco?</h2>
+          <p class="dg-help">Trabajamos las tres líneas; empezamos por la que más os aporte ahora.</p>
+          <div class="dg-opts" data-key="hotelFoco" data-multi="false" role="group" aria-label="Foco del hotel">
+            {HOTEL_FOCO.map(([key, label]) => (
+              <button type="button" class="dg-opt" data-val={label} data-rec={key}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{label}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+          </div>
+        </div>
+
+        <!-- Hotel · Departamentos (foco en equipo) -->
+        <div class="dg-step" data-dg="hotelDeptos" hidden>
+          <h2 class="dg-q">¿Qué departamentos os preocupan más?</h2>
+          <p class="dg-help">Puedes marcar varios. Cada puesto tiene un desgaste distinto.</p>
+          <div class="dg-opts" data-key="hotelDeptos" data-multi="true" role="group" aria-label="Departamentos del hotel">
+            {HOTEL_DEPTOS.map((d) => (
+              <button type="button" class="dg-opt" data-val={d}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{d}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+            <button type="button" class="btn btn--primary btn--sm dg-next" data-next>Siguiente <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <!-- Hotel · Espacios (foco en huéspedes o eventos) -->
+        <div class="dg-step" data-dg="hotelEspacios" hidden>
+          <h2 class="dg-q">¿Qué espacios podríais activar?</h2>
+          <p class="dg-help">Puedes marcar varios. Las experiencias se diseñan sobre lo que ya tenéis.</p>
+          <div class="dg-opts" data-key="hotelEspacios" data-multi="true" role="group" aria-label="Espacios del hotel">
+            {HOTEL_ESPACIOS.map((e) => (
+              <button type="button" class="dg-opt" data-val={e}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{e}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
+            <button type="button" class="btn btn--primary btn--sm dg-next" data-next>Siguiente <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <!-- Tamaño -->
+        <div class="dg-step" data-dg="tamano" hidden>
           <h2 class="dg-q">¿A cuántas personas afectaría?</h2>
           <p class="dg-help">Un número aproximado nos vale.</p>
           <div class="dg-opts" data-key="tamano" data-multi="false" role="group" aria-label="Tamaño del equipo">
@@ -158,8 +240,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </div>
         </div>
 
-        <!-- Paso 5 · Momento -->
-        <div class="dg-step" data-dg="5" hidden>
+        <!-- Momento -->
+        <div class="dg-step" data-dg="momento" hidden>
           <h2 class="dg-q">¿En qué punto estáis?</h2>
           <p class="dg-help">Sin compromiso: nos ayuda a priorizar.</p>
           <div class="dg-opts" data-key="momento" data-multi="false" role="group" aria-label="Momento">
@@ -175,8 +257,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           </div>
         </div>
 
-        <!-- Paso 6 · Contacto -->
-        <div class="dg-step" data-dg="6" hidden>
+        <!-- Contacto -->
+        <div class="dg-step" data-dg="contacto" hidden>
           <h2 class="dg-q">¿A quién le enviamos la recomendación?</h2>
           <p class="dg-help">Un momento más y te muestro la recomendación para tu equipo.</p>
           <form id="dg-form" novalidate>
@@ -617,10 +699,46 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
 
 <script is:inline>
   (function () {
-    var TOTAL = 6;
     var BOOKING_SHOWN = 'Sí';
-    var answers = { dolorKey: '' };
-    var current = 0;
+    var answers = { dolorKey: '', hotelFocoKey: '' };
+
+    // ── Motor de flujo dinámico ──
+    // El recorrido es una lista de nombres de paso. La rama hotelera se
+    // activa entrando con ?hotel=1 (flujo corto desde /hoteles) o al elegir
+    // "Hostelería y turismo" en el paso de sector (se insertan 2 preguntas).
+    // 'hotelDetalle' es un hueco que se resuelve a 'hotelDeptos' o
+    // 'hotelEspacios' según el foco elegido.
+    var HOTEL_SECTOR = 'Hostelería y turismo';
+    var hotelEntry = /[?&]hotel=1(?:&|$)/.test(window.location.search);
+    var FLOW_BASE = ['dolor', 'senales', 'sector', 'tamano', 'momento', 'contacto'];
+    var FLOW_HOTEL = ['hotelFoco', 'hotelDetalle', 'tamano', 'momento', 'contacto'];
+    var flow = (hotelEntry ? FLOW_HOTEL : FLOW_BASE).slice();
+    var current = 'start';
+
+    function detalleFor(focoKey) {
+      return focoKey === 'huespedes' || focoKey === 'eventos' ? 'hotelEspacios' : 'hotelDeptos';
+    }
+    function resolveDetalle() {
+      var det = detalleFor(answers.hotelFocoKey || 'todo');
+      ['hotelDetalle', 'hotelDeptos', 'hotelEspacios'].forEach(function (name) {
+        var i = flow.indexOf(name);
+        if (i !== -1) flow[i] = det;
+      });
+    }
+    function syncHotelBranch() {
+      if (hotelEntry) return;
+      var wantsHotel = answers.sector === HOTEL_SECTOR;
+      var hasHotel = flow.indexOf('hotelFoco') !== -1;
+      if (wantsHotel && !hasHotel) {
+        flow.splice(flow.indexOf('sector') + 1, 0, 'hotelFoco', 'hotelDetalle');
+      } else if (!wantsHotel && hasHotel) {
+        flow = flow.filter(function (s) { return s.indexOf('hotel') !== 0; });
+        answers.hotelFocoKey = '';
+        answers.hotelFoco = undefined;
+        answers.hotelDeptos = undefined;
+        answers.hotelEspacios = undefined;
+      }
+    }
 
     var steps = Array.from(document.querySelectorAll('.dg-step'));
     var progressWrap = document.getElementById('dg-progresswrap');
@@ -668,19 +786,51 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       },
     };
 
-    function showStep(id) {
+    // Recomendaciones específicas para hoteles, por foco elegido.
+    var HOTEL_RECS = {
+      equipo: {
+        area: 'Bienestar y formación para el equipo del hotel',
+        plan: 'Programa Equipo Hotel',
+        why: 'En un hotel el desgaste es físico y mental a la vez: housekeeping y cocina acumulan sobrecarga, y recepción y sala sostienen la presión del cliente. Cuidar al equipo por departamentos reduce absentismo y rotación — y buena parte puede encajar como formación bonificable.',
+        acciones: ['Ergonomía y prevención de sobrecargas por departamento', 'Gestión del estrés en temporada alta', 'Plan formativo anual con posible encaje FUNDAE'],
+      },
+      huespedes: {
+        area: 'Experiencias wellness para huéspedes',
+        plan: 'Programa Wellness Huéspedes',
+        why: 'Una programación estable de actividades diferencia al hotel y mejora la experiencia y las reseñas, aprovechando espacios que ya tenéis y con profesionales titulados.',
+        acciones: ['Calendario semanal de actividades por temporada', 'Stretching, yoga, pilates, aquagym o entrenamiento funcional según el perfil del huésped', 'Profesionales sanitarios y del deporte titulados'],
+      },
+      eventos: {
+        area: 'El hotel como sede de experiencias corporativas',
+        plan: 'Programa Hotel & Empresas',
+        why: 'Vuestros espacios pueden generar ingresos en temporada media y entre semana: team buildings, wellness days y retiros de empresa, con el hotel como sede y su restauración como parte del paquete.',
+        acciones: ['Team building y jornadas de empresa en el hotel', 'Wellness days y retiros corporativos', 'Paquetes reunión + experiencia con servicios del hotel'],
+      },
+      todo: {
+        area: 'Partner integral de bienestar del hotel',
+        plan: 'Partner Hotel 360º',
+        why: 'Equipo, huéspedes y eventos comparten espacios, calendario y estándar de cuidado. Un solo partner coordina las tres líneas y prioriza por impacto en cada temporada.',
+        acciones: ['Diagnóstico por departamentos y temporada', 'Programa combinado equipo + huéspedes', 'Activación del hotel como sede de experiencias corporativas'],
+      },
+    };
+
+    function showStep(name) {
       steps.forEach(function (s) {
-        s.hidden = s.getAttribute('data-dg') !== String(id);
+        s.hidden = s.getAttribute('data-dg') !== name;
       });
-      current = id;
-      var numeric = typeof id === 'number' && id >= 1 && id <= TOTAL;
-      if (progressWrap) progressWrap.hidden = !numeric;
-      if (numeric) {
-        if (fill) fill.style.width = (id / TOTAL) * 100 + '%';
-        if (count) count.textContent = id <= 5 ? 'Paso ' + id + ' de 5' : 'Último paso';
+      current = name;
+      var idx = flow.indexOf(name);
+      var inFlow = idx !== -1;
+      if (progressWrap) progressWrap.hidden = !inFlow;
+      if (inFlow) {
+        if (fill) fill.style.width = ((idx + 1) / flow.length) * 100 + '%';
+        if (count) {
+          count.textContent =
+            name === 'contacto' ? 'Último paso' : 'Paso ' + (idx + 1) + ' de ' + (flow.length - 1);
+        }
       }
       var card = document.querySelector('.dg-card');
-      if (card && typeof id === 'number' && id > 0) {
+      if (card && inFlow) {
         var top = card.getBoundingClientRect().top;
         if (top < 0) card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
       }
@@ -688,7 +838,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
 
     // Portada
     var startBtn = document.querySelector('[data-dg-start]');
-    if (startBtn) startBtn.addEventListener('click', function () { showStep(1); });
+    if (startBtn) startBtn.addEventListener('click', function () { showStep(flow[0]); });
 
     // Opciones
     document.querySelectorAll('.dg-opts').forEach(function (group) {
@@ -707,11 +857,17 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           btn.classList.add('selected');
           answers[key] = btn.getAttribute('data-val');
           if (key === 'dolor') answers.dolorKey = btn.getAttribute('data-rec') || 'nose';
-          var stepEl = group.closest('.dg-step');
-          var stepN = parseInt(stepEl.getAttribute('data-dg'), 10);
-          if (stepN < TOTAL) {
+          if (key === 'hotelFoco') {
+            answers.hotelFocoKey = btn.getAttribute('data-rec') || 'todo';
+            resolveDetalle();
+          }
+          if (key === 'sector') syncHotelBranch();
+          var stepName = group.closest('.dg-step').getAttribute('data-dg');
+          var idx = flow.indexOf(stepName);
+          if (idx !== -1 && idx < flow.length - 1) {
+            var next = flow[idx + 1];
             window.setTimeout(function () {
-              if (current === stepN) showStep(stepN + 1);
+              if (current === stepName) showStep(next);
             }, reduceMotion ? 0 : 240);
           }
         }
@@ -721,12 +877,15 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     // Navegación
     document.querySelectorAll('[data-prev]').forEach(function (b) {
       b.addEventListener('click', function () {
-        if (typeof current === 'number' && current > 0) showStep(current - 1);
+        var idx = flow.indexOf(current);
+        if (idx > 0) showStep(flow[idx - 1]);
+        else showStep('start');
       });
     });
     document.querySelectorAll('[data-next]').forEach(function (b) {
       b.addEventListener('click', function () {
-        if (typeof current === 'number' && current < TOTAL) showStep(current + 1);
+        var idx = flow.indexOf(current);
+        if (idx !== -1 && idx < flow.length - 1) showStep(flow[idx + 1]);
       });
     });
 
@@ -752,7 +911,20 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     }
 
     function getRec() {
+      if (answers.hotelFocoKey) return HOTEL_RECS[answers.hotelFocoKey] || HOTEL_RECS.todo;
       return RECS[answers.dolorKey] || RECS.nose;
+    }
+
+    // El detalle hotelero vigente según el foco (evita arrastrar respuestas
+    // de un detalle descartado si el usuario cambia de foco al volver atrás).
+    function hotelDetalleActual() {
+      if (!answers.hotelFocoKey) return null;
+      var det = detalleFor(answers.hotelFocoKey);
+      var vals = answers[det];
+      return {
+        label: det === 'hotelDeptos' ? 'Departamentos' : 'Espacios',
+        list: Array.isArray(vals) ? vals : [],
+      };
     }
 
     function buildMessage(rec, level, contact) {
@@ -766,17 +938,47 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         '• Tamaño del equipo: ' + (answers.tamano || '—'),
         '• Momento: ' + (answers.momento || '—'),
         '• Cargo: ' + ((contact && contact.cargo) || '—'),
+      ];
+      if (answers.hotelFocoKey) {
+        lines.push('• Vertical: Hoteles');
+        lines.push('• Foco hotel: ' + (answers.hotelFoco || '—'));
+        var det = hotelDetalleActual();
+        if (det) lines.push('• ' + det.label + ': ' + (det.list.join(', ') || '—'));
+      }
+      lines.push(
         '• Recomendación mostrada: ' + rec.area + ' — ' + rec.plan,
         '• Acción recomendada: ' + rec.acciones[0],
         '• Nivel del lead: ' + level,
-        '• CTA de reserva mostrado: ' + BOOKING_SHOWN,
-      ];
+        '• CTA de reserva mostrado: ' + BOOKING_SHOWN
+      );
       if (!(contact && contact.telefono)) lines.push('• Teléfono: no indicado');
       return lines.join('\n');
     }
 
     // Eco de las respuestas: "Para un equipo de X en Y que está notando Z…"
     function buildEco(rec) {
+      // Variante hotelera
+      if (answers.hotelFocoKey) {
+        var hparts = ['Para un hotel'];
+        if (answers.tamano && answers.tamano !== 'No lo sé todavía') {
+          hparts.push('con una plantilla de ' + answers.tamano + ' personas');
+        }
+        var det = hotelDetalleActual();
+        if (det && det.list.length) {
+          var hlista = det.list
+            .slice(0, 2)
+            .map(function (s) { return s.charAt(0).toLowerCase() + s.slice(1); })
+            .join(' y ');
+          hparts.push(
+            det.label === 'Departamentos'
+              ? 'donde ' + hlista + ' concentran la mayor carga'
+              : 'que puede activar ' + hlista
+          );
+        }
+        if (hparts.length === 1) return '';
+        return hparts.join(' ') + ', empezaríamos por ' + rec.area.toLowerCase() + '.';
+      }
+
       var parts = ['Para un equipo'];
       if (answers.tamano && answers.tamano !== 'No lo sé todavía') {
         parts.push('de ' + answers.tamano + ' personas');
@@ -803,7 +1005,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
     function renderResult(rec) {
       var empresa = (document.getElementById('dg-empresa').value || '').trim();
       var title = document.getElementById('dg-res-title');
-      title.textContent = (empresa ? 'Para ' + empresa + ': ' : 'Para tu equipo: ') + rec.area;
+      var fallback = answers.hotelFocoKey ? 'Para tu hotel: ' : 'Para tu equipo: ';
+      title.textContent = (empresa ? 'Para ' + empresa + ': ' : fallback) + rec.area;
       var eco = buildEco(rec);
       var ecoEl = document.getElementById('dg-res-eco');
       if (eco) {
@@ -820,7 +1023,10 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         ul.appendChild(li);
       });
       var extra = document.getElementById('dg-res-extra');
-      if (answers.sector === 'Hostelería y turismo') {
+      if (answers.hotelFocoKey && answers.hotelFocoKey !== 'todo') {
+        extra.textContent = 'Las tres líneas — equipo, huéspedes y experiencias corporativas — se pueden combinar en un mismo programa. En la llamada lo vemos sobre vuestros espacios y temporada.';
+        extra.hidden = false;
+      } else if (!answers.hotelFocoKey && answers.sector === 'Hostelería y turismo') {
         extra.textContent = 'Además, para hostelería existe un programa específico de prevención: ergonomía, autocuidado físico y hábitos saludables aplicados a los puestos del sector.';
         extra.hidden = false;
       }
@@ -861,7 +1067,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           fuente: 'Embudo diagnóstico',
           privacidad: !!data.privacidad,
           origen: 'web-batmotropicos',
-          pagina: '/diagnostico',
+          pagina: answers.hotelFocoKey ? '/diagnostico (hoteles)' : '/diagnostico',
           enviadoEn: new Date().toISOString(),
         };
 
@@ -890,6 +1096,22 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
 
-    showStep(0);
+    // Entrada desde /hoteles: sector fijado y portada adaptada.
+    if (hotelEntry) {
+      answers.sector = HOTEL_SECTOR;
+      var pe = document.getElementById('dg-portada-eyebrow');
+      var pt = document.getElementById('dg-portada-title');
+      var pl = document.getElementById('dg-portada-lead');
+      var pp = document.getElementById('dg-portada-pill');
+      if (pe) pe.textContent = 'Diagnóstico Batmotrópicos · Hoteles';
+      if (pt) pt.textContent = 'Descubre qué necesita tu hotel';
+      if (pl)
+        pl.textContent =
+          'Responde a cuatro preguntas rápidas sobre tu establecimiento, déjanos tus datos y te mostramos una recomendación para tu equipo, tus huéspedes o tus eventos. Sin compromiso.';
+      if (pp) pp.textContent = '4 preguntas + tus datos';
+      document.title = 'Diagnóstico de bienestar para hoteles · Batmotrópicos';
+    }
+
+    showStep('start');
   })();
 </script>

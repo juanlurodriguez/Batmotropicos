@@ -31,6 +31,7 @@ export const WHATSAPP = `https://wa.me/34640761701?text=${encodeURIComponent(WA_
 export const nav: { href: string; label: string }[] = [
   { href: '/que-hacemos', label: 'Qué hacemos' },
   { href: '/catalogo', label: 'Catálogo' },
+  { href: '/hoteles', label: 'Hoteles' },
   { href: '/quienes-somos', label: 'Quiénes somos' },
 ];
 

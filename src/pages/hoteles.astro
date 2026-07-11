@@ -1,0 +1,344 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+import { WHATSAPP } from '../data/site';
+
+// ════════════════════════════════════════════════════════════
+// VERTICAL HOTELES — /hoteles
+// Landing para dirección hotelera y RRHH de alojamientos turísticos.
+// Tres líneas de negocio: equipo, huéspedes y eventos corporativos.
+// El CTA principal lleva al embudo con la rama hotelera (?hotel=1).
+// ════════════════════════════════════════════════════════════
+
+const DX_HOTEL = '/diagnostico?hotel=1';
+
+const lineas = [
+  {
+    n: '01',
+    tag: 'Para tu equipo',
+    title: 'Bienestar y formación para la plantilla',
+    desc: 'Housekeeping y cocina acumulan sobrecarga física; recepción y sala sostienen la presión del cliente. Trabajamos cada departamento con acciones prácticas — ergonomía, gestión del estrés en temporada alta, prevención — y buena parte puede encajar como formación bonificable FUNDAE.',
+    points: ['Ergonomía y prevención por departamento', 'Gestión del estrés en temporada alta', 'Plan formativo anual bonificable'],
+  },
+  {
+    n: '02',
+    tag: 'Para tus huéspedes',
+    title: 'Experiencias wellness que diferencian al hotel',
+    desc: 'Stretching, movilidad, yoga, pilates, aquagym, mindfulness o entrenamiento funcional, impartidos por profesionales sanitarios y del deporte titulados. Un calendario estable por temporada, sobre los espacios que ya tenéis: piscina, rooftop, jardines o salas.',
+    points: ['Calendario semanal por temporada', 'Actividades según el perfil del huésped', 'Profesionales titulados, imagen premium'],
+  },
+  {
+    n: '03',
+    tag: 'Para tu cuenta de resultados',
+    title: 'El hotel como sede de experiencias corporativas',
+    desc: 'Vuestros espacios pueden generar ingresos entre semana y en temporada media: team buildings, wellness days, retiros y reuniones de empresas, con el hotel como sede y su restauración como parte del paquete. Nosotros diseñamos y ejecutamos la experiencia; el hotel pone el escenario.',
+    points: ['Team building y jornadas de empresa', 'Wellness days y retiros corporativos', 'Paquetes reunión + experiencia'],
+  },
+];
+
+const porque = [
+  ['Sanitarios y profesionales del deporte', 'Fisioterapia, actividad física y salud laboral. No animadores improvisados: profesionales titulados delante de tu equipo y de tus huéspedes.'],
+  ['Conocemos la hostelería por dentro', 'Años de trabajo en hoteles — equipos, animación y operativa real. Sabemos lo que es un agosto completo y cómo llega la plantilla a octubre.'],
+  ['FUNDAE sin promesas de humo', 'Revisamos qué acciones pueden bonificarse con el crédito formativo del hotel y preparamos la documentación antes de empezar. Sin prometer gratuidad.'],
+];
+
+const pasos = [
+  ['Diagnóstico', 'Analizamos plantilla, departamentos, temporada y espacios. 20 minutos con dirección o RRHH.'],
+  ['Propuesta a medida', 'Un plan por línea — equipo, huéspedes, eventos — con calendario, formato y encaje FUNDAE revisado.'],
+  ['Ejecución y medición', 'Impartimos en el hotel, medimos satisfacción e impacto y os entregamos memoria de resultados.'],
+];
+---
+
+<BaseLayout
+  title="Bienestar y wellness para hoteles"
+  description="Partner de bienestar para hoteles en Mallorca: formación bonificable y salud laboral para la plantilla, experiencias wellness para huéspedes y el hotel como sede de team buildings y eventos corporativos."
+  path="/hoteles"
+>
+  <!-- Hero -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:780px">
+        <p class="eyebrow">Hoteles y alojamientos turísticos · Mallorca</p>
+        <h1 class="h2" style="font-size:38px">
+          Un partner de bienestar para tu equipo, tus huéspedes y tus eventos
+        </h1>
+        <p class="lead">
+          Cuidamos a la plantilla que sostiene el hotel, diseñamos experiencias wellness que
+          mejoran la estancia del huésped y convertimos vuestros espacios en sede de eventos
+          corporativos rentables. Tres líneas, un solo partner.
+        </p>
+        <div class="ht-cta reveal">
+          <a href={DX_HOTEL} class="btn btn--primary">Hacer el diagnóstico de hotel (2 min) <span class="arrow">→</span></a>
+          <a href={WHATSAPP} target="_blank" rel="noopener noreferrer" class="btn btn--outline">Escribir por WhatsApp</a>
+        </div>
+        <ul class="ht-pills">
+          <li>Formación bonificable FUNDAE</li>
+          <li>En el propio hotel</li>
+          <li>Adaptado a tu temporada</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Las tres líneas -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal" style="max-width:720px">
+        <p class="eyebrow">Qué hacemos por un hotel</p>
+        <h2 class="h2">Tres líneas que se refuerzan entre sí</h2>
+        <p class="lead">
+          El mismo estándar de cuidado sirve al equipo, al huésped y a las empresas que visitan
+          el hotel. Puedes empezar por una línea y crecer hacia las demás.
+        </p>
+      </div>
+      <div class="ht-lineas">
+        {
+          lineas.map((l) => (
+            <article class="ht-linea card card--accent reveal">
+              <div class="ht-linea__head">
+                <span class="ht-linea__num" aria-hidden="true">{l.n}</span>
+                <span class="ht-linea__tag">{l.tag}</span>
+              </div>
+              <h3 class="ht-linea__title">{l.title}</h3>
+              <p class="card-text">{l.desc}</p>
+              <ul class="ht-linea__points">
+                {l.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+      <p class="note reveal" style="margin-top:18px; max-width:740px">
+        La bonificación FUNDAE aplica a acciones formativas para la plantilla, siempre sujeta al
+        crédito disponible y al cumplimiento de los requisitos. Las experiencias para huéspedes y
+        los eventos corporativos son líneas de servicio independientes.
+      </p>
+    </div>
+  </section>
+
+  <!-- Por qué Batmotrópicos -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:720px">
+        <p class="eyebrow">Por qué Batmotrópicos</p>
+        <h2 class="h2">Sanitarios que conocen la hostelería por dentro</h2>
+      </div>
+      <div class="ht-why">
+        {
+          porque.map(([t, d]) => (
+            <div class="ht-why__item reveal">
+              <h3 class="ht-why__title">{t}</h3>
+              <p class="card-text">{d}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Cómo funciona -->
+  <section class="section section--soft">
+    <div class="wrap">
+      <div class="reveal" style="max-width:720px">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2 class="h2">Del diagnóstico a la primera acción en tu hotel</h2>
+      </div>
+      <ol class="ht-steps">
+        {
+          pasos.map(([t, d], i) => (
+            <li class="ht-steps__item reveal">
+              <span class="ht-steps__num">{i + 1}</span>
+              <div>
+                <h3 class="ht-steps__title">{t}</h3>
+                <p class="card-text">{d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Empieza por aquí"
+    title="¿Vemos qué puede ganar tu hotel?"
+    text="Haz el diagnóstico para hoteles: en 2 minutos te mostramos por dónde empezar — equipo, huéspedes o eventos — y puedes reservar una llamada de 20 minutos para verlo sobre vuestra temporada y espacios."
+    primaryLabel="Hacer el diagnóstico de hotel (2 min)"
+    primaryHref={DX_HOTEL}
+  />
+</BaseLayout>
+
+<style>
+  .ht-cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 26px;
+  }
+  .ht-pills {
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .ht-pills li {
+    position: relative;
+    font-weight: 500;
+    font-size: 13px;
+    color: var(--text-sec);
+  }
+  .ht-pills li:not(:first-child)::before {
+    content: '';
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--line);
+    transform: translateY(-50%);
+  }
+
+  /* Tres líneas */
+  .ht-lineas {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 28px;
+  }
+  .ht-linea {
+    padding: 26px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ht-linea__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ht-linea__num {
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--green);
+    opacity: 0.35;
+    line-height: 1;
+  }
+  .ht-linea__tag {
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+  }
+  .ht-linea__title {
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--text);
+    margin: 0;
+    line-height: 1.3;
+  }
+  .ht-linea__points {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ht-linea__points li {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+  }
+  .ht-linea__points li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background: var(--green);
+  }
+
+  /* Por qué */
+  .ht-why {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .ht-why__item {
+    padding: 24px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .ht-why__title {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 8px;
+  }
+
+  /* Pasos */
+  .ht-steps {
+    list-style: none;
+    margin: 28px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .ht-steps__item {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 18px;
+    align-items: start;
+  }
+  .ht-steps__num {
+    width: 44px;
+    height: 44px;
+    border-radius: 44px;
+    border: 2px solid var(--green);
+    color: var(--green);
+    background: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .ht-steps__title {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 6px;
+  }
+
+  @media (min-width: 860px) {
+    .ht-lineas {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .ht-why {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      border-top: none;
+    }
+    .ht-why__item {
+      border-bottom: none;
+      border-top: 2px solid var(--green);
+      padding-top: 18px;
+    }
+    .ht-steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
