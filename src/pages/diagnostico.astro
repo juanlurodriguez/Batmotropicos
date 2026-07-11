@@ -80,6 +80,15 @@ const HOTEL_ESPACIOS = [
   'Spa / zona wellness',
 ];
 
+// Solo cuando el foco es el equipo: interés en fisioterapia in company.
+const HOTEL_FISIO = [
+  'Sí, presencial en el hotel',
+  'Sí, presencial + seguimiento online',
+  'Solo refuerzo en temporada alta',
+  'Quiero entenderlo mejor en la llamada',
+  'De momento, solo formación preventiva',
+];
+
 const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
 ---
 
@@ -220,6 +229,23 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
           <div class="dg-nav">
             <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
             <button type="button" class="btn btn--primary btn--sm dg-next" data-next>Siguiente <span class="arrow">→</span></button>
+          </div>
+        </div>
+
+        <!-- Hotel · Fisioterapia para la plantilla (solo foco equipo) -->
+        <div class="dg-step" data-dg="hotelFisio" hidden>
+          <h2 class="dg-q">¿Te interesa incorporar fisioterapia para la plantilla?</h2>
+          <p class="dg-help">Tratamiento y seguimiento de molestias en el propio hotel, además de la prevención.</p>
+          <div class="dg-opts" data-key="hotelFisio" data-multi="false" role="group" aria-label="Interés en fisioterapia">
+            {HOTEL_FISIO.map((f) => (
+              <button type="button" class="dg-opt" data-val={f}>
+                <span class="dg-opt__tick" aria-hidden="true"></span>
+                <span>{f}</span>
+              </button>
+            ))}
+          </div>
+          <div class="dg-nav">
+            <button type="button" class="btn btn--outline btn--sm" data-prev>← Atrás</button>
           </div>
         </div>
 
@@ -719,11 +745,21 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       return focoKey === 'huespedes' || focoKey === 'eventos' ? 'hotelEspacios' : 'hotelDeptos';
     }
     function resolveDetalle() {
-      var det = detalleFor(answers.hotelFocoKey || 'todo');
+      var focoKey = answers.hotelFocoKey || 'todo';
+      var det = detalleFor(focoKey);
       ['hotelDetalle', 'hotelDeptos', 'hotelEspacios'].forEach(function (name) {
         var i = flow.indexOf(name);
         if (i !== -1) flow[i] = det;
       });
+      // La pregunta de fisioterapia solo aplica cuando el foco es el equipo.
+      var wantsFisio = focoKey === 'equipo' || focoKey === 'todo';
+      var fi = flow.indexOf('hotelFisio');
+      if (wantsFisio && fi === -1) {
+        flow.splice(flow.indexOf(det) + 1, 0, 'hotelFisio');
+      } else if (!wantsFisio && fi !== -1) {
+        flow.splice(fi, 1);
+        answers.hotelFisio = undefined;
+      }
     }
     function syncHotelBranch() {
       if (hotelEntry) return;
@@ -737,6 +773,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         answers.hotelFoco = undefined;
         answers.hotelDeptos = undefined;
         answers.hotelEspacios = undefined;
+        answers.hotelFisio = undefined;
       }
     }
 
@@ -910,8 +947,27 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       }
     }
 
+    function fisioInteres() {
+      var v = answers.hotelFisio || '';
+      return v !== '' && v !== 'De momento, solo formación preventiva';
+    }
+
     function getRec() {
-      if (answers.hotelFocoKey) return HOTEL_RECS[answers.hotelFocoKey] || HOTEL_RECS.todo;
+      if (answers.hotelFocoKey) {
+        var rec = HOTEL_RECS[answers.hotelFocoKey] || HOTEL_RECS.todo;
+        // Si hay interés en fisioterapia, encabeza las acciones recomendadas.
+        if (fisioInteres()) {
+          return {
+            area: rec.area,
+            plan: rec.plan,
+            why: rec.why,
+            acciones: ['Fisioterapia in company: tratamiento y seguimiento de la plantilla'].concat(
+              rec.acciones.slice(0, 2)
+            ),
+          };
+        }
+        return rec;
+      }
       return RECS[answers.dolorKey] || RECS.nose;
     }
 
@@ -944,6 +1000,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
         lines.push('• Foco hotel: ' + (answers.hotelFoco || '—'));
         var det = hotelDetalleActual();
         if (det) lines.push('• ' + det.label + ': ' + (det.list.join(', ') || '—'));
+        if (answers.hotelFisio) lines.push('• Fisioterapia plantilla: ' + answers.hotelFisio);
       }
       lines.push(
         '• Recomendación mostrada: ' + rec.area + ' — ' + rec.plan,
@@ -961,17 +1018,18 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       if (answers.hotelFocoKey) {
         var hparts = ['Para un hotel'];
         if (answers.tamano && answers.tamano !== 'No lo sé todavía') {
-          hparts.push('con una plantilla de ' + answers.tamano + ' personas');
+          var htam = answers.tamano.charAt(0).toLowerCase() + answers.tamano.slice(1);
+          hparts.push('con una plantilla de ' + htam + ' personas');
         }
         var det = hotelDetalleActual();
         if (det && det.list.length) {
-          var hlista = det.list
-            .slice(0, 2)
+          var hsel = det.list.slice(0, 2);
+          var hlista = hsel
             .map(function (s) { return s.charAt(0).toLowerCase() + s.slice(1); })
             .join(' y ');
           hparts.push(
             det.label === 'Departamentos'
-              ? 'donde ' + hlista + ' concentran la mayor carga'
+              ? 'donde ' + hlista + (hsel.length > 1 ? ' concentran' : ' concentra') + ' la mayor carga'
               : 'que puede activar ' + hlista
           );
         }
@@ -981,7 +1039,7 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
 
       var parts = ['Para un equipo'];
       if (answers.tamano && answers.tamano !== 'No lo sé todavía') {
-        parts.push('de ' + answers.tamano + ' personas');
+        parts.push('de ' + answers.tamano.charAt(0).toLowerCase() + answers.tamano.slice(1) + ' personas');
       }
       if (answers.sector && answers.sector !== 'Otro sector') {
         parts.push('de ' + answers.sector.toLowerCase());
@@ -1107,8 +1165,8 @@ const BOOKING_URL = 'https://cal.eu/batmotropicos/diagnostico';
       if (pt) pt.textContent = 'Descubre qué necesita tu hotel';
       if (pl)
         pl.textContent =
-          'Responde a cuatro preguntas rápidas sobre tu establecimiento, déjanos tus datos y te mostramos una recomendación para tu equipo, tus huéspedes o tus eventos. Sin compromiso.';
-      if (pp) pp.textContent = '4 preguntas + tus datos';
+          'Responde a cuatro o cinco preguntas rápidas sobre tu establecimiento, déjanos tus datos y te mostramos una recomendación para tu equipo, tus huéspedes o tus eventos. Sin compromiso.';
+      if (pp) pp.textContent = '4–5 preguntas + tus datos';
       document.title = 'Diagnóstico de bienestar para hoteles · Batmotrópicos';
     }
 

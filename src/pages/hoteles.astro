@@ -16,9 +16,9 @@ const lineas = [
   {
     n: '01',
     tag: 'Para tu equipo',
-    title: 'Bienestar y formación para la plantilla',
-    desc: 'Housekeeping y cocina acumulan sobrecarga física; recepción y sala sostienen la presión del cliente. Trabajamos cada departamento con acciones prácticas — ergonomía, gestión del estrés en temporada alta, prevención — y buena parte puede encajar como formación bonificable FUNDAE.',
-    points: ['Ergonomía y prevención por departamento', 'Gestión del estrés en temporada alta', 'Plan formativo anual bonificable'],
+    title: 'Bienestar, formación y fisioterapia para la plantilla',
+    desc: 'Housekeeping y cocina acumulan sobrecarga física; recepción y sala sostienen la presión del cliente. Trabajamos cada departamento en dos frentes: prevención — ergonomía, gestión del estrés, formación bonificable FUNDAE — y atención directa, con fisioterapia y seguimiento en el propio hotel.',
+    points: ['Ergonomía y prevención por departamento', 'Fisioterapia in company: tratamiento y seguimiento', 'Plan formativo anual bonificable'],
   },
   {
     n: '02',
@@ -115,6 +115,50 @@ const pasos = [
         crédito disponible y al cumplimiento de los requisitos. Las experiencias para huéspedes y
         los eventos corporativos son líneas de servicio independientes.
       </p>
+    </div>
+  </section>
+
+  <!-- Fisioterapia in company: profundización de la línea equipo.
+       Sin clase "reveal": contenido estratégico, visible incondicionalmente. -->
+  <section class="section">
+    <div class="wrap">
+      <div class="ht-fisio card card--accent">
+        <div class="ht-fisio__media">
+          <img
+            src="/assets/img/real/Fisio.jpg"
+            alt="Juan Luis Rodríguez, fisioterapeuta, tratando a un trabajador"
+            class="ht-fisio__img"
+            loading="lazy"
+            decoding="async"
+            width="942"
+            height="1672"
+          />
+        </div>
+        <div class="ht-fisio__body">
+          <p class="eyebrow">Fisioterapia in company</p>
+          <h2 class="h2" style="margin-bottom:12px">
+            Tratamos a tu plantilla antes de que la molestia se convierta en baja
+          </h2>
+          <p class="card-text" style="font-size:15.5px; margin-bottom:14px">
+            Años tratando a trabajadores de hotel dejan un patrón claro: las sobrecargas de
+            housekeeping, cocina, sala o mantenimiento no avisan — se acumulan hasta que llega la
+            baja. Por eso la línea de equipo no se queda en la prevención: ponemos fisioterapia
+            dentro del hotel, con valoración, tratamiento y seguimiento de cada caso.
+          </p>
+          <ul class="ht-fisio__points">
+            <li>Valoración y tratamiento en el propio hotel</li>
+            <li>Seguimiento presencial, online o combinado</li>
+            <li>Programas por departamento y refuerzos en temporada alta</li>
+          </ul>
+          <p class="note" style="margin:14px 0 18px">
+            El modelo se adapta a cada hotel: puede financiarlo la empresa, el propio trabajador o
+            un copago entre ambos. Lo concretamos en la propuesta, según plantilla y temporada.
+          </p>
+          <a href={DX_HOTEL} class="btn btn--outline btn--sm">
+            Ver si encaja en mi hotel <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -267,6 +311,74 @@ const pasos = [
     height: 6px;
     border-radius: 6px;
     background: var(--green);
+  }
+
+  /* Fisioterapia in company */
+  .ht-fisio {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+  }
+  .ht-fisio__media {
+    height: 260px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+  .ht-fisio__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+  }
+  .ht-fisio__body {
+    padding: 26px 24px;
+  }
+  .ht-fisio__points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .ht-fisio__points li {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+  }
+  .ht-fisio__points li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 6px;
+    background: var(--green);
+  }
+  @media (min-width: 860px) {
+    .ht-fisio {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .ht-fisio__media {
+      width: 36%;
+      flex-shrink: 0;
+      height: auto;
+      border-bottom: none;
+      border-right: 1px solid var(--line);
+    }
+    .ht-fisio__body {
+      padding: 34px 38px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
   }
 
   /* Por qué */
