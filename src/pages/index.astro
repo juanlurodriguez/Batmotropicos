@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
+import CasoClubMac from '../components/CasoClubMac.astro';
 import { site } from '../data/site';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
@@ -116,6 +117,9 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
       </div>
     </div>
   </section>
+
+  <!-- CASO REAL: Club Mac Alcúdia (prueba social arriba) -->
+  <CasoClubMac ctaHref="/hoteles" ctaLabel="Ver la solución para hoteles" />
 
   <!-- DIAGNÓSTICO 360º (reubicado del hero) -->
   <section class="section diag">
