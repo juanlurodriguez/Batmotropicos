@@ -20,6 +20,9 @@ const {
   ctaLabel = 'Quiero algo así para mi equipo',
   soft = false,
 } = Astro.props;
+
+const LINKEDIN =
+  'https://www.linkedin.com/posts/mac-hotels_housekeeping-machotels-employerbranding-activity-7506690399311208448-Js7x';
 ---
 
 <section class={soft ? 'section section--soft' : 'section'}>
@@ -32,10 +35,17 @@ const {
         width="640"
         height="1138"
         controls
+        muted
+        loop
         playsinline
         preload="none"
+        data-autoplay
         aria-label="Vídeo de la Semana del Housekeeping en Club Mac Alcúdia, con testimonios del equipo de pisos"
       ></video>
+      <button type="button" class="cm__unmute" data-unmute>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a10 10 0 0 1 0 14"/></svg>
+        Activar sonido
+      </button>
     </div>
 
     <div class="cm__body reveal">
@@ -59,8 +69,14 @@ const {
       </p>
 
       <figure class="cm__quote">
-        <blockquote>“Bueno, pues yo recomendaría realmente esta formación.”</blockquote>
-        <figcaption>Marga Munar · Responsable de Pisos, Club Mac</figcaption>
+        <blockquote>
+          “Dar a nuestros profesionales las herramientas necesarias para trabajar con salud y
+          seguridad es, sin duda, nuestra mejor inversión.”
+        </blockquote>
+        <figcaption>
+          Mac Hotels ·
+          <a href={LINKEDIN} target="_blank" rel="noopener noreferrer">ver la publicación en LinkedIn</a>
+        </figcaption>
       </figure>
 
       <a href={ctaHref} class="btn btn--primary">{ctaLabel} <span class="arrow">→</span></a>
@@ -77,6 +93,34 @@ const {
   }
   .cm__media {
     width: 100%;
+    position: relative;
+  }
+  .cm__unmute {
+    position: absolute;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 13px;
+    color: #fff;
+    background: rgba(17, 17, 17, 0.62);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 100px;
+    padding: 8px 14px;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    white-space: nowrap;
+  }
+  .cm__unmute:hover {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .cm__unmute[hidden] {
+    display: none;
   }
   .cm__video {
     display: block;
@@ -147,6 +191,10 @@ const {
   .cm__quote figcaption {
     font-size: 12.5px;
     color: var(--text-sec);
+  }
+  .cm__quote figcaption a {
+    color: var(--green);
+    font-weight: 600;
   }
 
   @media (max-width: 880px) {

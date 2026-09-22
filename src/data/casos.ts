@@ -40,15 +40,18 @@ export const casos: Caso[] = [
     objetivo: 'Reducir la carga física del equipo de pisos: hombro, espalda y agotamiento.',
     accion:
       'Semana del Housekeeping: formación práctica en autocuidado preventivo, higiene postural y calentamiento para 73 personas. Programa piloto de salud laboral.',
-    feedback: 'Mac Hotels lo presentó como su mejor inversión: cuidar desde dentro a quienes sostienen el hotel.',
+    feedback:
+      'Mac Hotels lo compartió públicamente como programa piloto de salud laboral para su equipo de Pisos y Servicios Técnicos.',
     videoSrc: '/assets/casos/club-mac-housekeeping.mp4',
     poster: '/assets/casos/club-mac-housekeeping-poster.jpg',
     vertical: true,
     cita: {
-      texto: 'Bueno, pues yo recomendaría realmente esta formación.',
-      autor: 'Marga Munar · Responsable de Pisos, Club Mac',
+      texto:
+        'Dar a nuestros profesionales las herramientas necesarias para trabajar con salud y seguridad es, sin duda, nuestra mejor inversión.',
+      autor: 'Mac Hotels',
     },
-    linkedin: '',
+    linkedin:
+      'https://www.linkedin.com/posts/mac-hotels_housekeeping-machotels-employerbranding-activity-7506690399311208448-Js7x',
   },
   {
     id: 'kokomo',

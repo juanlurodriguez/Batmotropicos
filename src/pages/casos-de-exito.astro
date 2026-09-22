@@ -30,6 +30,9 @@ import { casos } from '../data/casos';
                     src={c.videoSrc}
                     poster={c.poster}
                     controls
+                    muted={c.vertical}
+                    loop={c.vertical}
+                    data-autoplay={c.vertical ? '' : undefined}
                     preload={c.poster ? 'none' : 'metadata'}
                     playsinline
                     class={c.vertical ? 'caso__video caso__video--vertical' : 'caso__video'}

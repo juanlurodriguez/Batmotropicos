@@ -115,5 +115,56 @@ const fullTitle = `${title} · ${site.name}`;
         window.addEventListener('load', onScroll);
       })();
     </script>
+
+    <!-- Vídeos [data-autoplay]: se reproducen en silencio solo mientras están en
+         pantalla (no descargan nada antes). Respeta reduced-motion y la pausa
+         manual del usuario. Botón [data-unmute] opcional para activar el sonido. -->
+    <script is:inline>
+      (function () {
+        var vids = document.querySelectorAll('video[data-autoplay]');
+        if (!vids.length) return;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        vids.forEach(function (v) {
+          v.muted = true;
+          var userPaused = false;
+          var autoPausing = false;
+          v.addEventListener('pause', function () {
+            if (!autoPausing && !v.ended) userPaused = true;
+            autoPausing = false;
+          });
+          v.addEventListener('play', function () { userPaused = false; });
+
+          var btn = v.parentElement && v.parentElement.querySelector('[data-unmute]');
+          if (btn) {
+            btn.addEventListener('click', function () {
+              v.muted = false;
+              v.currentTime = 0;
+              userPaused = false;
+              v.play();
+              btn.hidden = true;
+            });
+            v.addEventListener('volumechange', function () {
+              if (!v.muted) btn.hidden = true;
+            });
+          }
+
+          if (reduce || !('IntersectionObserver' in window)) return;
+          new IntersectionObserver(
+            function (entries) {
+              entries.forEach(function (e) {
+                if (e.isIntersecting) {
+                  if (!userPaused) v.play().catch(function () {});
+                } else if (!v.paused) {
+                  autoPausing = true;
+                  v.pause();
+                }
+              });
+            },
+            { threshold: 0.4 }
+          ).observe(v);
+        });
+      })();
+    </script>
   </body>
 </html>
