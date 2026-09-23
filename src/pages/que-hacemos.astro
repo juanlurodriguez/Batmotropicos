@@ -3,48 +3,70 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CTASection from '../components/CTASection.astro';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
-const areas = [
+const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
+
+// Líneas de servicio. `href` lleva a la categoría del catálogo (se abre sola)
+// o a la página específica. `icon` son trazados SVG de 24×24.
+const servicios = [
   {
     t: 'Formación bonificable',
-    d: 'Acciones presenciales y online diseñadas para encajar en el crédito FUNDAE de la empresa: salud, habilidades, prevención y cumplimiento.',
+    d: 'Acciones presenciales y online diseñadas para encajar en el crédito FUNDAE: salud, habilidades, prevención y cumplimiento.',
+    href: '/fundae',
+    cta: 'Cómo funciona la bonificación',
+    icon: '<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/>',
   },
   {
-    t: 'Bienestar laboral',
-    d: 'Ergonomía, gestión del estrés, comunicación y hábitos saludables aplicados al puesto real del equipo.',
-  },
-  {
-    t: 'Productividad, liderazgo y coaching',
-    d: 'Programas de desarrollo para mandos, equipos de alto rendimiento y organizaciones que quieren mejorar cómo funcionan por dentro.',
-  },
-  {
-    t: 'Team building y cohesión',
-    d: 'Experiencias diseñadas para activar, conectar y reforzar el sentimiento de equipo, adaptadas al tamaño del grupo y al momento de la organización.',
+    t: 'Salud física y mental',
+    d: 'Ergonomía, pausas activas, gestión del estrés y hábitos saludables aplicados al puesto real del equipo.',
+    href: '/catalogo#salud-fisica',
+    cta: 'Ver acciones',
+    icon: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/><path d="M3.2 12H8l1.5-3 3 6 1.5-3h6.8"/>',
   },
   {
     t: 'Wellness in company',
-    d: 'Fisioterapia, psicología, yoga, pausas activas, movilidad y recuperación en las instalaciones de la empresa. Con modelos flexibles: sesiones recurrentes, bolsa de horas mensual o copago empresa-trabajador.',
+    d: 'Fisioterapia, psicología, yoga y movilidad en tus instalaciones. Sesiones recurrentes, bolsa de horas o copago.',
+    href: '/catalogo#wellness-in-company',
+    cta: 'Ver servicios',
+    icon: '<circle cx="12" cy="4.5" r="2"/><path d="M4 9.5c2.7 1 5.3 1.5 8 1.5s5.3-.5 8-1.5"/><path d="M12 11v4l-3 6"/><path d="m12 15 3 6"/>',
   },
   {
-    t: 'Formación técnica y obligatoria',
-    d: 'Cursos técnicos y de cumplimiento normativo (PRL, primeros auxilios, igualdad…) con su documentación gestionada y ordenada.',
+    t: 'Team building y cohesión',
+    d: 'Experiencias para activar, conectar y reforzar el sentimiento de equipo, adaptadas al grupo y al momento.',
+    href: '/team-building',
+    cta: 'Ver experiencias',
+    icon: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>',
   },
-];
-
-const beneficios = [
-  ['Reduce el desgaste físico y mental', 'Menos molestias musculoesqueléticas, menos estrés crónico y más energía disponible en la jornada.'],
-  ['Disminuye el absentismo', 'Las intervenciones preventivas reducen bajas y ausencias por causas relacionadas con el entorno de trabajo.'],
-  ['Mejora el clima y la colaboración', 'Un equipo que se cuida discute menos y coopera mejor. El clima laboral tiene impacto directo en los resultados.'],
-  ['Refuerza el sentimiento de pertenencia', 'Cuando la empresa cuida a su equipo de forma real, las personas se quedan. El salario emocional importa.'],
-  ['Atrae y retiene talento', 'El bienestar corporativo es un argumento diferencial frente a empresas que solo ofrecen sueldo y condiciones estándar.'],
-  ['Centraliza la gestión de servicios', 'Un solo equipo para formación, bienestar y cohesión. Menos contratos, menos coordinación dispersa.'],
+  {
+    t: 'Productividad, IA y liderazgo',
+    d: 'Inteligencia artificial aplicada, organización del trabajo, comunicación y liderazgo de equipos.',
+    href: '/catalogo#productividad-digital',
+    cta: 'Ver acciones',
+    icon: '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8Z"/>',
+  },
+  {
+    t: 'Cumplimiento y prevención',
+    d: 'PRL, primeros auxilios, igualdad y protocolos, con toda la documentación gestionada y ordenada.',
+    href: '/catalogo#cumplimiento-prevencion',
+    cta: 'Ver formaciones',
+    icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/>',
+  },
 ];
 
 const proceso = [
   ['Diagnóstico', 'Analizamos las necesidades reales del equipo y de la empresa.'],
-  ['Diseño', 'Proponemos un plan a medida con acciones, formato y calendario.'],
-  ['Gestión FUNDAE previa', 'Si aplica, revisamos el encaje en el crédito formativo y preparamos la documentación antes de ejecutar.'],
-  ['Ejecución', 'Impartimos las acciones, presenciales u online, con profesionales especializados.'],
-  ['Medición y cierre', 'Recogemos KPIs de bienestar, feedback del equipo y entregamos una memoria de resultados útil para la dirección.'],
+  ['Diseño', 'Plan a medida con acciones, formato y calendario.'],
+  ['Gestión FUNDAE', 'Si aplica, revisamos el encaje y preparamos la documentación antes de empezar.'],
+  ['Ejecución', 'Presencial u online, con profesionales especializados.'],
+  ['Medición', 'KPIs, feedback del equipo y memoria de resultados para dirección.'],
+];
+
+const beneficios = [
+  ['Menos desgaste físico y mental', 'Menos molestias y estrés crónico, más energía en la jornada.'],
+  ['Menos absentismo', 'La prevención reduce bajas ligadas al entorno de trabajo.'],
+  ['Mejor clima', 'Un equipo que se cuida coopera mejor y discute menos.'],
+  ['Más pertenencia', 'Cuando la empresa cuida de verdad, las personas se quedan.'],
+  ['Atrae y retiene talento', 'Un argumento diferencial frente al sueldo y condiciones estándar.'],
+  ['Un solo interlocutor', 'Formación, bienestar y cohesión con un único equipo.'],
 ];
 
 const fundaeFaqs = [
@@ -69,57 +91,78 @@ const fundaeFaqs = [
 
 <BaseLayout
   title="Qué hacemos"
-  description="Formación bonificable, bienestar laboral, team building y wellness in company para empresas. Un equipo que diseña, ejecuta y mide lo que el equipo necesita."
+  description="Formación bonificable, salud física y mental, wellness in company, team building, productividad y cumplimiento para empresas. Un solo equipo que diseña, ejecuta y mide."
   path="/que-hacemos"
 >
-  <section class="section">
-    <div class="wrap">
-      <div class="reveal" style="max-width:760px">
+  <!-- Hero -->
+  <section class="section qh-hero">
+    <div class="wrap qh-hero__grid">
+      <div class="reveal">
         <p class="eyebrow">Qué hacemos</p>
-        <h1 class="h2" style="font-size:38px">Una sola propuesta para cuidar, formar y cohesionar al equipo</h1>
+        <h1 class="h2 qh-hero__title">Una sola propuesta para cuidar, formar y cohesionar al equipo</h1>
         <p class="lead">
-          Centralizamos formación, bienestar y cohesión en una propuesta coordinada, con menos
-          proveedores que gestionar y más coherencia en lo que se hace.
+          Formación, bienestar y cohesión coordinados por un solo equipo: menos proveedores que
+          gestionar y más coherencia en lo que se hace.
         </p>
+        <div class="qh-hero__actions">
+          <a href="/diagnostico" class="btn btn--primary">Hacer el diagnóstico (2 min) <span class="arrow">→</span></a>
+          <a href="/catalogo" class="btn btn--outline">Ver catálogo</a>
+        </div>
+        <ul class="qh-hero__facts" aria-label="En cifras">
+          <li><strong>{totalItems}</strong> acciones</li>
+          <li><strong>{catalogo.length}</strong> áreas</li>
+          <li><strong>1</strong> solo equipo</li>
+        </ul>
       </div>
 
-      <div class="rows">
-        {
-          areas.map((a, i) => (
-            <div class="row reveal">
-              <span class="row__num">0{i + 1}</span>
-              <div class="row__body">
-                <h2 class="row__title">{a.t}</h2>
-                <p class="card-text" style="font-size:15.5px">{a.d}</p>
-              </div>
-            </div>
-          ))
-        }
+      <div class="qh-collage reveal" aria-hidden="true">
+        <img
+          class="qh-collage__main"
+          src="/assets/img/real/kokomo-formacion.webp"
+          alt=""
+          width="1200"
+          height="2133"
+          loading="eager"
+          decoding="async"
+        />
+        <img
+          class="qh-collage__inset"
+          src="/assets/img/real/clubmac-calentamiento.webp"
+          alt=""
+          width="640"
+          height="1138"
+          loading="lazy"
+          decoding="async"
+        />
+        <span class="qh-collage__badge">Sesiones en el propio espacio de trabajo</span>
       </div>
     </div>
   </section>
 
-  <!-- Beneficios -->
+  <!-- Servicios -->
   <section class="section section--soft">
     <div class="wrap">
-      <div class="reveal" style="max-width:740px">
-        <p class="eyebrow">Beneficios</p>
-        <h2 class="h2">Lo que gana la empresa</h2>
-        <p class="lead">
-          No son actividades sueltas: es una forma estructurada de cuidar al equipo que repercute en
-          clima, retención y rendimiento.
+      <div class="qh-head reveal">
+        <div>
+          <p class="eyebrow">Líneas de servicio</p>
+          <h2 class="h2" style="margin-bottom:0">Seis formas de cuidar al equipo</h2>
+        </div>
+        <p class="qh-head__sub">
+          Se combinan en un mismo plan según lo que necesite cada empresa. Toca una para ver sus
+          acciones.
         </p>
       </div>
-      <div class="ben">
+      <div class="svc reveal">
         {
-          beneficios.map(([t, d], i) => (
-            <div class="ben__item reveal">
-              <span class="ben__num">0{i + 1}</span>
-              <div>
-                <h3 class="ben__title">{t}</h3>
-                <p class="card-text">{d}</p>
-              </div>
-            </div>
+          servicios.map((s, i) => (
+            <a href={s.href} class={i === 0 ? 'svc__card svc__card--dark' : 'svc__card'}>
+              <span class="svc__ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" set:html={s.icon} />
+              </span>
+              <h3 class="svc__title">{s.t}</h3>
+              <p class="svc__desc">{s.d}</p>
+              <span class="svc__cta">{s.cta} <span class="arrow">→</span></span>
+            </a>
           ))
         }
       </div>
@@ -129,23 +172,21 @@ const fundaeFaqs = [
   <!-- Método -->
   <section class="section">
     <div class="wrap">
-      <div class="reveal" style="max-width:740px">
+      <div class="reveal" style="max-width:680px">
         <p class="eyebrow">Cómo trabajamos</p>
         <h2 class="h2">Del diagnóstico a los resultados</h2>
         <p class="lead">
-          Cinco pasos que van desde el análisis inicial hasta el cierre documentado, con la gestión
-          de bonificación resuelta antes de ejecutar.
+          Cinco pasos, del análisis inicial al cierre documentado, con la bonificación resuelta
+          antes de ejecutar.
         </p>
       </div>
-      <ol class="method">
+      <ol class="steps reveal">
         {
           proceso.map(([t, d], i) => (
-            <li class="method__step reveal">
-              <span class="method__dot">{i + 1}</span>
-              <div>
-                <h3 class="method__title">{t}</h3>
-                <p class="card-text">{d}</p>
-              </div>
+            <li class="steps__item">
+              <span class="steps__dot">{i + 1}</span>
+              <h3 class="steps__title">{t}</h3>
+              <p class="steps__desc">{d}</p>
             </li>
           ))
         }
@@ -153,45 +194,53 @@ const fundaeFaqs = [
     </div>
   </section>
 
+  <!-- Beneficios -->
+  <section class="section section--dark qh-ben">
+    <div class="wrap">
+      <div class="reveal" style="max-width:680px">
+        <p class="eyebrow eyebrow--light">Beneficios</p>
+        <h2 class="h2 h2--light">Lo que gana la empresa</h2>
+      </div>
+      <ul class="gains reveal">
+        {
+          beneficios.map(([t, d]) => (
+            <li>
+              <span class="gains__check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10" /></svg>
+              </span>
+              <div>
+                <h3 class="gains__title">{t}</h3>
+                <p class="gains__desc">{d}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   <!-- FUNDAE FAQ -->
   <section class="section section--soft">
-    <div class="wrap">
-      <div class="reveal" style="max-width:740px">
+    <div class="wrap faqwrap">
+      <div class="faqwrap__intro reveal">
         <p class="eyebrow">Bonificación FUNDAE</p>
         <h2 class="h2">Lo que conviene saber antes de planificar</h2>
-        <p class="lead">
-          La formación tiene un coste real. Muchas acciones pueden bonificarse mediante el crédito
-          formativo de la empresa. Aquí aclaramos las dudas más habituales.
+        <p class="card-text" style="font-size:15.5px; margin-bottom:22px">
+          La formación tiene un coste real. Muchas acciones pueden bonificarse con el crédito
+          formativo de la empresa; te lo revisamos desde el primer momento.
         </p>
+        <a href="/fundae" class="btn btn--outline">Más sobre bonificación <span class="arrow">→</span></a>
+        <p class="note" style="margin-top:20px">{BONIF_NOTE}</p>
       </div>
-      <div class="faq">
+      <div class="faq reveal">
         {
           fundaeFaqs.map(([q, a]) => (
-            <details class="faq__item reveal">
+            <details class="faq__item">
               <summary class="faq__q">{q}</summary>
               <p class="faq__a">{a}</p>
             </details>
           ))
         }
-      </div>
-      <div class="reveal" style="margin-top:20px">
-        <a href="/fundae" class="btn btn--outline">Ver más sobre bonificación FUNDAE <span class="arrow">→</span></a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Áreas del catálogo -->
-  <section class="section">
-    <div class="wrap">
-      <div class="reveal">
-        <p class="eyebrow">Catálogo</p>
-        <h2 class="h2">Áreas que cubrimos</h2>
-      </div>
-      <div class="tags reveal">
-        {catalogo.map((c) => <a href="/catalogo" class="tag">{c.tab} · {c.items.length}</a>)}
-      </div>
-      <div class="reveal" style="margin-top:24px">
-        <a href="/catalogo" class="btn btn--primary">Ver catálogo completo <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
@@ -200,157 +249,408 @@ const fundaeFaqs = [
 </BaseLayout>
 
 <style>
-  .rows {
-    margin-top: 32px;
-    border-top: 1px solid var(--line);
+  /* Hero */
+  .qh-hero {
+    overflow: hidden;
   }
-  .row {
+  .qh-hero__grid {
     display: grid;
-    grid-template-columns: 64px 1fr;
-    gap: 24px;
-    padding: 28px 0;
-    border-bottom: 1px solid var(--line);
-    align-items: baseline;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 64px;
+    align-items: center;
   }
-  .row__num {
-    font-weight: 700;
-    font-size: 22px;
-    color: var(--line);
+  .qh-hero__title {
+    font-size: 40px;
+    line-height: 1.18;
   }
-  .row__title {
-    font-weight: 700;
-    font-size: 20px;
-    color: var(--green);
-    margin: 0 0 8px;
-  }
-
-  .ben {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 56px;
-    margin-top: 30px;
-    border-top: 1px solid var(--line);
-  }
-  .ben__item {
+  .qh-hero__actions {
     display: flex;
-    gap: 20px;
-    padding: 26px 0;
-    border-bottom: 1px solid var(--line);
-    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
   }
-  .ben__num {
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--green);
-    min-width: 28px;
-  }
-  .ben__title {
-    font-weight: 600;
-    font-size: 17px;
-    color: var(--text);
-    margin: 0 0 6px;
-    line-height: 1.35;
-  }
-
-  .method {
+  .qh-hero__facts {
     list-style: none;
     margin: 32px 0 0;
-    padding: 0;
+    padding: 22px 0 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 36px;
   }
-  .method__step {
+  .qh-hero__facts li {
+    font-size: 13.5px;
+    color: var(--text-sec);
+  }
+  .qh-hero__facts strong {
+    display: block;
+    font-weight: 700;
+    font-size: 26px;
+    color: var(--green);
+    line-height: 1.1;
+  }
+
+  /* Collage de fotos reales */
+  .qh-collage {
+    position: relative;
+    max-width: 420px;
+    margin: 0 auto 0 auto;
+    padding: 0 0 48px 48px;
+  }
+  .qh-collage__main {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 40%;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-hover);
+  }
+  .qh-collage__inset {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 42%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 30%;
+    border: 5px solid #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-hover);
+  }
+  .qh-collage__badge {
+    position: absolute;
+    top: 18px;
+    right: -10px;
+    max-width: 190px;
+    background: #fff;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-hover);
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 12.5px;
+    line-height: 1.35;
+    color: var(--green-dark);
+    border-left: 3px solid var(--green);
+  }
+
+  /* Cabecera de sección con subtítulo lateral */
+  .qh-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px 48px;
+    margin-bottom: 30px;
+  }
+  .qh-head > div {
+    max-width: 600px;
+  }
+  .qh-head__sub {
+    max-width: 340px;
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.65;
+    color: var(--text-sec);
+  }
+
+  /* Tarjetas de servicio */
+  .svc {
     display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 24px;
-    padding-bottom: 32px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
   }
-  .method__step:last-child {
-    padding-bottom: 0;
+  .svc__card {
+    display: flex;
+    flex-direction: column;
+    padding: 26px 24px 24px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
   }
-  .method__dot {
+  .svc__card:hover {
+    border-color: var(--green);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+  }
+  .svc__ico {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .svc__ico svg {
+    width: 22px;
+    height: 22px;
+  }
+  .svc__title {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--text);
+    line-height: 1.3;
+    margin: 0 0 8px;
+  }
+  .svc__desc {
+    font-size: 14px;
+    color: var(--text-sec);
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+  .svc__cta {
+    margin-top: auto;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--green);
+  }
+  .svc__card--dark {
+    background: var(--green-dark);
+    border-color: var(--green-dark);
+  }
+  .svc__card--dark .svc__ico {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+  .svc__card--dark .svc__title,
+  .svc__card--dark .svc__cta {
+    color: #fff;
+  }
+  .svc__card--dark .svc__desc {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  /* Método — línea de tiempo */
+  .steps {
+    list-style: none;
+    margin: 36px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 20px;
+    position: relative;
+  }
+  .steps::before {
+    content: '';
+    position: absolute;
+    top: 21px;
+    left: 22px;
+    right: 22px;
+    height: 2px;
+    background: linear-gradient(to right, var(--green), rgba(26, 92, 26, 0.18));
+  }
+  .steps__item {
+    position: relative;
+  }
+  .steps__dot {
+    position: relative;
     width: 44px;
     height: 44px;
-    border-radius: 44px;
-    border: 2px solid var(--green);
-    color: var(--green);
-    background: #fff;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
     font-weight: 700;
     font-size: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 0 6px #fff;
+    margin-bottom: 18px;
   }
-  .method__title {
+  .steps__title {
     font-weight: 700;
-    font-size: 18px;
+    font-size: 16.5px;
     color: var(--text);
     margin: 0 0 6px;
   }
-
-  .faq {
-    margin-top: 28px;
-    border-top: 1px solid var(--line);
+  .steps__desc {
+    font-size: 13.5px;
+    color: var(--text-sec);
+    line-height: 1.6;
+    margin: 0;
   }
-  .faq__item {
+
+  /* Beneficios — banda oscura */
+  .section--dark {
+    background: var(--green-dark);
+    border-bottom: none;
+  }
+  .gains {
+    list-style: none;
+    margin: 30px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 40px;
+  }
+  .gains li {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 22px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .gains__check {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .gains__check svg {
+    width: 14px;
+    height: 14px;
+  }
+  .gains__title {
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    margin: 0 0 4px;
+    line-height: 1.35;
+  }
+  .gains__desc {
+    font-size: 13.5px;
+    color: rgba(255, 255, 255, 0.74);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* FAQ en dos columnas */
+  .faqwrap {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 56px;
+    align-items: start;
+  }
+  .faq {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 6px 26px;
+  }
+  .faq__item:not(:last-child) {
     border-bottom: 1px solid var(--line);
-    padding: 4px 0;
   }
   .faq__q {
     font-weight: 600;
     font-size: 16px;
     color: var(--text);
     cursor: pointer;
-    padding: 18px 36px 18px 0;
+    padding: 20px 36px 20px 0;
     position: relative;
     list-style: none;
   }
-  .faq__q::-webkit-details-marker { display: none; }
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
   .faq__q::after {
     content: '+';
     position: absolute;
-    right: 4px;
-    top: 16px;
-    font-size: 22px;
-    font-weight: 400;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--green-soft);
     color: var(--green);
+    font-size: 18px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
-  .faq__item[open] .faq__q::after { content: '–'; }
+  .faq__item[open] .faq__q::after {
+    content: '–';
+    background: var(--green);
+    color: #fff;
+  }
   .faq__a {
     font-size: 15px;
     color: var(--text-sec);
     line-height: 1.7;
     margin: 0;
-    padding: 0 36px 20px 0;
-  }
-
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 20px;
-  }
-  .tag {
-    font-weight: 600;
-    font-size: 13.5px;
-    color: var(--green);
-    border: 1px solid var(--line);
-    border-radius: 100px;
-    padding: 9px 16px;
-    text-decoration: none;
-    background: #fff;
-  }
-  .tag:hover {
-    border-color: var(--green);
+    padding: 0 36px 22px 0;
   }
 
   @media (max-width: 980px) {
-    .ben {
+    .qh-hero__grid {
       grid-template-columns: 1fr;
+      gap: 44px;
+    }
+    .qh-hero__title {
+      font-size: 32px;
+    }
+    .svc {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .steps::before {
+      top: 22px;
+      bottom: 22px;
+      left: 21px;
+      right: auto;
+      width: 2px;
+      height: auto;
+      background: linear-gradient(to bottom, var(--green), rgba(26, 92, 26, 0.18));
+    }
+    .steps__item {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      column-gap: 18px;
+      padding-bottom: 22px;
+    }
+    .steps__dot {
+      grid-row: span 2;
+      margin-bottom: 0;
+    }
+    .steps__title {
+      margin-top: 10px;
+    }
+    .gains {
+      grid-template-columns: 1fr 1fr;
+    }
+    .faqwrap {
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
   }
-  @media (max-width: 560px) {
-    .row {
+  @media (max-width: 600px) {
+    .svc,
+    .gains {
       grid-template-columns: 1fr;
-      gap: 8px;
+    }
+    .qh-collage {
+      max-width: 340px;
+      padding: 0 0 36px 36px;
+    }
+    .qh-collage__badge {
+      right: 0;
+    }
+    .faq {
+      padding: 4px 18px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .svc__card {
+      transition: none;
+    }
+    .svc__card:hover {
+      transform: none;
     }
   }
 </style>
