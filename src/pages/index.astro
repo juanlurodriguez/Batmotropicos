@@ -5,18 +5,6 @@ import CasoClubMac from '../components/CasoClubMac.astro';
 import { site } from '../data/site';
 import { catalogo, BONIF_NOTE } from '../data/catalogo';
 
-const queHacemosMain = [
-  ['Formación bonificable', 'Acciones presenciales y online, diseñadas para encajar en el crédito FUNDAE de la empresa.'],
-  ['Bienestar laboral', 'Ergonomía, estrés, comunicación y hábitos saludables aplicados al puesto.'],
-  ['Team building y cohesión', 'Experiencias diseñadas para activar y conectar equipos, más allá de la actividad puntual.'],
-];
-
-const queHacemosComplementario = [
-  'Wellness in company',
-  'Formación técnica y obligatoria',
-  'Programas semestrales / anuales',
-];
-
 const filosofia = [
   'Menos desgaste',
   'Más pertenencia',
@@ -29,6 +17,8 @@ const beneficios = [
   ['Refuerza el sentimiento de pertenencia', 'El cuidado real de las personas se traduce en compromiso, identificación con la empresa y menor rotación.'],
   ['Centraliza servicios de bienestar', 'Formación, bienestar y cohesión coordinados por un solo equipo. Menos proveedores, más coherencia.'],
 ];
+
+const totalItems = catalogo.reduce((n, c) => n + c.items.length, 0);
 
 const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecución', 'Medición y cierre'];
 ---
@@ -121,76 +111,39 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
   <!-- CASO REAL: Club Mac Alcúdia (prueba social arriba) -->
   <CasoClubMac ctaHref="/hoteles" ctaLabel="Ver la solución para hoteles" />
 
-  <!-- DIAGNÓSTICO 360º (reubicado del hero) -->
-  <section class="section diag">
-    <div class="wrap diag__grid">
-      <div class="diag__intro reveal">
-        <p class="eyebrow">Cómo empezamos</p>
-        <h2 class="h2">Diagnóstico 360º</h2>
-        <p class="lead" style="margin-bottom:22px">
-          Antes de proponer nada, miramos al equipo de cerca. Sin diagnóstico no hay plan que
-          encaje de verdad.
-        </p>
-        <a href="/diagnostico" class="btn btn--outline">Hacer el diagnóstico (2 min) <span class="arrow">→</span></a>
-      </div>
-      <ol class="diag__steps reveal">
-        <li>
-          <span class="diag__n">01</span>
-          <div>
-            <strong>Detectamos</strong> las prioridades reales del equipo: salud, clima, formación
-            o cohesión.
-          </div>
-        </li>
-        <li>
-          <span class="diag__n">02</span>
-          <div>
-            <strong>Diseñamos</strong> un plan a medida y revisamos el encaje con el crédito FUNDAE.
-          </div>
-        </li>
-        <li>
-          <span class="diag__n">03</span>
-          <div>
-            <strong>Medimos</strong> resultados y proponemos continuidad, sin sobrecargar la gestión
-            interna.
-          </div>
-        </li>
-      </ol>
-    </div>
-  </section>
-
-  <!-- QUÉ HACEMOS -->
-  <section class="section">
+  <!-- QUÉ HACEMOS + CATÁLOGO -->
+  <section class="section section--soft">
     <div class="wrap">
-      <div class="reveal">
-        <p class="eyebrow">Qué hacemos</p>
-        <h2 class="h2">Una sola propuesta para cuidar, formar y cohesionar al equipo</h2>
-        <p class="lead">
-          Centralizamos formación, bienestar corporativo y experiencias de cohesión en una propuesta
-          coordinada, con menos proveedores y más coherencia en lo que se hace.
+      <div class="areas__head reveal">
+        <div>
+          <p class="eyebrow">Qué hacemos</p>
+          <h2 class="h2" style="margin-bottom:0">Una sola propuesta para cuidar, formar y cohesionar al equipo</h2>
+        </div>
+        <p class="areas__sub">
+          Formación, bienestar y cohesión coordinados por un solo equipo. Elige un área o explora
+          las {totalItems} acciones del catálogo.
         </p>
       </div>
-
-      <div class="qh-main">
+      <ul class="areas reveal">
         {
-          queHacemosMain.map(([t, d], i) => (
-            <div class="qh-main__item reveal">
-              <span class="qh-main__num">0{i + 1}</span>
-              <h3 class="qh-main__title">{t}</h3>
-              <p class="card-text">{d}</p>
-            </div>
+          catalogo.map((c) => (
+            <li>
+              <a href={`/catalogo#${c.id}`} class="area">
+                <span class="area__letter" aria-hidden="true">{c.letter}</span>
+                <span class="area__name">{c.tab}</span>
+                <span class="area__count">{c.items.length} acciones</span>
+                <span class="area__arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
           ))
         }
-      </div>
-
-      <div class="qh-comp reveal">
-        <span class="qh-comp__label">También cubrimos</span>
-        <ul class="qh-comp__list">
-          {queHacemosComplementario.map((t) => <li>{t}</li>)}
-        </ul>
-      </div>
-
-      <div class="reveal" style="margin-top:30px">
-        <a href="/que-hacemos" class="btn btn--outline">Conocer el enfoque <span class="arrow">→</span></a>
+      </ul>
+      <div class="areas__foot reveal">
+        <p class="note">{BONIF_NOTE}</p>
+        <div class="areas__actions">
+          <a href="/catalogo" class="btn btn--primary">Explorar el catálogo <span class="arrow">→</span></a>
+          <a href="/que-hacemos" class="btn btn--outline">Conocer el enfoque</a>
+        </div>
       </div>
     </div>
   </section>
@@ -215,42 +168,6 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
           ))
         }
       </ul>
-    </div>
-  </section>
-
-  <!-- CATÁLOGO PREVIEW -->
-  <section class="section section--soft">
-    <div class="wrap">
-      <div class="reveal">
-        <p class="eyebrow">Catálogo</p>
-        <h2 class="h2">Todo lo que necesita un equipo, en un catálogo</h2>
-        <p class="lead">
-          Formación, bienestar, cohesión y servicios wellness organizados por áreas. Un solo equipo
-          que conoce el contexto y propone lo que encaja.
-        </p>
-      </div>
-      <ul class="cat-list">
-        {
-          catalogo.map((c) => (
-            <li class="reveal">
-              <a href="/catalogo" class="cat-row">
-                <span class="cat-row__letter" aria-hidden="true">{c.letter}</span>
-                <span class="cat-row__body">
-                  <span class="cat-row__title">{c.tab}</span>
-                  <span class="cat-row__desc">{c.desc}</span>
-                </span>
-                <span class="cat-row__count">{c.items.length} acciones</span>
-                <span class="cat-row__arrow" aria-hidden="true">→</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-      <p class="note reveal" style="margin-top:18px; max-width:740px">{BONIF_NOTE}</p>
-      <div class="reveal" style="margin-top:24px">
-        <a href="/catalogo" class="btn btn--primary">Explorar el catálogo completo <span class="arrow">→</span></a>
-      </div>
-
     </div>
   </section>
 
@@ -289,106 +206,48 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     </div>
   </section>
 
-  <!-- BENEFICIOS -->
-  <section class="section">
-    <div class="wrap">
-      <div class="ben-head">
-        <div class="reveal">
-          <p class="eyebrow">Beneficios</p>
-          <h2 class="h2">Lo que gana la empresa</h2>
-        </div>
-        <p class="reveal ben-head__txt">
-          No es un gasto en actividades sueltas: es una forma estructurada de cuidar al equipo que
-          repercute en clima, retención y rendimiento.
-        </p>
-      </div>
-      <div class="ben">
-        {
-          beneficios.map(([t, d], i) => (
-            <div class="ben__item reveal">
-              <span class="ben__num">0{i + 1}</span>
-              <div>
-                <h3 class="ben__title">{t}</h3>
-                <p class="card-text">{d}</p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <!-- PERTENENCIA -->
-  <section class="section section--pertenencia">
-    <div class="wrap">
-      <div class="perten reveal">
-        <p class="eyebrow">Por qué el bienestar retiene</p>
-        <h2 class="h2 perten__title">El salario importa, pero no es suficiente para quedarse</h2>
-        <div class="perten__body">
-          <p>
-            Si el sueldo es insuficiente, la persona se va. Eso es innegociable. Pero cuando el
-            salario deja de ser el problema, la motivación no se sostiene solo con dinero. Una
-            subida puede generar un pico de motivación, pero ese efecto se enfría.
-          </p>
-          <p>
-            Lo que realmente une a una persona a una empresa es sentir que trabaja en un lugar
-            donde se cuida a las personas, donde los valores encajan y donde formar parte del
-            equipo tiene sentido.
-          </p>
-          <p class="perten__callout">
-            La cultura de cuidado no es un extra. Es lo que hace que alguien quiera seguir.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RECONOCIMIENTO -->
-  <section class="section">
-    <div class="wrap reconoc__grid reveal">
-      <div class="reconoc__text">
-        <p class="eyebrow">Reconocimiento</p>
-        <h2 class="h2">Placa Empresa Saludable</h2>
-        <p class="reconoc__subtitle">
-          Un reconocimiento visible al compromiso de la empresa con la salud y el bienestar de su
-          equipo.
-        </p>
-        <p class="lead">
-          Tras la realización de una acción formativa o programa de bienestar corporativo, la empresa
-          puede recibir una placa de reconocimiento Batmotrópicos como símbolo de su compromiso con la
-          salud física y mental de sus trabajadores.
-        </p>
-        <p class="reconoc__highlight">
-          Una forma sencilla de visibilizar que tu empresa invierte en las personas.
-        </p>
-        <p class="note" style="margin-top:14px">
-          Muchas de estas acciones pueden realizarse a través del crédito formativo FUNDAE, siempre
-          sujeto al crédito disponible y al cumplimiento de los requisitos aplicables.
-        </p>
-      </div>
-      <div class="reconoc__media">
-        <img
-          src="/assets/icons/placa-empresa-saludable-2026.webp"
-          alt="Placa Empresa Saludable 2026 de Batmotrópicos: esta empresa ha implementado un programa de formación en salud física y mental para sus trabajadores."
-          class="reconoc__plaque-img"
-          width="2000"
-          height="1334"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- PROGRAMAS PREMIUM -->
+  <!-- POR QUÉ FUNCIONA: beneficios + pertenencia -->
   <section class="section section--soft">
     <div class="wrap">
-      <div class="reveal">
+      <div class="reveal" style="max-width:720px">
+        <p class="eyebrow">Por qué funciona</p>
+        <h2 class="h2">Lo que gana la empresa</h2>
+      </div>
+      <div class="why">
+        <figure class="why__quote reveal">
+          <blockquote>El salario importa, pero no es suficiente para quedarse.</blockquote>
+          <p>
+            Cuando el sueldo deja de ser el problema, lo que retiene es sentir que se trabaja en un
+            lugar que cuida a las personas y donde formar parte del equipo tiene sentido.
+          </p>
+          <figcaption>La cultura de cuidado no es un extra: es lo que hace que alguien quiera seguir.</figcaption>
+        </figure>
+        <ol class="why__list reveal">
+          {
+            beneficios.map(([t, d], i) => (
+              <li>
+                <span class="why__num">0{i + 1}</span>
+                <div>
+                  <h3 class="why__title">{t}</h3>
+                  <p class="card-text">{d}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMAS + CÓMO TRABAJAMOS -->
+  <section class="section">
+    <div class="wrap">
+      <div class="reveal" style="max-width:720px">
         <p class="eyebrow">Programas</p>
         <h2 class="h2">Una estructura para cada tipo de empresa</h2>
         <p class="lead">
-          Desde una acción puntual hasta un programa anual integral. Cada nivel de compromiso tiene
-          su propia estructura, su seguimiento y su medición de resultados.
+          Desde una acción puntual hasta un programa anual integral, con seguimiento y medición de
+          resultados en cada nivel.
         </p>
       </div>
       <div class="progs reveal">
@@ -396,76 +255,88 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
           <span class="progs__tag">Continuidad</span>
           <h3 class="progs__title">Plan Semestral</h3>
           <p class="progs__meta">6 meses · 6 acciones · 1 al mes</p>
-          <p class="card-text">Una intervención mensual con hilo conductor, seguimiento trimestral y memoria de resultados al cierre. Para empresas que quieren empezar con estructura y sin sobredimensionar.</p>
+          <p class="card-text">Una intervención mensual con hilo conductor, seguimiento trimestral y memoria de resultados al cierre. Para empezar con estructura y sin sobredimensionar.</p>
         </div>
         <div class="progs__item card card--accent progs__item--featured">
           <span class="progs__tag progs__tag--light">Recomendado</span>
           <h3 class="progs__title">Plan Anual</h3>
           <p class="progs__meta">12 meses · 12 acciones · evaluación semestral</p>
-          <p class="card-text">Programa completo con una acción mensual —formación, bienestar o cohesión según necesidad—, evaluación a mitad de año y propuesta de continuidad basada en resultados.</p>
+          <p class="card-text">Una acción mensual —formación, bienestar o cohesión según necesidad—, evaluación a mitad de año y propuesta de continuidad basada en resultados.</p>
         </div>
         <div class="progs__item card card--accent">
           <span class="progs__tag">Integral</span>
           <h3 class="progs__title">Plan Integral Anual</h3>
           <p class="progs__meta">Formación + bienestar + team building + medición</p>
-          <p class="card-text">Formación, bienestar y team building integrados en un único programa anual, con diagnóstico inicial, diseño a medida y medición de impacto. Para empresas con mayor volumen, varias sedes o necesidades combinadas.</p>
+          <p class="card-text">Todo integrado en un único programa anual con diagnóstico inicial y medición de impacto. Para empresas con más volumen, varias sedes o necesidades combinadas.</p>
         </div>
       </div>
-      <div class="reveal" style="margin-top:28px">
-        <a href="/contacto" class="btn btn--primary">Solicitar propuesta de programa <span class="arrow">→</span></a>
+
+      <div class="flow reveal">
+        <span class="flow__label">Cómo trabajamos</span>
+        <ol class="flow__steps">
+          {
+            proceso.map((st, i) => (
+              <li>
+                <span class="flow__dot">{i + 1}</span>
+                {st}
+              </li>
+            ))
+          }
+        </ol>
+      </div>
+
+      <div class="reveal" style="margin-top:30px">
+        <a href="/diagnostico" class="btn btn--primary">Empezar por el diagnóstico <span class="arrow">→</span></a>
       </div>
     </div>
   </section>
 
-  <!-- MÉTODO -->
+  <!-- PLACA + QUIÉN ESTÁ DETRÁS -->
   <section class="section section--soft">
-    <div class="wrap">
-      <div class="reveal">
-        <p class="eyebrow">Cómo trabajamos</p>
-        <h2 class="h2">Diagnóstico, gestión, ejecución y medición</h2>
-        <p class="lead">
-          Del primer diagnóstico al cierre documental. La gestión FUNDAE se prepara antes de ejecutar,
-          no después. Al final recogemos KPIs: satisfacción, utilidad percibida, aplicabilidad y
-          clima del equipo.
-        </p>
-      </div>
-      <ol class="proc reveal">
-        {
-          proceso.map((s, i) => (
-            <li class="proc__step">
-              <span class="proc__dot">{i + 1}</span>
-              <span class="proc__label">{s}</span>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
+    <div class="wrap duo">
+      <article class="duo__card reveal">
+        <div class="duo__media duo__media--plaque">
+          <img
+            src="/assets/icons/placa-empresa-saludable-2026.webp"
+            alt="Placa Empresa Saludable 2026 de Batmotrópicos: esta empresa ha implementado un programa de formación en salud física y mental para sus trabajadores."
+            width="2000"
+            height="1334"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="duo__body">
+          <p class="eyebrow">Reconocimiento</p>
+          <h2 class="duo__title">Placa Empresa Saludable</h2>
+          <p class="card-text">
+            Tras una acción formativa o un programa de bienestar, la empresa recibe una placa que
+            hace visible su compromiso con la salud física y mental de su equipo.
+          </p>
+        </div>
+      </article>
 
-  <!-- JUAN LUIS TEASER -->
-  <section class="section section--soft">
-    <div class="wrap jl-teaser reveal">
-      <div class="jl-teaser__media">
-        <img
-          src="/assets/img/real/Fisio.jpg"
-          alt="Juan Luis Rodríguez, fundador de Batmotrópicos, en una sesión de fisioterapia"
-          class="jl-teaser__img"
-          loading="lazy"
-          decoding="async"
-          width="942"
-          height="1672"
-        />
-      </div>
-      <div class="jl-teaser__body">
-        <p class="eyebrow">Quiénes somos</p>
-        <h2 class="h2">Fisioterapia, deporte, comunicación y años de trabajo con personas</h2>
-        <p class="lead">
-          Juan Luis Rodríguez Ávila combina formación en fisioterapia y deporte con años de
-          experiencia en hostelería y trabajo directo con equipos. Batmotrópicos nace de juntar
-          todo eso en una forma de hacer formación que conecta con las personas de verdad.
-        </p>
-        <a href="/quienes-somos" class="btn btn--outline" style="margin-top:18px">Conocer la historia <span class="arrow">→</span></a>
-      </div>
+      <article class="duo__card reveal">
+        <div class="duo__media">
+          <img
+            src="/assets/img/real/Fisio.jpg"
+            alt="Juan Luis Rodríguez Ávila, fundador de Batmotrópicos"
+            width="942"
+            height="1672"
+            loading="lazy"
+            decoding="async"
+            class="duo__portrait"
+          />
+        </div>
+        <div class="duo__body">
+          <p class="eyebrow">Quién está detrás</p>
+          <h2 class="duo__title">Juan Luis Rodríguez Ávila</h2>
+          <p class="card-text">
+            Fisioterapeuta con años de experiencia en hostelería y trabajo directo con equipos.
+            Batmotrópicos nace de juntar las dos cosas: salud aplicada al trabajo real.
+          </p>
+          <a href="/quienes-somos" class="duo__link">Conocer la historia <span class="arrow">→</span></a>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -661,53 +532,6 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     line-height: 1.4;
   }
 
-  /* Diagnóstico 360º (reubicado) */
-  .diag__grid {
-    display: grid;
-    grid-template-columns: 0.9fr 1.1fr;
-    gap: 56px;
-    align-items: center;
-  }
-  .diag__steps {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .diag__steps li {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    gap: 18px;
-    align-items: start;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--line);
-  }
-  .diag__steps li:first-child {
-    border-top: 1px solid var(--line);
-  }
-  .diag__steps li > div {
-    font-size: 15px;
-    color: var(--text-sec);
-    line-height: 1.6;
-  }
-  .diag__steps li strong {
-    color: var(--text);
-    font-weight: 600;
-  }
-  .diag__n {
-    font-weight: 700;
-    font-size: 13px;
-    color: var(--green);
-    border: 1.5px solid var(--green);
-    border-radius: 30px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
   .reel__sound-btn {
     position: absolute;
     left: 50%;
@@ -788,74 +612,6 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     letter-spacing: 0.02em;
   }
 
-  /* Qué hacemos — 3 líneas principales */
-  .qh-main {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0;
-    margin-top: 18px;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .qh-main__item {
-    padding: 30px 26px 30px 0;
-    border-right: 1px solid var(--line);
-  }
-  .qh-main__item:last-child {
-    border-right: none;
-    padding-right: 0;
-  }
-  .qh-main__num {
-    display: block;
-    font-weight: 700;
-    font-size: 30px;
-    color: var(--green);
-    opacity: 0.35;
-    line-height: 1;
-    margin-bottom: 18px;
-  }
-  .qh-main__title {
-    font-weight: 700;
-    font-size: 19px;
-    color: var(--text);
-    margin: 0 0 10px;
-    line-height: 1.3;
-  }
-
-  /* Servicios complementarios — discretos */
-  .qh-comp {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 16px 28px;
-    margin-top: 26px;
-    padding-top: 22px;
-  }
-  .qh-comp__label {
-    font-weight: 600;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-sec);
-    white-space: nowrap;
-  }
-  .qh-comp__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 14px;
-  }
-  .qh-comp__list li {
-    font-weight: 500;
-    font-size: 13.5px;
-    color: var(--text-sec);
-    padding: 7px 16px;
-    border: 1px solid var(--line);
-    border-radius: 30px;
-  }
-
   /* Filosofía — sección de contraste verde oscuro */
   .section--dark {
     background: var(--green-dark);
@@ -910,7 +666,7 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     margin-bottom: 30px;
   }
   .field__sub {
-    max-width: 400px;
+    max-width: 340px;
     margin: 0;
     font-size: 15.5px;
     line-height: 1.65;
@@ -981,205 +737,6 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
     .field__tile:hover img { transform: none; }
   }
 
-  /* Reconocimiento — mobile first */
-  .reconoc__grid {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
-  }
-  .reconoc__media {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-  }
-  .reconoc__text .lead {
-    margin-bottom: 0;
-  }
-  .reconoc__subtitle {
-    font-weight: 600;
-    font-size: 18px;
-    color: var(--green-dark);
-    line-height: 1.5;
-    margin: 0 0 18px;
-  }
-  .reconoc__highlight {
-    font-weight: 600;
-    font-size: 15px;
-    color: var(--green-dark);
-    line-height: 1.55;
-    margin: 20px 0 0;
-    padding-left: 16px;
-    border-left: 3px solid var(--green);
-  }
-
-  /* Catálogo preview — lista editorial */
-  .cat-list {
-    list-style: none;
-    margin: 22px 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 48px;
-    border-top: 1px solid var(--line);
-  }
-  .cat-list > li {
-    border-bottom: 1px solid var(--line);
-  }
-  .cat-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    gap: 18px;
-    padding: 22px 8px 22px 4px;
-    text-decoration: none;
-    transition: padding 0.18s ease, background 0.18s ease;
-  }
-  .cat-row:hover {
-    background: var(--surface);
-    padding-left: 14px;
-    padding-right: 0;
-  }
-  .cat-row__letter {
-    width: 38px;
-    height: 38px;
-    border: 1.5px solid var(--green);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--green);
-    flex-shrink: 0;
-    transition: background 0.18s ease, color 0.18s ease;
-  }
-  .cat-row:hover .cat-row__letter {
-    background: var(--green);
-    color: #fff;
-  }
-  .cat-row__body {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-  }
-  .cat-row__title {
-    font-weight: 600;
-    font-size: 16.5px;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .cat-row__desc {
-    font-size: 13px;
-    color: var(--text-sec);
-    line-height: 1.5;
-  }
-  .cat-row__count {
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--green-accent);
-    white-space: nowrap;
-  }
-  .cat-row__arrow {
-    color: var(--green);
-    font-size: 16px;
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.18s ease, transform 0.18s ease;
-  }
-  .cat-row:hover .cat-row__arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  /* Beneficios */
-  .ben-head {
-    display: grid;
-    grid-template-columns: 0.8fr 1.2fr;
-    gap: 40px;
-    margin-bottom: 40px;
-    align-items: end;
-  }
-  .ben-head__txt {
-    font-size: 16.5px;
-    color: var(--text-sec);
-    line-height: 1.7;
-    margin: 0;
-  }
-  .ben {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 56px;
-    border-top: 1px solid var(--line);
-  }
-  .ben__item {
-    display: flex;
-    gap: 20px;
-    padding: 26px 0;
-    border-bottom: 1px solid var(--line);
-    align-items: baseline;
-  }
-  .ben__num {
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--green);
-    min-width: 28px;
-  }
-  .ben__title {
-    font-weight: 600;
-    font-size: 17px;
-    color: var(--text);
-    margin: 0 0 6px;
-    line-height: 1.35;
-  }
-
-  /* Proceso */
-  .proc {
-    list-style: none;
-    margin: 28px 0 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
-    position: relative;
-  }
-  .proc::before {
-    content: '';
-    position: absolute;
-    top: 14px;
-    left: 10%;
-    right: 10%;
-    height: 2px;
-    background: var(--green);
-    opacity: 0.25;
-  }
-  .proc__step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    position: relative;
-  }
-  .proc__dot {
-    width: 30px;
-    height: 30px;
-    border-radius: 30px;
-    background: var(--green);
-    color: #fff;
-    font-weight: 700;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .proc__label {
-    font-weight: 600;
-    font-size: 13.5px;
-    color: var(--text);
-    margin-top: 12px;
-  }
-
   /* Responsive */
   @media (max-width: 980px) {
     .progs {
@@ -1215,139 +772,331 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
       border-right: none;
       border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     }
-    .diag__grid {
-      grid-template-columns: 1fr;
-      gap: 28px;
-    }
-    .qh-main {
-      grid-template-columns: 1fr;
-    }
-    .qh-main__item {
-      border-right: none;
-      border-bottom: 1px solid var(--line);
-      padding-right: 0;
-    }
-    .qh-main__item:last-child {
-      border-bottom: none;
-    }
     .dark__grid {
       grid-template-columns: 1fr;
       gap: 32px;
     }
-    .cat-list {
-      grid-template-columns: 1fr;
-    }
-    .ben-head,
-    .ben {
-      grid-template-columns: 1fr;
-    }
-  }
-  @media (max-width: 720px) {
-    .proc {
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
-    .proc::before {
-      display: none;
-    }
-  }
-  @media (max-width: 560px) {
-    .qh-comp {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 12px;
-    }
   }
 
-  /* Pertenencia storytelling */
-  .section--pertenencia {
-    background: var(--surface);
-  }
-  .perten {
-    max-width: 740px;
-  }
-  .perten__title {
-    margin-bottom: 24px;
-  }
-  .perten__body {
+  /* Qué hacemos + catálogo — rejilla de áreas */
+  .areas__head {
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px 48px;
+    margin-bottom: 30px;
   }
-  .perten__body p {
-    font-size: 16.5px;
+  .areas__head > div,
+  .field__head > div {
+    max-width: 600px;
+  }
+  .areas__sub {
+    max-width: 340px;
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.65;
     color: var(--text-sec);
-    line-height: 1.75;
+  }
+  .areas {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .area {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 14px;
+    align-items: center;
+    height: 100%;
+    padding: 18px 18px 17px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-decoration: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  }
+  .area:hover {
+    border-color: var(--green);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-2px);
+  }
+  .area__letter {
+    grid-row: span 2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--green-soft);
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    transition: background 0.18s ease, color 0.18s ease;
+  }
+  .area:hover .area__letter {
+    background: var(--green);
+    color: #fff;
+  }
+  .area__name {
+    font-weight: 600;
+    font-size: 15.5px;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .area__count {
+    grid-column: 2;
+    font-size: 12.5px;
+    color: var(--text-sec);
+  }
+  .area__arrow {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    color: var(--green);
+    opacity: 0.35;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+  }
+  .area:hover .area__arrow {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+  .areas__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px 40px;
+    margin-top: 28px;
+  }
+  .areas__foot .note {
+    max-width: 560px;
     margin: 0;
   }
-  .perten__callout {
+  .areas__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Por qué funciona — cita + beneficios */
+  .why {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: 48px;
+    align-items: start;
+  }
+  .why__quote {
+    margin: 0;
+    padding: 34px 32px 30px;
+    background: var(--green-dark);
+    border-radius: var(--radius-lg);
+    color: #fff;
+  }
+  .why__quote blockquote {
+    margin: 0 0 18px;
+    font-weight: 700;
+    font-size: 27px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .why__quote p {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.82);
+  }
+  .why__quote figcaption {
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
     font-weight: 600;
-    font-size: 17px !important;
-    color: var(--text) !important;
-    padding-left: 18px;
-    border-left: 3px solid var(--green);
-    margin-top: 8px !important;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #fff;
+  }
+  .why__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .why__list li {
+    display: flex;
+    gap: 20px;
+    align-items: baseline;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .why__num {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--green);
+    min-width: 26px;
+  }
+  .why__title {
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 6px;
+    line-height: 1.35;
   }
 
-  /* Placa de reconocimiento — imagen real "Empresa Saludable" */
-  .reconoc__plaque-img {
-    display: block;
-    width: 100%;
-    max-width: 480px;
-    height: auto;
+  /* Cómo trabajamos — tira fina bajo los programas */
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px 28px;
+    margin-top: 28px;
+    padding: 18px 22px;
+    border: 1px solid var(--line);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-soft);
+    background: var(--bg-soft);
+  }
+  .flow__label {
+    font-weight: 600;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    white-space: nowrap;
+  }
+  .flow__steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+  }
+  .flow__steps li {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--text);
+  }
+  .flow__dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  /* Juan Luis teaser */
-  .jl-teaser {
+  /* Placa + quién está detrás — dúo de tarjetas */
+  .duo {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .duo__card {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-  }
-  .jl-teaser__media {
-    width: 100%;
-    max-width: 360px;
-    aspect-ratio: 4 / 5;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    border-radius: 10px;
-    margin: 0 auto;
   }
-  .jl-teaser__img {
+  .duo__media {
+    aspect-ratio: 3 / 2;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .duo__media img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+  .duo__media--plaque {
+    padding: 22px 26px;
+    background: var(--surface);
+  }
+  .duo__media--plaque img {
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-soft);
+  }
+  .duo__portrait {
     object-position: center 22%;
   }
+  .duo__body {
+    padding: 26px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .duo__title {
+    font-weight: 700;
+    font-size: 21px;
+    color: var(--text);
+    margin: 0 0 10px;
+    line-height: 1.3;
+  }
+  .duo__link {
+    margin-top: auto;
+    padding-top: 18px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--green);
+    text-decoration: none;
+  }
+  .duo__link:hover .arrow {
+    transform: translateX(3px);
+  }
+  .duo__link .arrow {
+    display: inline-block;
+    transition: transform 0.18s ease;
+  }
 
-  /* Desktop 2-col for reconocimiento */
-  @media (min-width: 980px) {
-    .reconoc__grid {
-      flex-direction: row;
-      align-items: center;
-      gap: 56px;
+  @media (max-width: 980px) {
+    .areas {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .reconoc__text {
-      flex: 1.2;
+    .why {
+      grid-template-columns: 1fr;
+      gap: 28px;
     }
-    .reconoc__media {
-      flex: 0.8;
+    .why__quote blockquote {
+      font-size: 23px;
     }
-    .jl-teaser {
-      flex-direction: row;
-      align-items: center;
-      gap: 56px;
+  }
+  @media (max-width: 720px) {
+    .duo {
+      grid-template-columns: 1fr;
     }
-    .jl-teaser__media {
-      width: 360px;
-      max-width: 360px;
-      aspect-ratio: 4 / 5;
-      flex-shrink: 0;
-      margin: 0;
+  }
+  @media (max-width: 560px) {
+    .areas {
+      grid-template-columns: 1fr;
+      gap: 8px;
     }
-    .jl-teaser__body {
-      flex: 1;
+    .area {
+      padding: 14px 16px;
+    }
+    .why__quote {
+      padding: 26px 22px 24px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .area,
+    .area__arrow,
+    .area__letter {
+      transition: none;
+    }
+    .area:hover {
+      transform: none;
     }
   }
 </style>

@@ -174,20 +174,25 @@ const steps = [
 </BaseLayout>
 
 <style>
+  /* La animación es vertical con mucho blanco: se recorta a cuadrado
+     centrado en el logo y se funde con una tarjeta blanca limpia. */
   .brand {
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+    background: #fff;
     border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg-soft);
-    padding: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
   }
   .brand__video {
+    display: block;
     width: 100%;
-    max-width: 360px;
-    height: auto;
-    border-radius: 4px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center 48%;
+    transform: scale(1.18);
   }
 
   .spine {
