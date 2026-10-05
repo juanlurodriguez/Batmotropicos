@@ -1,0 +1,860 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// ════════════════════════════════════════════════════════════
+// FICHA DE PACIENTE — /paciente  (página oculta: noindex, fuera del menú)
+// La rellenan los pacientes de fisioterapia antes de la primera cita,
+// casi siempre desde el móvil. Se envía a /api/paciente → Airtable
+// "Fichas de pacientes". Contiene datos de salud: no se guarda nada en
+// el navegador (ni localStorage) y no hay scripts de terceros.
+// Las opciones deben coincidir con las de la tabla de Airtable.
+// ════════════════════════════════════════════════════════════
+
+const ZONAS = ['Cuello', 'Hombro', 'Espalda alta', 'Zona lumbar', 'Codo / muñeca / mano', 'Cadera', 'Rodilla', 'Tobillo / pie', 'Cabeza / mandíbula', 'Otra'];
+const DESDE = ['Menos de 1 semana', '1 a 4 semanas', '1 a 3 meses', '3 a 6 meses', 'Más de 6 meses'];
+const INICIO = ['Golpe o caída', 'Esfuerzo o mal gesto', 'Haciendo deporte', 'Poco a poco, sin causa clara', 'Tras una cirugía', 'No lo sé'];
+const EVOLUCION = ['Va a mejor', 'Igual', 'Va a peor', 'Va y viene'];
+const ENFERMEDADES = ['Hipertensión', 'Problemas cardíacos', 'Diabetes', 'Problemas respiratorios', 'Tiroides', 'Osteoporosis', 'Artritis o enfermedad reumática', 'Migrañas', 'Ansiedad o depresión', 'Ninguna'];
+const CONTRAINDICACIONES = [
+  'Anticoagulantes o problemas de coagulación',
+  'Marcapasos u otro dispositivo implantado',
+  'Embarazo o posibilidad de estarlo',
+  'Epilepsia o convulsiones',
+  'Mareo o desmayo con agujas',
+  'Miedo a las agujas',
+  'Alergia a metales, látex o adhesivo',
+  'Cáncer actual o antecedentes',
+  'Linfedema o extirpación de ganglios',
+  'Diabetes',
+  'Inmunodepresión o corticoides',
+  'Infección o problema de piel en la zona',
+  'Osteoporosis',
+  'Cirugía en los últimos 6 meses',
+  'Implantes metálicos o prótesis',
+  'Fiebre o malestar general',
+  'Ninguna',
+];
+const SENALES = [
+  'Dolor nocturno intenso que no cambia con la postura',
+  'Pérdida de peso sin causa',
+  'Hormigueo o pérdida de fuerza',
+  'Cambios en orina o heces',
+  'Golpe o caída fuerte reciente',
+  'Ninguna',
+];
+
+const WA_PACIENTE = `https://wa.me/34640761701?text=${encodeURIComponent('Hola Juanlu, ya he rellenado la ficha de paciente y quería comentarte algo antes de la cita.')}`;
+---
+
+<BaseLayout
+  title="Ficha de paciente"
+  description="Ficha previa a la primera sesión de fisioterapia con Juan Luis Rodríguez."
+  path="/paciente"
+  noindex
+  minimal
+>
+  <div class="pt">
+    <!-- Progreso (fijo arriba en los pasos 1-5) -->
+    <div class="pt-top" id="pt-top" hidden>
+      <div class="pt-top__row">
+        <span id="pt-step-name">Tus datos</span>
+        <span id="pt-step-count">1 de 5</span>
+      </div>
+      <div class="pt-bar" aria-hidden="true"><div class="pt-bar__fill" id="pt-fill"></div></div>
+    </div>
+
+    <form id="pt-form" novalidate>
+      <!-- 0 · Portada -->
+      <section class="pt-step" data-step="0">
+        <p class="pt-eyebrow">Fisioterapia · Juan Luis Rodríguez</p>
+        <h1 class="pt-h1">Ficha de paciente</h1>
+        <p class="pt-lead">
+          Antes de la primera sesión necesito saber qué te pasa y si hay algo de tu salud que deba
+          tener en cuenta. Así aprovechamos la consulta desde el primer minuto.
+        </p>
+        <ul class="pt-facts">
+          <li><strong>4 min</strong> aprox.</li>
+          <li><strong>5 pasos</strong> cortos</li>
+          <li><strong>Confidencial</strong> solo lo leo yo</li>
+        </ul>
+        <button type="button" class="btn btn--primary pt-start" data-start>
+          Empezar <span class="arrow">→</span>
+        </button>
+        <p class="pt-small">
+          Si dudas en alguna pregunta, déjala en blanco o márcalo y lo vemos juntos en consulta.
+        </p>
+      </section>
+
+      <!-- 1 · Tus datos -->
+      <section class="pt-step" data-step="1" data-name="Tus datos" hidden>
+        <h2 class="pt-h2">Tus datos</h2>
+        <label class="pt-field">
+          <span>Nombre y apellidos <em>*</em></span>
+          <input type="text" name="nombre" autocomplete="name" required />
+        </label>
+        <label class="pt-field">
+          <span>Teléfono <em>*</em></span>
+          <input type="tel" name="telefono" inputmode="tel" autocomplete="tel" required />
+        </label>
+        <label class="pt-field">
+          <span>Email</span>
+          <input type="email" name="email" inputmode="email" autocomplete="email" />
+        </label>
+        <label class="pt-field">
+          <span>Fecha de nacimiento</span>
+          <input type="date" name="nacimiento" autocomplete="bday" />
+        </label>
+        <label class="pt-field">
+          <span>Profesión o actividad principal</span>
+          <input type="text" name="profesion" placeholder="Ej. camarera de piso, oficina, estudiante" />
+        </label>
+        <input type="text" name="_gotcha" class="pt-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+      </section>
+
+      <!-- 2 · Motivo de consulta -->
+      <section class="pt-step" data-step="2" data-name="Qué te pasa" hidden>
+        <h2 class="pt-h2">¿Qué te pasa?</h2>
+
+        <fieldset class="pt-group" data-key="zona" data-multi data-required>
+          <legend>¿Dónde te duele o qué zona quieres tratar? <em>*</em></legend>
+          <div class="pt-chips">
+            {ZONAS.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <fieldset class="pt-group" data-key="desde">
+          <legend>¿Desde cuándo?</legend>
+          <div class="pt-chips">
+            {DESDE.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <fieldset class="pt-group" data-key="inicio">
+          <legend>¿Cómo empezó?</legend>
+          <div class="pt-chips">
+            {INICIO.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <div class="pt-group">
+          <label for="pt-intensidad" class="pt-legend">¿Cuánto te duele ahora, de 0 a 10?</label>
+          <div class="pt-range">
+            <output id="pt-intensidad-out" for="pt-intensidad">5</output>
+            <input type="range" id="pt-intensidad" name="intensidad" min="0" max="10" step="1" value="5" />
+            <div class="pt-range__ends"><span>0 · nada</span><span>10 · insoportable</span></div>
+          </div>
+        </div>
+
+        <fieldset class="pt-group" data-key="evolucion">
+          <legend>¿Cómo va evolucionando?</legend>
+          <div class="pt-chips">
+            {EVOLUCION.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <label class="pt-field">
+          <span>¿Qué lo empeora?</span>
+          <textarea name="empeora" rows="2" placeholder="Posturas, movimientos, horas del día…"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>¿Qué lo alivia?</span>
+          <textarea name="alivia" rows="2" placeholder="Reposo, calor, moverte, medicación…"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>¿Tienes pruebas o informes? (radiografía, resonancia, diagnóstico médico…)</span>
+          <textarea name="pruebas" rows="2" placeholder="Cuéntame cuáles y qué dicen, si lo sabes"></textarea>
+        </label>
+      </section>
+
+      <!-- 3 · Salud general -->
+      <section class="pt-step" data-step="3" data-name="Tu salud" hidden>
+        <h2 class="pt-h2">Tu salud en general</h2>
+
+        <fieldset class="pt-group" data-key="enfermedades" data-multi data-exclusive="Ninguna">
+          <legend>¿Tienes alguna de estas condiciones?</legend>
+          <div class="pt-chips">
+            {ENFERMEDADES.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <label class="pt-field">
+          <span>Operaciones o lesiones importantes que hayas tenido</span>
+          <textarea name="cirugias" rows="2" placeholder="Qué y cuándo, aproximadamente"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>Medicación que tomas ahora</span>
+          <textarea name="medicacion" rows="2" placeholder="Nombre y para qué, si lo sabes"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>¿Haces actividad física? ¿Cuál y cuántas veces por semana?</span>
+          <input type="text" name="actividad" placeholder="Ej. gimnasio 3 días, caminar a diario" />
+        </label>
+      </section>
+
+      <!-- 4 · Seguridad -->
+      <section class="pt-step" data-step="4" data-name="Seguridad" hidden>
+        <h2 class="pt-h2">Para tratarte con seguridad</h2>
+        <p class="pt-note">
+          Algunas técnicas, como la punción seca o la electropunción, no son adecuadas en ciertos
+          casos. Marca todo lo que se aplique a ti. Lo revisamos juntos en consulta.
+        </p>
+
+        <fieldset class="pt-group" data-key="contraindicaciones" data-multi data-required data-exclusive="Ninguna">
+          <legend>¿Algo de esto te aplica? <em>*</em></legend>
+          <div class="pt-chips pt-chips--list">
+            {CONTRAINDICACIONES.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+
+        <label class="pt-field" id="pt-implantes" hidden>
+          <span>¿Dónde tienes el implante o la prótesis?</span>
+          <input type="text" name="implantes" placeholder="Ej. placa en el tobillo derecho" />
+        </label>
+
+        <fieldset class="pt-group" data-key="senales" data-multi data-required data-exclusive="Ninguna">
+          <legend>¿Has notado alguna de estas señales? <em>*</em></legend>
+          <div class="pt-chips pt-chips--list">
+            {SENALES.map((z) => <button type="button" class="pt-chip" data-val={z} aria-pressed="false">{z}</button>)}
+          </div>
+        </fieldset>
+      </section>
+
+      <!-- 5 · Objetivos y consentimiento -->
+      <section class="pt-step" data-step="5" data-name="Último paso" hidden>
+        <h2 class="pt-h2">Lo que quieres conseguir</h2>
+        <label class="pt-field">
+          <span>¿Qué te gustaría conseguir con el tratamiento?</span>
+          <textarea name="objetivo" rows="3" placeholder="Ej. volver a correr sin dolor, dormir mejor, trabajar sin molestias"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>¿Has ido antes al fisio por esto? ¿Qué te funcionó y qué no?</span>
+          <textarea name="fisioPrevia" rows="2"></textarea>
+        </label>
+        <label class="pt-field">
+          <span>¿Algo más que deba saber?</span>
+          <textarea name="observaciones" rows="2"></textarea>
+        </label>
+
+        <label class="pt-check">
+          <input type="checkbox" name="consentimiento" required />
+          <span>
+            Doy mi consentimiento para que Juan Luis Rodríguez Ávila trate estos datos de salud con
+            el único fin de valorar y planificar mi tratamiento de fisioterapia.
+            <a href="/privacidad" target="_blank" rel="noopener">Política de privacidad</a>. <em>*</em>
+          </span>
+        </label>
+        <label class="pt-check">
+          <input type="checkbox" name="veraz" required />
+          <span>La información que he dado es correcta y avisaré si algo cambia. <em>*</em></span>
+        </label>
+      </section>
+
+      <!-- Gracias -->
+      <section class="pt-step pt-done" data-step="done" hidden>
+        <span class="pt-done__ico" aria-hidden="true">✓</span>
+        <h2 class="pt-h1">Ficha recibida</h2>
+        <p class="pt-lead">
+          Gracias. La revisaré antes de tu cita para tenerlo todo preparado. Si mientras tanto algo
+          cambia (te encuentras peor, empiezas una medicación…), escríbeme.
+        </p>
+        <a href={WA_PACIENTE} class="btn btn--outline" target="_blank" rel="noopener noreferrer">
+          Escribir por WhatsApp
+        </a>
+      </section>
+
+      <p class="pt-error" id="pt-error" role="alert" hidden></p>
+
+      <!-- Navegación fija abajo (pulgar) -->
+      <div class="pt-nav" id="pt-nav" hidden>
+        <button type="button" class="pt-nav__back" data-back aria-label="Paso anterior">←</button>
+        <button type="button" class="btn btn--primary pt-nav__next" data-next>
+          <span id="pt-next-label">Siguiente</span> <span class="arrow">→</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Mobile-first: todo está pensado para 375 px y se amplía después. */
+  .pt {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .pt-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin: 0 -16px;
+    padding: 12px 16px 10px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .pt-top[hidden] {
+    display: none;
+  }
+  .pt-top__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .pt-top__row span:last-child {
+    color: var(--text-sec);
+    font-weight: 500;
+  }
+  .pt-bar {
+    height: 5px;
+    border-radius: 5px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .pt-bar__fill {
+    height: 100%;
+    width: 20%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+
+  .pt-step {
+    padding: 24px 0 8px;
+  }
+  .pt-step[hidden] {
+    display: none;
+  }
+  .pt-eyebrow {
+    font-weight: 600;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin: 12px 0 10px;
+  }
+  .pt-h1 {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .pt-h2 {
+    font-weight: 700;
+    font-size: 23px;
+    line-height: 1.25;
+    color: var(--text);
+    margin: 0 0 18px;
+  }
+  .pt-lead {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-sec);
+    margin: 0 0 20px;
+  }
+  .pt-note {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--green-dark);
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    padding: 12px 14px;
+    margin: -6px 0 20px;
+  }
+  .pt-small {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-sec);
+    margin: 14px 0 0;
+    text-align: center;
+  }
+  .pt-facts {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pt-facts li {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 12px 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text-sec);
+    text-align: center;
+  }
+  .pt-facts strong {
+    display: block;
+    font-size: 15px;
+    color: var(--green);
+  }
+  .pt-start {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  /* Campos: 16 px para que iOS no haga zoom; zonas táctiles grandes */
+  .pt-field {
+    display: block;
+    margin-bottom: 16px;
+  }
+  .pt-field > span,
+  .pt-group legend,
+  .pt-legend {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .pt-field em,
+  .pt-group em,
+  .pt-check em {
+    font-style: normal;
+    color: var(--green);
+  }
+  .pt-field input,
+  .pt-field textarea {
+    width: 100%;
+    min-height: 50px;
+    font-family: var(--font);
+    font-size: 16px;
+    color: var(--text);
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .pt-field textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .pt-field input:focus,
+  .pt-field textarea:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+  .pt-field input::placeholder,
+  .pt-field textarea::placeholder {
+    color: #9a9a9a;
+  }
+  .pt-field.is-invalid input {
+    border-color: #b00020;
+  }
+  .pt-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .pt-group {
+    border: none;
+    margin: 0 0 22px;
+    padding: 0;
+    min-width: 0;
+  }
+  .pt-group.is-invalid legend {
+    color: #b00020;
+  }
+  .pt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pt-chip {
+    min-height: 46px;
+    padding: 10px 16px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 100px;
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.14s ease, background 0.14s ease, color 0.14s ease;
+  }
+  .pt-chip[aria-pressed='true'] {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  /* Listas largas (seguridad): una opción por fila, más fácil de leer y tocar */
+  .pt-chips--list {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .pt-chips--list .pt-chip {
+    border-radius: 12px;
+    padding: 13px 16px 13px 46px;
+    position: relative;
+  }
+  .pt-chips--list .pt-chip::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+  }
+  .pt-chips--list .pt-chip[aria-pressed='true']::before {
+    border-color: #fff;
+    background: #fff
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a5c1a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")
+      center / 14px no-repeat;
+  }
+
+  .pt-range output {
+    display: block;
+    font-weight: 700;
+    font-size: 34px;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .pt-range input[type='range'] {
+    width: 100%;
+    height: 32px;
+    accent-color: var(--green);
+  }
+  .pt-range__ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-sec);
+  }
+
+  .pt-check {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-sec);
+    cursor: pointer;
+  }
+  .pt-check input {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin: 1px 0 0;
+    accent-color: var(--green);
+  }
+  .pt-check a {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .pt-check.is-invalid span {
+    color: #b00020;
+  }
+
+  .pt-error {
+    margin: 4px 0 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #fdecee;
+    color: #8a0018;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .pt-error[hidden] {
+    display: none;
+  }
+
+  /* Navegación fija abajo, al alcance del pulgar */
+  .pt-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    gap: 10px;
+    margin: 18px -16px 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid var(--line);
+  }
+  .pt-nav[hidden] {
+    display: none;
+  }
+  .pt-nav__back {
+    flex-shrink: 0;
+    width: 52px;
+    min-height: 52px;
+    font-size: 20px;
+    color: var(--green);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .pt-nav__next {
+    flex: 1;
+    justify-content: center;
+    min-height: 52px;
+    font-size: 16px;
+  }
+  .pt-nav__next:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .pt-done {
+    text-align: center;
+    padding-top: 48px;
+  }
+  .pt-done__ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  @media (min-width: 640px) {
+    .pt-step {
+      padding-top: 40px;
+    }
+    .pt-h1 {
+      font-size: 36px;
+    }
+    .pt-nav {
+      margin-left: 0;
+      margin-right: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      bottom: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pt-bar__fill,
+    .pt-chip,
+    .pt-field input,
+    .pt-field textarea {
+      transition: none;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    var TOTAL = 5;
+    var form = document.getElementById('pt-form');
+    var steps = Array.prototype.slice.call(document.querySelectorAll('.pt-step'));
+    var top = document.getElementById('pt-top');
+    var nav = document.getElementById('pt-nav');
+    var fill = document.getElementById('pt-fill');
+    var stepName = document.getElementById('pt-step-name');
+    var stepCount = document.getElementById('pt-step-count');
+    var nextLabel = document.getElementById('pt-next-label');
+    var nextBtn = document.querySelector('[data-next]');
+    var errorEl = document.getElementById('pt-error');
+    var implantes = document.getElementById('pt-implantes');
+    var current = 0;
+
+    // Valores de los grupos de chips (no van en el FormData).
+    var chips = {};
+
+    function show(n) {
+      current = n;
+      steps.forEach(function (s) {
+        s.hidden = s.getAttribute('data-step') !== String(n);
+      });
+      var inForm = typeof n === 'number' && n >= 1 && n <= TOTAL;
+      top.hidden = !inForm;
+      nav.hidden = !inForm;
+      hideError();
+      if (inForm) {
+        var el = document.querySelector('.pt-step[data-step="' + n + '"]');
+        stepName.textContent = el.getAttribute('data-name');
+        stepCount.textContent = n + ' de ' + TOTAL;
+        fill.style.width = (n / TOTAL) * 100 + '%';
+        nextLabel.textContent = n === TOTAL ? 'Enviar ficha' : 'Siguiente';
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    }
+    function hideError() {
+      errorEl.hidden = true;
+    }
+
+    // Chips: selección única o múltiple, con opción excluyente ("Ninguna").
+    document.querySelectorAll('.pt-group[data-key]').forEach(function (group) {
+      var key = group.getAttribute('data-key');
+      var multi = group.hasAttribute('data-multi');
+      var exclusive = group.getAttribute('data-exclusive');
+      chips[key] = multi ? [] : '';
+      group.addEventListener('click', function (e) {
+        var btn = e.target.closest('.pt-chip');
+        if (!btn) return;
+        var val = btn.getAttribute('data-val');
+        var buttons = group.querySelectorAll('.pt-chip');
+        if (!multi) {
+          var was = btn.getAttribute('aria-pressed') === 'true';
+          buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', was ? 'false' : 'true');
+          chips[key] = was ? '' : val;
+        } else {
+          var on = btn.getAttribute('aria-pressed') !== 'true';
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          if (on && exclusive) {
+            buttons.forEach(function (b) {
+              var v = b.getAttribute('data-val');
+              if (val === exclusive ? v !== exclusive : v === exclusive) b.setAttribute('aria-pressed', 'false');
+            });
+          }
+          chips[key] = Array.prototype.slice
+            .call(buttons)
+            .filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })
+            .map(function (b) { return b.getAttribute('data-val'); });
+        }
+        group.classList.remove('is-invalid');
+        if (key === 'contraindicaciones') {
+          implantes.hidden = chips[key].indexOf('Implantes metálicos o prótesis') === -1;
+        }
+      });
+    });
+
+    // Intensidad: número grande visible.
+    var range = document.getElementById('pt-intensidad');
+    var out = document.getElementById('pt-intensidad-out');
+    range.addEventListener('input', function () { out.textContent = range.value; });
+
+    // Validación del paso actual: devuelve el primer elemento inválido.
+    function validate(n) {
+      var stepEl = document.querySelector('.pt-step[data-step="' + n + '"]');
+      var firstBad = null;
+      stepEl.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+      stepEl.querySelectorAll('input[required]').forEach(function (input) {
+        var ok = input.type === 'checkbox' ? input.checked : input.value.trim() !== '';
+        if (!ok) {
+          var wrap = input.closest('.pt-field, .pt-check');
+          if (wrap) wrap.classList.add('is-invalid');
+          firstBad = firstBad || input;
+        }
+      });
+      stepEl.querySelectorAll('.pt-group[data-required]').forEach(function (group) {
+        var v = chips[group.getAttribute('data-key')];
+        if (!v || v.length === 0) {
+          group.classList.add('is-invalid');
+          firstBad = firstBad || group;
+        }
+      });
+      var email = stepEl.querySelector('input[type="email"]');
+      if (email && email.value.trim() && !email.checkValidity()) {
+        email.closest('.pt-field').classList.add('is-invalid');
+        firstBad = firstBad || email;
+      }
+      return firstBad;
+    }
+
+    document.querySelector('[data-start]').addEventListener('click', function () { show(1); });
+    document.querySelector('[data-back]').addEventListener('click', function () {
+      if (current > 1) show(current - 1);
+      else show(0);
+    });
+
+    nextBtn.addEventListener('click', function () {
+      var bad = validate(current);
+      if (bad) {
+        showError(
+          current === TOTAL
+            ? 'Para enviar la ficha necesito que marques las dos casillas.'
+            : 'Revisa los campos marcados con * antes de seguir.'
+        );
+        bad.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+      if (current < TOTAL) show(current + 1);
+      else send();
+    });
+
+    function send() {
+      var fd = new FormData(form);
+      var payload = {
+        nombre: fd.get('nombre'),
+        telefono: fd.get('telefono'),
+        email: fd.get('email'),
+        nacimiento: fd.get('nacimiento'),
+        profesion: fd.get('profesion'),
+        zona: chips.zona,
+        desde: chips.desde,
+        inicio: chips.inicio,
+        intensidad: Number(fd.get('intensidad')),
+        evolucion: chips.evolucion,
+        empeora: fd.get('empeora'),
+        alivia: fd.get('alivia'),
+        pruebas: fd.get('pruebas'),
+        enfermedades: chips.enfermedades,
+        cirugias: fd.get('cirugias'),
+        medicacion: fd.get('medicacion'),
+        actividad: fd.get('actividad'),
+        contraindicaciones: chips.contraindicaciones,
+        senales: chips.senales,
+        implantes: implantes.hidden ? '' : fd.get('implantes'),
+        objetivo: fd.get('objetivo'),
+        fisioPrevia: fd.get('fisioPrevia'),
+        observaciones: fd.get('observaciones'),
+        consentimiento: fd.get('consentimiento') === 'on',
+        enviadoEn: new Date().toISOString(),
+        _gotcha: fd.get('_gotcha'),
+      };
+      nextBtn.disabled = true;
+      nextLabel.textContent = 'Enviando…';
+      fetch('/api/paciente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            if (!res.ok || !body.ok) throw new Error(body.error || 'Error ' + res.status);
+          });
+        })
+        .then(function () {
+          form.reset();
+          show('done');
+        })
+        .catch(function () {
+          showError('No se ha podido enviar. Revisa tu conexión e inténtalo de nuevo; si sigue fallando, escríbeme por WhatsApp.');
+          nextBtn.disabled = false;
+          nextLabel.textContent = 'Enviar ficha';
+        });
+    }
+
+    show(0);
+  })();
+</script>

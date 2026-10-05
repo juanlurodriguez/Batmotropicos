@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppWidget from '../components/WhatsAppWidget.astro';
+import Icon from '../components/Icon.astro';
 import { site } from '../data/site';
 
 interface Props {
@@ -10,9 +11,13 @@ interface Props {
   description: string;
   /** Ruta canónica relativa, ej. "/catalogo" */
   path?: string;
+  /** Excluye la página de buscadores (páginas ocultas, ej. /paciente) */
+  noindex?: boolean;
+  /** Cabecera y pie mínimos, sin navegación B2B ni widget de WhatsApp */
+  minimal?: boolean;
 }
 
-const { title, description, path = '' } = Astro.props;
+const { title, description, path = '', noindex = false, minimal = false } = Astro.props;
 const canonical = new URL(path, site.url).href;
 const fullTitle = `${title} · ${site.name}`;
 ---
@@ -36,6 +41,7 @@ const fullTitle = `${title} · ${site.name}`;
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_ES" />
     <meta name="twitter:card" content="summary" />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -46,12 +52,37 @@ const fullTitle = `${title} · ${site.name}`;
     />
   </head>
   <body>
-    <Header />
+    {
+      minimal ? (
+        <header class="mini-hd">
+          <span class="mini-hd__brand">
+            <Icon size={32} />
+            <span>
+              <strong>Batmotrópicos</strong>
+              <small>Health Services</small>
+            </span>
+          </span>
+        </header>
+      ) : (
+        <Header />
+      )
+    }
     <main>
       <slot />
     </main>
-    <Footer />
-    <WhatsAppWidget />
+    {
+      minimal ? (
+        <footer class="mini-ft">
+          <span>© {site.name} {new Date().getFullYear()}</span>
+          <a href="/privacidad">Privacidad</a>
+        </footer>
+      ) : (
+        <>
+          <Footer />
+          <WhatsAppWidget />
+        </>
+      )
+    }
 
     <!-- Reveal sobrio en scroll (IntersectionObserver, degrada sin JS).
          Incluye fallback por scroll: si el observer falla en algún dispositivo,
@@ -168,3 +199,45 @@ const fullTitle = `${title} · ${site.name}`;
     </script>
   </body>
 </html>
+
+<style>
+  .mini-hd {
+    display: flex;
+    justify-content: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+  .mini-hd__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--green);
+    line-height: 1.1;
+  }
+  .mini-hd__brand strong {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .mini-hd__brand small {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+  .mini-ft {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    padding: 22px 16px 28px;
+    font-size: 12px;
+    color: var(--text-sec);
+  }
+  .mini-ft a {
+    color: var(--text-sec);
+  }
+</style>
