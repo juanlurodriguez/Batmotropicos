@@ -1,0 +1,112 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { contacto, site, titular } from '../data/site';
+
+const actualizado = '5 de octubre de 2026';
+---
+
+<BaseLayout
+  title="Aviso legal"
+  description="Datos del titular de batmotropicos.com y condiciones de uso de la web."
+  path="/aviso-legal"
+>
+  <section class="section">
+    <div class="wrap legal">
+      <p class="eyebrow">Legal</p>
+      <h1 class="h2" style="font-size:36px">Aviso legal</h1>
+      <p class="legal__date">Última actualización: {actualizado}</p>
+
+      <h2>Titular de la web</h2>
+      <p>
+        En cumplimiento de la Ley 34/2002, de servicios de la sociedad de la información y de
+        comercio electrónico (LSSI), estos son los datos del titular de {site.url.replace('https://', '')}:
+      </p>
+      <ul>
+        <li><strong>Titular:</strong> {titular.nombre}</li>
+        <li><strong>NIF:</strong> {titular.nif}</li>
+        <li><strong>Domicilio:</strong> {titular.domicilio}</li>
+        <li><strong>Email:</strong> <a href={`mailto:${contacto.email}`}>{contacto.email}</a></li>
+        <li><strong>Teléfono:</strong> <a href={`tel:${contacto.telefonoIntl}`}>{contacto.telefono}</a></li>
+      </ul>
+      <p>Batmotrópicos es la marca comercial con la que el titular presta sus servicios.</p>
+
+      <h2>Uso de la web</h2>
+      <p>
+        Quien navega por esta web se compromete a usarla de forma lícita y a no dañar su
+        funcionamiento ni el de los sistemas que la sostienen. La información publicada es
+        orientativa: los contenidos, precios y condiciones de cada servicio se concretan en la
+        propuesta que recibe cada cliente.
+      </p>
+
+      <h2>Propiedad intelectual</h2>
+      <p>
+        Los textos, imágenes, vídeos, logotipos y diseño de la web pertenecen al titular o se usan con
+        autorización de sus autores. No se pueden reproducir, distribuir ni transformar sin permiso
+        expreso, salvo para uso personal y privado.
+      </p>
+
+      <h2>Enlaces a otras webs</h2>
+      <p>
+        La web puede enlazar a páginas de terceros, como LinkedIn o la plataforma de reservas. El
+        titular no controla su contenido ni responde de él.
+      </p>
+
+      <h2>Responsabilidad</h2>
+      <p>
+        El titular procura que la información sea correcta y esté actualizada, pero no garantiza la
+        ausencia de errores ni la disponibilidad continua de la web, y no responde de los daños que
+        pudieran derivarse de su uso. Los contenidos sobre salud tienen carácter divulgativo y no
+        sustituyen a una valoración profesional individual.
+      </p>
+
+      <h2>Datos personales</h2>
+      <p>
+        El tratamiento de los datos que se recogen en la web se explica en la
+        <a href="/privacidad">política de privacidad</a>.
+      </p>
+
+      <h2>Legislación aplicable</h2>
+      <p>
+        Este aviso legal se rige por la legislación española. Para cualquier controversia, las
+        partes se someten a los juzgados y tribunales que correspondan conforme a la normativa
+        vigente.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal {
+    max-width: 760px;
+  }
+  .legal__date {
+    font-size: 13px;
+    color: var(--text-sec);
+    margin: -6px 0 32px;
+  }
+  .legal h2 {
+    font-weight: 700;
+    font-size: 21px;
+    color: var(--text);
+    margin: 36px 0 12px;
+  }
+  .legal p,
+  .legal li {
+    font-size: 15.5px;
+    line-height: 1.75;
+    color: var(--text-sec);
+  }
+  .legal p {
+    margin: 0 0 14px;
+  }
+  .legal ul {
+    margin: 0 0 14px;
+    padding-left: 20px;
+  }
+  .legal li {
+    margin-bottom: 6px;
+  }
+  .legal strong {
+    color: var(--text);
+  }
+</style>

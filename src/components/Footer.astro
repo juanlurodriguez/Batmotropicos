@@ -49,7 +49,10 @@ const year = new Date().getFullYear();
 
   <div class="wrap ft__legal">
     <span>© {site.name} {year}. Todos los derechos reservados.</span>
-    <a href="/privacidad" class="ft__legal-link">Política de privacidad</a>
+    <span class="ft__legal-links">
+      <a href="/aviso-legal" class="ft__legal-link">Aviso legal</a>
+      <a href="/privacidad" class="ft__legal-link">Política de privacidad</a>
+    </span>
   </div>
 </footer>
 
@@ -144,6 +147,10 @@ const year = new Date().getFullYear();
     color: var(--text-sec);
   }
 
+  .ft__legal-links {
+    display: inline-flex;
+    gap: 18px;
+  }
   .ft__legal-link {
     color: var(--text-sec);
     text-decoration: none;

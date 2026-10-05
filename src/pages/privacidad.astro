@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { contacto } from '../data/site';
+import { contacto, titular } from '../data/site';
 
 const actualizado = '5 de octubre de 2026';
 ---
@@ -18,8 +18,9 @@ const actualizado = '5 de octubre de 2026';
 
       <h2>Quién trata tus datos</h2>
       <p>
-        El responsable es <strong>{contacto.nombre}</strong>, que presta sus servicios bajo la
-        marca Batmotrópicos. Para cualquier cuestión sobre tus datos puedes escribir a
+        El responsable es <strong>{titular.nombre}</strong> (NIF {titular.nif}), con domicilio en
+        {titular.domicilio}, que presta sus servicios bajo la marca Batmotrópicos. Para cualquier
+        cuestión sobre tus datos puedes escribir a
         <a href={`mailto:${contacto.email}`}>{contacto.email}</a>.
       </p>
 

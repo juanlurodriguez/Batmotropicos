@@ -22,6 +22,13 @@ export const contacto = {
   linkedinLabel: 'juanlurodriguez',
 };
 
+// Titular de la web (aviso legal y política de privacidad).
+export const titular = {
+  nombre: 'Juan Luis Rodríguez Ávila',
+  nif: '77380906M',
+  domicilio: 'Carrer Vicenç Ensenyat, 25, 07300 Inca (Illes Balears)',
+};
+
 // WhatsApp con mensaje predefinido
 const WA_TEXT =
   'Hola, quiero solicitar información sobre programas de bienestar corporativo para mi empresa.';
