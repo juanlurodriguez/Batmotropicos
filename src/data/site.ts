@@ -18,8 +18,8 @@ export const contacto = {
   telefonoIntl: '+34640761701',
   email: 'contacto@juanlurodriguez.com',
   ubicacion: 'Palma de Mallorca',
-  linkedin: 'https://www.linkedin.com/in/juan-luis-rodriguez-avila-755743275/',
-  linkedinLabel: 'juanlurodriguez',
+  linkedin: 'https://www.linkedin.com/in/juanlu-batmotropicos/',
+  linkedinLabel: 'juanlu-batmotropicos',
 };
 
 // Titular de la web (aviso legal y política de privacidad).
