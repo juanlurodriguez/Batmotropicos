@@ -51,8 +51,12 @@ export async function onRequestPost(context) {
   const auth = { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' };
   const api = `https://api.airtable.com/v0/${baseId}/${TABLE}`;
 
+  let paso = 'busqueda';
   try {
     // 1 · Buscar la ficha más reciente con ese teléfono (últimos 9 dígitos).
+    //     Necesita el permiso data.records:read en el token. Si la búsqueda
+    //     falla, se sigue igualmente creando una ficha: el documento firmado
+    //     nunca debe perderse.
     const last = digits.slice(-9);
     const formula = `RIGHT(REGEX_REPLACE({Teléfono} & '', '[^0-9]', ''), ${last.length}) = '${last}'`;
     const q = new URLSearchParams({
@@ -61,12 +65,18 @@ export async function onRequestPost(context) {
       'sort[0][field]': 'Fecha envío',
       'sort[0][direction]': 'desc',
     });
+    let recordId;
+    let busqueda = 'ok';
     const found = await fetch(`${api}?${q}`, { headers: auth });
-    if (!found.ok) throw new Error('búsqueda ' + found.status + ' ' + (await found.text()));
-    const foundJson = await found.json();
-    let recordId = foundJson.records?.[0]?.id;
+    if (found.ok) {
+      recordId = (await found.json()).records?.[0]?.id;
+    } else {
+      busqueda = 'error ' + found.status;
+      console.error('Búsqueda de ficha fallida', found.status, await found.text());
+    }
 
-    // 2 · Si no existe, crear una ficha mínima para no perder el documento.
+    // 2 · Si no existe (o no se pudo buscar), crear una ficha mínima.
+    paso = 'creacion';
     if (!recordId) {
       const created = await fetch(api, {
         method: 'POST',
@@ -93,6 +103,7 @@ export async function onRequestPost(context) {
     }
 
     // 3 · Marcar el consentimiento en la ficha.
+    paso = 'actualizacion';
     const upd = await fetch(`${api}/${recordId}`, {
       method: 'PATCH',
       headers: auth,
@@ -108,6 +119,7 @@ export async function onRequestPost(context) {
     if (!upd.ok) throw new Error('actualización ' + upd.status + ' ' + (await upd.text()));
 
     // 4 · Adjuntar el PDF firmado.
+    paso = 'adjunto';
     const dia = fecha.toISOString().slice(0, 10);
     const up = await fetch(
       `https://content.airtable.com/v0/${baseId}/${recordId}/${PDF_FIELD}/uploadAttachment`,
@@ -123,11 +135,14 @@ export async function onRequestPost(context) {
     );
     if (!up.ok) throw new Error('adjunto ' + up.status + ' ' + (await up.text()));
 
-    return json({ ok: true });
+    return json({ ok: true, busqueda });
   } catch (err) {
     // El detalle va solo al log del servidor: puede contener datos de salud.
-    console.error('Error guardando el consentimiento', String(err));
-    return json({ ok: false, error: 'No se pudo guardar el consentimiento' }, 502);
+    // Al navegador solo se le dice el paso y el código HTTP de Airtable.
+    // (500 y no 502: Cloudflare sustituye las respuestas 502 por su página genérica.)
+    console.error('Error guardando el consentimiento', paso, String(err));
+    const code = /\b(\d{3})\b/.exec(String(err));
+    return json({ ok: false, error: 'No se pudo guardar el consentimiento', paso, status: code ? code[1] : null }, 500);
   }
 }
 
