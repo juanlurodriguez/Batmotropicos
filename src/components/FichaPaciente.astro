@@ -1,0 +1,854 @@
+---
+// ════════════════════════════════════════════════════════════
+// FICHA DE PACIENTE — formulario por pasos, mobile-first, ES/EN.
+// Se monta desde /paciente y /paciente/en. Envía a
+// /api/paciente → Airtable "Fichas de pacientes". Las opciones se guardan
+// siempre con su valor canónico en español (ver src/data/fichaPaciente.ts).
+// Datos de salud: nada se guarda en el navegador y no hay scripts de terceros.
+// ════════════════════════════════════════════════════════════
+import {
+  CONTRAINDICACIONES,
+  DESDE,
+  ENFERMEDADES,
+  EVOLUCION,
+  INICIO,
+  LANGS,
+  SENALES,
+  TEXTS,
+  ZONAS,
+  label,
+  type Lang,
+} from '../data/fichaPaciente';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = TEXTS[lang];
+const idioma = LANGS.find((l) => l.code === lang)!.airtable;
+const waHref = `https://wa.me/34640761701?text=${encodeURIComponent(t.done.waText)}`;
+const stepNames = t.steps;
+const js = { ...t.js, of: t.of };
+---
+
+<div class="pt">
+  <!-- Progreso (fijo arriba en los pasos 1-5) -->
+  <div class="pt-top" id="pt-top" hidden>
+    <div class="pt-top__row">
+      <span id="pt-step-name">{stepNames[0]}</span>
+      <span id="pt-step-count">1 {t.of} 5</span>
+    </div>
+    <div class="pt-bar" aria-hidden="true"><div class="pt-bar__fill" id="pt-fill"></div></div>
+  </div>
+
+  <form id="pt-form" novalidate>
+    <!-- 0 · Portada -->
+    <section class="pt-step" data-step="0">
+      <nav class="pt-lang" aria-label="Idioma · Language">
+        {
+          LANGS.map((l) => (
+            <a href={l.href} hreflang={l.code} aria-current={l.code === lang ? 'page' : undefined}>
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+      <p class="pt-eyebrow">{t.eyebrow}</p>
+      <h1 class="pt-h1">{t.h1}</h1>
+      <p class="pt-lead">{t.lead}</p>
+      <ul class="pt-facts">
+        {t.facts.map(([a, b]) => <li><strong>{a}</strong> {b}</li>)}
+      </ul>
+      <button type="button" class="btn btn--primary pt-start" data-start>
+        {t.start} <span class="arrow">→</span>
+      </button>
+      <p class="pt-small">{t.startNote}</p>
+    </section>
+
+    <!-- 1 · Datos -->
+    <section class="pt-step" data-step="1" data-name={stepNames[0]} hidden>
+      <h2 class="pt-h2">{t.s1.h2}</h2>
+      <label class="pt-field">
+        <span>{t.s1.nombre} <em>*</em></span>
+        <input type="text" name="nombre" autocomplete="name" required />
+      </label>
+      <label class="pt-field">
+        <span>{t.s1.telefono} <em>*</em></span>
+        <input type="tel" name="telefono" inputmode="tel" autocomplete="tel" required />
+      </label>
+      <label class="pt-field">
+        <span>{t.s1.email}</span>
+        <input type="email" name="email" inputmode="email" autocomplete="email" />
+      </label>
+      <label class="pt-field">
+        <span>{t.s1.nacimiento}</span>
+        <input type="date" name="nacimiento" autocomplete="bday" />
+      </label>
+      <label class="pt-field">
+        <span>{t.s1.profesion}</span>
+        <input type="text" name="profesion" placeholder={t.s1.profesionPh} />
+      </label>
+      <input type="text" name="_gotcha" class="pt-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    </section>
+
+    <!-- 2 · Motivo de consulta -->
+    <section class="pt-step" data-step="2" data-name={stepNames[1]} hidden>
+      <h2 class="pt-h2">{t.s2.h2}</h2>
+
+      <fieldset class="pt-group" data-key="zona" data-multi data-required>
+        <legend>{t.s2.zona} <em>*</em></legend>
+        <div class="pt-chips">
+          {ZONAS.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <fieldset class="pt-group" data-key="desde">
+        <legend>{t.s2.desde}</legend>
+        <div class="pt-chips">
+          {DESDE.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <fieldset class="pt-group" data-key="inicio">
+        <legend>{t.s2.inicio}</legend>
+        <div class="pt-chips">
+          {INICIO.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <div class="pt-group">
+        <label for="pt-intensidad" class="pt-legend">{t.s2.intensidad}</label>
+        <div class="pt-range">
+          <output id="pt-intensidad-out" for="pt-intensidad">5</output>
+          <input type="range" id="pt-intensidad" name="intensidad" min="0" max="10" step="1" value="5" />
+          <div class="pt-range__ends"><span>{t.s2.min}</span><span>{t.s2.max}</span></div>
+        </div>
+      </div>
+
+      <fieldset class="pt-group" data-key="evolucion">
+        <legend>{t.s2.evolucion}</legend>
+        <div class="pt-chips">
+          {EVOLUCION.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <label class="pt-field">
+        <span>{t.s2.empeora}</span>
+        <textarea name="empeora" rows="2" placeholder={t.s2.empeoraPh}></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s2.alivia}</span>
+        <textarea name="alivia" rows="2" placeholder={t.s2.aliviaPh}></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s2.pruebas}</span>
+        <textarea name="pruebas" rows="2" placeholder={t.s2.pruebasPh}></textarea>
+      </label>
+    </section>
+
+    <!-- 3 · Salud general -->
+    <section class="pt-step" data-step="3" data-name={stepNames[2]} hidden>
+      <h2 class="pt-h2">{t.s3.h2}</h2>
+
+      <fieldset class="pt-group" data-key="enfermedades" data-multi data-exclusive="Ninguna">
+        <legend>{t.s3.enfermedades}</legend>
+        <div class="pt-chips">
+          {ENFERMEDADES.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <label class="pt-field">
+        <span>{t.s3.cirugias}</span>
+        <textarea name="cirugias" rows="2" placeholder={t.s3.cirugiasPh}></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s3.medicacion}</span>
+        <textarea name="medicacion" rows="2" placeholder={t.s3.medicacionPh}></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s3.actividad}</span>
+        <input type="text" name="actividad" placeholder={t.s3.actividadPh} />
+      </label>
+    </section>
+
+    <!-- 4 · Seguridad -->
+    <section class="pt-step" data-step="4" data-name={stepNames[3]} hidden>
+      <h2 class="pt-h2">{t.s4.h2}</h2>
+      <p class="pt-note">{t.s4.note}</p>
+
+      <fieldset class="pt-group" data-key="contraindicaciones" data-multi data-required data-exclusive="Ninguna">
+        <legend>{t.s4.contra} <em>*</em></legend>
+        <div class="pt-chips pt-chips--list">
+          {CONTRAINDICACIONES.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+
+      <label class="pt-field" id="pt-implantes" hidden>
+        <span>{t.s4.implantes}</span>
+        <input type="text" name="implantes" placeholder={t.s4.implantesPh} />
+      </label>
+
+      <fieldset class="pt-group" data-key="senales" data-multi data-required data-exclusive="Ninguna">
+        <legend>{t.s4.senales} <em>*</em></legend>
+        <div class="pt-chips pt-chips--list">
+          {SENALES.map((z) => <button type="button" class="pt-chip" data-val={z.val} aria-pressed="false">{label(z, lang)}</button>)}
+        </div>
+      </fieldset>
+    </section>
+
+    <!-- 5 · Objetivos y consentimiento -->
+    <section class="pt-step" data-step="5" data-name={stepNames[4]} hidden>
+      <h2 class="pt-h2">{t.s5.h2}</h2>
+      <label class="pt-field">
+        <span>{t.s5.objetivo}</span>
+        <textarea name="objetivo" rows="3" placeholder={t.s5.objetivoPh}></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s5.fisioPrevia}</span>
+        <textarea name="fisioPrevia" rows="2"></textarea>
+      </label>
+      <label class="pt-field">
+        <span>{t.s5.observaciones}</span>
+        <textarea name="observaciones" rows="2"></textarea>
+      </label>
+
+      <label class="pt-check">
+        <input type="checkbox" name="consentimiento" required />
+        <span>
+          {t.s5.consent}
+          <a href="/privacidad" target="_blank" rel="noopener">{t.s5.privacyLink}</a>. <em>*</em>
+        </span>
+      </label>
+      <label class="pt-check">
+        <input type="checkbox" name="veraz" required />
+        <span>{t.s5.veraz} <em>*</em></span>
+      </label>
+    </section>
+
+    <!-- Gracias -->
+    <section class="pt-step pt-done" data-step="done" hidden>
+      <span class="pt-done__ico" aria-hidden="true">✓</span>
+      <h2 class="pt-h1">{t.done.h}</h2>
+      <p class="pt-lead">{t.done.p}</p>
+      <a href={waHref} class="btn btn--outline" target="_blank" rel="noopener noreferrer">{t.done.wa}</a>
+    </section>
+
+    <p class="pt-error" id="pt-error" role="alert" hidden></p>
+
+    <!-- Navegación fija abajo (pulgar) -->
+    <div class="pt-nav" id="pt-nav" hidden>
+      <button type="button" class="pt-nav__back" data-back aria-label={t.js.back}>←</button>
+      <button type="button" class="btn btn--primary pt-nav__next" data-next>
+        <span id="pt-next-label">{t.js.next}</span> <span class="arrow">→</span>
+      </button>
+    </div>
+  </form>
+</div>
+
+<style>
+  /* Mobile-first: todo está pensado para 375 px y se amplía después. */
+  .pt {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  .pt-top {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin: 0 -16px;
+    padding: 12px 16px 10px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--line);
+  }
+  .pt-top[hidden] {
+    display: none;
+  }
+  .pt-top__row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .pt-top__row span:last-child {
+    color: var(--text-sec);
+    font-weight: 500;
+  }
+  .pt-bar {
+    height: 5px;
+    border-radius: 5px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .pt-bar__fill {
+    height: 100%;
+    width: 20%;
+    background: var(--green);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+  }
+
+  .pt-lang {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    margin: 4px 0 0;
+  }
+  .pt-lang a {
+    min-width: 44px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--text-sec);
+    text-decoration: none;
+    border: 1.5px solid var(--line);
+    border-radius: 100px;
+  }
+  .pt-lang a[aria-current='page'] {
+    color: #fff;
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .pt-step {
+    padding: 24px 0 8px;
+  }
+  .pt-step[hidden] {
+    display: none;
+  }
+  .pt-eyebrow {
+    font-weight: 600;
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--green-accent);
+    margin: 12px 0 10px;
+  }
+  .pt-h1 {
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .pt-h2 {
+    font-weight: 700;
+    font-size: 23px;
+    line-height: 1.25;
+    color: var(--text);
+    margin: 0 0 18px;
+  }
+  .pt-lead {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--text-sec);
+    margin: 0 0 20px;
+  }
+  .pt-note {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--green-dark);
+    background: var(--green-soft);
+    border-left: 3px solid var(--green);
+    padding: 12px 14px;
+    margin: -6px 0 20px;
+  }
+  .pt-small {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-sec);
+    margin: 14px 0 0;
+    text-align: center;
+  }
+  .pt-facts {
+    list-style: none;
+    margin: 0 0 24px;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .pt-facts li {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 12px 10px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--text-sec);
+    text-align: center;
+  }
+  .pt-facts strong {
+    display: block;
+    font-size: 15px;
+    color: var(--green);
+  }
+  .pt-start {
+    width: 100%;
+    justify-content: center;
+    min-height: 52px;
+    font-size: 16px;
+  }
+
+  /* Campos: 16 px para que iOS no haga zoom; zonas táctiles grandes */
+  .pt-field {
+    display: block;
+    margin-bottom: 16px;
+  }
+  .pt-field > span,
+  .pt-group legend,
+  .pt-legend {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .pt-field em,
+  .pt-group em,
+  .pt-check em {
+    font-style: normal;
+    color: var(--green);
+  }
+  .pt-field input,
+  .pt-field textarea {
+    width: 100%;
+    min-height: 50px;
+    font-family: var(--font);
+    font-size: 16px;
+    color: var(--text);
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-soft);
+    outline: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .pt-field textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+  .pt-field input:focus,
+  .pt-field textarea:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+  .pt-field input::placeholder,
+  .pt-field textarea::placeholder {
+    color: #9a9a9a;
+  }
+  .pt-field.is-invalid input {
+    border-color: #b00020;
+  }
+  .pt-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .pt-group {
+    border: none;
+    margin: 0 0 22px;
+    padding: 0;
+    min-width: 0;
+  }
+  .pt-group.is-invalid legend {
+    color: #b00020;
+  }
+  .pt-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .pt-chip {
+    min-height: 46px;
+    padding: 10px 16px;
+    font-family: var(--font);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 100px;
+    cursor: pointer;
+    text-align: left;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.14s ease, background 0.14s ease, color 0.14s ease;
+  }
+  .pt-chip[aria-pressed='true'] {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+  /* Listas largas (seguridad): una opción por fila, más fácil de leer y tocar */
+  .pt-chips--list {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+  .pt-chips--list .pt-chip {
+    border-radius: 12px;
+    padding: 13px 16px 13px 46px;
+    position: relative;
+  }
+  .pt-chips--list .pt-chip::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    border: 1.5px solid var(--line);
+    border-radius: 6px;
+    background: #fff;
+  }
+  .pt-chips--list .pt-chip[aria-pressed='true']::before {
+    border-color: #fff;
+    background: #fff
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a5c1a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 12 5 5 9-10'/%3E%3C/svg%3E")
+      center / 14px no-repeat;
+  }
+
+  .pt-range output {
+    display: block;
+    font-weight: 700;
+    font-size: 34px;
+    color: var(--green);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .pt-range input[type='range'] {
+    width: 100%;
+    height: 32px;
+    accent-color: var(--green);
+  }
+  .pt-range__ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-sec);
+  }
+
+  .pt-check {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 0 0 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-sec);
+    cursor: pointer;
+  }
+  .pt-check input {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    margin: 1px 0 0;
+    accent-color: var(--green);
+  }
+  .pt-check a {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .pt-check.is-invalid span {
+    color: #b00020;
+  }
+
+  .pt-error {
+    margin: 4px 0 0;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #fdecee;
+    color: #8a0018;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .pt-error[hidden] {
+    display: none;
+  }
+
+  /* Navegación fija abajo, al alcance del pulgar */
+  .pt-nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    gap: 10px;
+    margin: 18px -16px 0;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid var(--line);
+  }
+  .pt-nav[hidden] {
+    display: none;
+  }
+  .pt-nav__back {
+    flex-shrink: 0;
+    width: 52px;
+    min-height: 52px;
+    font-size: 20px;
+    color: var(--green);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .pt-nav__next {
+    flex: 1;
+    justify-content: center;
+    min-height: 52px;
+    font-size: 16px;
+  }
+  .pt-nav__next:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .pt-done {
+    text-align: center;
+    padding-top: 48px;
+  }
+  .pt-done__ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+
+  @media (min-width: 640px) {
+    .pt-step {
+      padding-top: 40px;
+    }
+    .pt-h1 {
+      font-size: 36px;
+    }
+    .pt-nav {
+      margin-left: 0;
+      margin-right: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      bottom: 16px;
+      box-shadow: var(--shadow-soft);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pt-bar__fill,
+    .pt-chip,
+    .pt-field input,
+    .pt-field textarea {
+      transition: none;
+    }
+  }
+</style>
+
+<script define:vars={{ T: js, IDIOMA: idioma }}>
+  (function () {
+    var TOTAL = 5;
+    var form = document.getElementById('pt-form');
+    var steps = Array.prototype.slice.call(document.querySelectorAll('.pt-step'));
+    var top = document.getElementById('pt-top');
+    var nav = document.getElementById('pt-nav');
+    var fill = document.getElementById('pt-fill');
+    var stepName = document.getElementById('pt-step-name');
+    var stepCount = document.getElementById('pt-step-count');
+    var nextLabel = document.getElementById('pt-next-label');
+    var nextBtn = document.querySelector('[data-next]');
+    var errorEl = document.getElementById('pt-error');
+    var implantes = document.getElementById('pt-implantes');
+    var current = 0;
+
+    // Valores de los grupos de chips (no van en el FormData).
+    var chips = {};
+
+    function show(n) {
+      current = n;
+      steps.forEach(function (s) {
+        s.hidden = s.getAttribute('data-step') !== String(n);
+      });
+      var inForm = typeof n === 'number' && n >= 1 && n <= TOTAL;
+      top.hidden = !inForm;
+      nav.hidden = !inForm;
+      hideError();
+      if (inForm) {
+        var el = document.querySelector('.pt-step[data-step="' + n + '"]');
+        stepName.textContent = el.getAttribute('data-name');
+        stepCount.textContent = n + ' ' + T.of + ' ' + TOTAL;
+        fill.style.width = (n / TOTAL) * 100 + '%';
+        nextLabel.textContent = n === TOTAL ? T.send : T.next;
+      }
+      window.scrollTo(0, 0);
+    }
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+    }
+    function hideError() {
+      errorEl.hidden = true;
+    }
+
+    // Chips: selección única o múltiple, con opción excluyente ("Ninguna").
+    document.querySelectorAll('.pt-group[data-key]').forEach(function (group) {
+      var key = group.getAttribute('data-key');
+      var multi = group.hasAttribute('data-multi');
+      var exclusive = group.getAttribute('data-exclusive');
+      chips[key] = multi ? [] : '';
+      group.addEventListener('click', function (e) {
+        var btn = e.target.closest('.pt-chip');
+        if (!btn) return;
+        var val = btn.getAttribute('data-val');
+        var buttons = group.querySelectorAll('.pt-chip');
+        if (!multi) {
+          var was = btn.getAttribute('aria-pressed') === 'true';
+          buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', was ? 'false' : 'true');
+          chips[key] = was ? '' : val;
+        } else {
+          var on = btn.getAttribute('aria-pressed') !== 'true';
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+          if (on && exclusive) {
+            buttons.forEach(function (b) {
+              var v = b.getAttribute('data-val');
+              if (val === exclusive ? v !== exclusive : v === exclusive) b.setAttribute('aria-pressed', 'false');
+            });
+          }
+          chips[key] = Array.prototype.slice
+            .call(buttons)
+            .filter(function (b) { return b.getAttribute('aria-pressed') === 'true'; })
+            .map(function (b) { return b.getAttribute('data-val'); });
+        }
+        group.classList.remove('is-invalid');
+        if (key === 'contraindicaciones') {
+          implantes.hidden = chips[key].indexOf('Implantes metálicos o prótesis') === -1;
+        }
+      });
+    });
+
+    // Intensidad: número grande visible.
+    var range = document.getElementById('pt-intensidad');
+    var out = document.getElementById('pt-intensidad-out');
+    range.addEventListener('input', function () { out.textContent = range.value; });
+
+    // Validación del paso actual: devuelve el primer elemento inválido.
+    function validate(n) {
+      var stepEl = document.querySelector('.pt-step[data-step="' + n + '"]');
+      var firstBad = null;
+      stepEl.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); });
+      stepEl.querySelectorAll('input[required]').forEach(function (input) {
+        var ok = input.type === 'checkbox' ? input.checked : input.value.trim() !== '';
+        if (!ok) {
+          var wrap = input.closest('.pt-field, .pt-check');
+          if (wrap) wrap.classList.add('is-invalid');
+          firstBad = firstBad || input;
+        }
+      });
+      stepEl.querySelectorAll('.pt-group[data-required]').forEach(function (group) {
+        var v = chips[group.getAttribute('data-key')];
+        if (!v || v.length === 0) {
+          group.classList.add('is-invalid');
+          firstBad = firstBad || group;
+        }
+      });
+      var email = stepEl.querySelector('input[type="email"]');
+      if (email && email.value.trim() && !email.checkValidity()) {
+        email.closest('.pt-field').classList.add('is-invalid');
+        firstBad = firstBad || email;
+      }
+      return firstBad;
+    }
+
+    document.querySelector('[data-start]').addEventListener('click', function () { show(1); });
+    document.querySelector('[data-back]').addEventListener('click', function () {
+      if (current > 1) show(current - 1);
+      else show(0);
+    });
+
+    nextBtn.addEventListener('click', function () {
+      var bad = validate(current);
+      if (bad) {
+        showError(current === TOTAL ? T.errConsent : T.errFields);
+        bad.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
+      if (current < TOTAL) show(current + 1);
+      else send();
+    });
+
+    function send() {
+      var fd = new FormData(form);
+      var payload = {
+        idioma: IDIOMA,
+        nombre: fd.get('nombre'),
+        telefono: fd.get('telefono'),
+        email: fd.get('email'),
+        nacimiento: fd.get('nacimiento'),
+        profesion: fd.get('profesion'),
+        zona: chips.zona,
+        desde: chips.desde,
+        inicio: chips.inicio,
+        intensidad: Number(fd.get('intensidad')),
+        evolucion: chips.evolucion,
+        empeora: fd.get('empeora'),
+        alivia: fd.get('alivia'),
+        pruebas: fd.get('pruebas'),
+        enfermedades: chips.enfermedades,
+        cirugias: fd.get('cirugias'),
+        medicacion: fd.get('medicacion'),
+        actividad: fd.get('actividad'),
+        contraindicaciones: chips.contraindicaciones,
+        senales: chips.senales,
+        implantes: implantes.hidden ? '' : fd.get('implantes'),
+        objetivo: fd.get('objetivo'),
+        fisioPrevia: fd.get('fisioPrevia'),
+        observaciones: fd.get('observaciones'),
+        consentimiento: fd.get('consentimiento') === 'on',
+        enviadoEn: new Date().toISOString(),
+        _gotcha: fd.get('_gotcha'),
+      };
+      nextBtn.disabled = true;
+      nextLabel.textContent = T.sending;
+      fetch('/api/paciente', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            if (!res.ok || !body.ok) throw new Error(body.error || 'Error ' + res.status);
+          });
+        })
+        .then(function () {
+          form.reset();
+          show('done');
+        })
+        .catch(function () {
+          showError(T.errSend);
+          nextBtn.disabled = false;
+          nextLabel.textContent = T.send;
+        });
+    }
+
+    show(0);
+  })();
+</script>

@@ -13,6 +13,8 @@
 // ════════════════════════════════════════════════════════════════════
 
 const DEFAULT_TABLE = 'tbljCHrMYSDF6V2Bw'; // "Fichas de pacientes" (el ID no es secreto)
+// Idiomas de la ficha (/paciente y /paciente/en); deben existir como opción en Airtable.
+const IDIOMAS = ['Español', 'English'];
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -50,6 +52,7 @@ export async function onRequestPost(context) {
   const fields = {
     'Nombre': nombre,
     'Estado': 'Nueva',
+    'Idioma': IDIOMAS.includes(data.idioma) ? data.idioma : 'Español',
     'Fecha envío': data.enviadoEn || new Date().toISOString(),
     'Teléfono': telefono,
     'Email': text(data.email),

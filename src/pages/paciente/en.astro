@@ -1,0 +1,12 @@
+---
+// Patient form in English (hidden page: noindex, not in the menu).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import FichaPaciente from '../../components/FichaPaciente.astro';
+import { TEXTS } from '../../data/fichaPaciente';
+
+const t = TEXTS.en;
+---
+
+<BaseLayout title={t.metaTitle} description={t.metaDesc} path="/paciente/en" lang="en" noindex minimal>
+  <FichaPaciente lang="en" />
+</BaseLayout>
