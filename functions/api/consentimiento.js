@@ -1,20 +1,20 @@
 // ════════════════════════════════════════════════════════════════════
 // Cloudflare Pages Function · POST /api/consentimiento
 // Recibe el consentimiento de fisioterapia invasiva firmado en la tablet
-// (/consentimiento), genera el PDF y lo adjunta a la ficha del paciente en
-// Airtable ("Fichas de pacientes"), que se localiza por el teléfono.
+// (/consentimiento) con el PDF ya generado en el navegador (generarlo aquí
+// supera el límite de CPU del plan gratuito) y lo adjunta a la ficha del
+// paciente en Airtable ("Fichas de pacientes"), localizada por teléfono.
 // Si no hay ficha con ese teléfono, crea una para no perder el documento.
 //
 // Reutiliza AIRTABLE_API_KEY y AIRTABLE_BASE_ID (ya en Cloudflare Pages).
 // Sin ellas → MODO DEMO: genera el PDF pero no guarda nada.
 // ════════════════════════════════════════════════════════════════════
-import { buildConsentPdf } from '../../src/lib/consentPdf.ts';
 import { TECNICAS } from '../../src/data/consentimiento.ts';
 
 const TABLE = 'tbljCHrMYSDF6V2Bw'; // "Fichas de pacientes"
 const PDF_FIELD = 'fldJqnoW3NWylTW7f'; // "Consentimiento invasiva (PDF)"
 const VALID_TECNICAS = TECNICAS.map((t) => t.val);
-const MAX_SIG_BYTES = 600_000;
+const MAX_PDF_BYTES = 3_000_000;
 
 export async function onRequestPost(context) {
   const { request, env } = context;
@@ -40,20 +40,9 @@ export async function onRequestPost(context) {
     return json({ ok: false, error: 'Faltan datos obligatorios' }, 422);
   }
 
-  const firmaPaciente = jpeg(data.firmaPaciente);
-  const firmaProfesional = jpeg(data.firmaProfesional);
-  if (!firmaPaciente || !firmaProfesional) {
-    return json({ ok: false, error: 'Faltan las firmas' }, 422);
-  }
-
+  const pdf = pdfBytes(data.pdf);
+  if (!pdf) return json({ ok: false, error: 'Falta el documento firmado' }, 422);
   const fecha = new Date();
-  let pdf;
-  try {
-    pdf = await buildConsentPdf({ lang, nombre, documento, telefono, tecnicas, firmaPaciente, firmaProfesional, fecha });
-  } catch (err) {
-    console.error('Error generando el PDF', String(err));
-    return json({ ok: false, error: 'No se pudo generar el documento' }, 500);
-  }
 
   const apiKey = env.AIRTABLE_API_KEY;
   const baseId = env.AIRTABLE_BASE_ID;
@@ -151,12 +140,11 @@ function text(v, max) {
   return String(v ?? '').trim().slice(0, max);
 }
 
-// data:image/jpeg;base64,... → bytes (o null si no es un JPEG válido y razonable)
-function jpeg(dataUrl) {
-  const m = /^data:image\/jpeg;base64,([A-Za-z0-9+/=]+)$/.exec(String(dataUrl || ''));
-  if (!m) return null;
-  const bin = atob(m[1]);
-  if (bin.length < 500 || bin.length > MAX_SIG_BYTES) return null;
+// base64 → bytes del PDF (o null si no parece un PDF de tamaño razonable)
+function pdfBytes(b64) {
+  if (typeof b64 !== 'string' || !/^[A-Za-z0-9+/=]+$/.test(b64)) return null;
+  const bin = atob(b64);
+  if (bin.length < 1000 || bin.length > MAX_PDF_BYTES || !bin.startsWith('%PDF-')) return null;
   const out = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
   return out;

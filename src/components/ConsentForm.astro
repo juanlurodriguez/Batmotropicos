@@ -1,10 +1,12 @@
 ---
 // ════════════════════════════════════════════════════════════
 // CONSENTIMIENTO INFORMADO · FISIOTERAPIA INVASIVA — firma en tablet.
-// Se usa en /consentimiento (ES) y /consentimiento/en (EN). Envía a
-// /api/consentimiento, que genera el PDF y lo adjunta a la ficha del
-// paciente en Airtable. JavaScript en ES5 a propósito: debe funcionar en
-// tablets Android antiguas (Huawei MediaPad T5, Android 8).
+// Se usa en /consentimiento (ES) y /consentimiento/en (EN). El PDF firmado
+// se genera EN LA TABLET (src/lib/consentPdf.ts) y se envía a
+// /api/consentimiento, que solo lo adjunta a la ficha en Airtable: generarlo
+// en el servidor supera el límite de CPU del plan gratuito de Cloudflare.
+// Estilo de código conservador: debe funcionar en tablets Android antiguas
+// (Huawei MediaPad T5, Android 8).
 // ════════════════════════════════════════════════════════════
 import { CONSENT, TECNICAS, VERSION, type ConsentLang } from '../data/consentimiento';
 import { titular } from '../data/site';
@@ -29,7 +31,7 @@ const msgs = {
 };
 ---
 
-<div class="cs">
+<div class="cs" id="cs-root" data-msg={JSON.stringify(msgs)}>
   <form id="cs-form" novalidate>
     <div class="cs-top">
       <nav class="cs-lang" aria-label={t.ui.lang}>
@@ -424,8 +426,11 @@ const msgs = {
   }
 </style>
 
-<script define:vars={{ MSG: msgs }}>
+<script>
+  import { buildConsentPdf } from '../lib/consentPdf';
+
   (function () {
+    var MSG = JSON.parse(document.getElementById('cs-root').getAttribute('data-msg'));
     var form = document.getElementById('cs-form');
     var errorEl = document.getElementById('cs-error');
     var submit = document.getElementById('cs-submit');
@@ -578,6 +583,20 @@ const msgs = {
       return null;
     }
 
+    function dataUrlBytes(dataUrl) {
+      var bin = atob(dataUrl.split(',')[1]);
+      var out = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+      return out;
+    }
+    function bytesBase64(bytes) {
+      var bin = '';
+      for (var i = 0; i < bytes.length; i += 0x8000) {
+        bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      }
+      return btoa(bin);
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       errorEl.hidden = true;
@@ -595,17 +614,28 @@ const msgs = {
           return c.value;
         }),
         declaraciones: true,
-        firmaPaciente: pads.paciente.toJpeg(),
-        firmaProfesional: pads.profesional.toJpeg(),
         _gotcha: form.elements._gotcha.value,
       };
       submit.disabled = true;
       submit.textContent = MSG.enviando;
-      fetch('/api/consentimiento', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+      buildConsentPdf({
+        lang: payload.lang,
+        nombre: payload.nombre,
+        documento: payload.documento,
+        telefono: payload.telefono,
+        tecnicas: payload.tecnicas,
+        firmaPaciente: dataUrlBytes(pads.paciente.toJpeg()),
+        firmaProfesional: dataUrlBytes(pads.profesional.toJpeg()),
+        fecha: new Date(),
       })
+        .then(function (bytes) {
+          payload.pdf = bytesBase64(bytes);
+          return fetch('/api/consentimiento', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+        })
         .then(function (res) {
           return res.json().then(function (body) {
             if (!res.ok || !body.ok) throw new Error(body.error || res.status);
