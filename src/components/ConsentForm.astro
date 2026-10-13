@@ -1,0 +1,638 @@
+---
+// ════════════════════════════════════════════════════════════
+// CONSENTIMIENTO INFORMADO · FISIOTERAPIA INVASIVA — firma en tablet.
+// Se usa en /consentimiento (ES) y /consentimiento/en (EN). Envía a
+// /api/consentimiento, que genera el PDF y lo adjunta a la ficha del
+// paciente en Airtable. JavaScript en ES5 a propósito: debe funcionar en
+// tablets Android antiguas (Huawei MediaPad T5, Android 8).
+// ════════════════════════════════════════════════════════════
+import { CONSENT, TECNICAS, VERSION, type ConsentLang } from '../data/consentimiento';
+import { titular } from '../data/site';
+
+interface Props {
+  lang: ConsentLang;
+}
+
+const { lang } = Astro.props;
+const t = CONSENT[lang];
+const prof =
+  lang === 'en'
+    ? `${titular.nombre} · Physiotherapist, registration no. ${titular.colegiado} (COFIB)`
+    : `${titular.nombre} · Fisioterapeuta colegiado nº ${titular.colegiado} (COFIB)`;
+const msgs = {
+  lang,
+  enviar: t.ui.enviar,
+  enviando: t.ui.enviando,
+  errCampos: t.ui.errCampos,
+  errFirma: t.ui.errFirma,
+  errEnvio: t.ui.errEnvio,
+};
+---
+
+<div class="cs">
+  <form id="cs-form" novalidate>
+    <div class="cs-top">
+      <nav class="cs-lang" aria-label={t.ui.lang}>
+        <a href="/consentimiento" hreflang="es" aria-current={lang === 'es' ? 'page' : undefined}>ES</a>
+        <a href="/consentimiento/en" hreflang="en" aria-current={lang === 'en' ? 'page' : undefined}>EN</a>
+      </nav>
+      <p class="cs-prof">{prof}</p>
+    </div>
+
+    <h1 class="cs-h1">{t.title}</h1>
+    <p class="cs-intro">{t.intro}</p>
+
+    <!-- Datos del paciente -->
+    <section class="cs-card">
+      <h2 class="cs-h2">{t.ui.patient}</h2>
+      <label class="cs-field">
+        <span>{t.ui.nombre} <em>*</em></span>
+        <input type="text" name="nombre" autocomplete="name" required />
+      </label>
+      <div class="cs-row">
+        <label class="cs-field">
+          <span>{t.ui.telefono} <em>*</em></span>
+          <input type="tel" name="telefono" inputmode="tel" autocomplete="tel" required />
+          <small>{t.ui.telefonoHint}</small>
+        </label>
+        <label class="cs-field">
+          <span>{t.ui.documento}</span>
+          <input type="text" name="documento" autocomplete="off" />
+          <small>{t.ui.documentoHint}</small>
+        </label>
+      </div>
+      <input type="text" name="_gotcha" class="cs-hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
+    </section>
+
+    <!-- Técnicas -->
+    <section class="cs-card" id="cs-tecnicas">
+      <h2 class="cs-h2">{t.ui.tecnicas} <em>*</em></h2>
+      <p class="cs-hint">{t.ui.tecnicasHint}</p>
+      {
+        TECNICAS.map((tec) => (
+          <label class="cs-check">
+            <input type="checkbox" name="tecnica" value={tec.val} />
+            <span>{lang === 'en' ? tec.en : tec.val}</span>
+          </label>
+        ))
+      }
+    </section>
+
+    <!-- Información -->
+    <section class="cs-card cs-info">
+      <h2 class="cs-h2">{t.ui.info}</h2>
+      {
+        t.sections.map((s) => (
+          <div class="cs-sec">
+            <h3>{s.h}</h3>
+            {s.p && <p>{s.p}</p>}
+            {s.list && (
+              <ul>
+                {s.list.map((li) => (
+                  <li>{li}</li>
+                ))}
+              </ul>
+            )}
+            {s.after && <p class="cs-after">{s.after}</p>}
+          </div>
+        ))
+      }
+      <p class="cs-legal">
+        {lang === 'en' ? 'This document is kept in your clinical record. ' : 'Este documento se guarda en tu historia clínica. '}
+        <a href="/privacidad" target="_blank" rel="noopener">{lang === 'en' ? 'Privacy policy (in Spanish)' : 'Política de privacidad'}</a>
+      </p>
+    </section>
+
+    <!-- Declaraciones -->
+    <section class="cs-card" id="cs-decl">
+      <h2 class="cs-h2">{t.ui.declare} <em>*</em></h2>
+      {
+        t.declarations.map((d) => (
+          <label class="cs-check">
+            <input type="checkbox" name="declaracion" required />
+            <span>{d}</span>
+          </label>
+        ))
+      }
+    </section>
+
+    <!-- Firmas -->
+    <section class="cs-card">
+      <div class="cs-sig" data-sig="paciente">
+        <div class="cs-sig__head">
+          <h2 class="cs-h2">{t.ui.firmaPaciente} <em>*</em></h2>
+          <button type="button" class="cs-clear" data-clear>{t.ui.borrar}</button>
+        </div>
+        <canvas class="cs-canvas" aria-label={t.ui.firmaPaciente}></canvas>
+        <p class="cs-hint">{t.ui.firmaHint}</p>
+      </div>
+      <div class="cs-sig" data-sig="profesional">
+        <div class="cs-sig__head">
+          <h2 class="cs-h2">{t.ui.firmaProfesional} <em>*</em></h2>
+          <button type="button" class="cs-clear" data-clear>{t.ui.borrar}</button>
+        </div>
+        <canvas class="cs-canvas" aria-label={t.ui.firmaProfesional}></canvas>
+      </div>
+    </section>
+
+    <p class="cs-error" id="cs-error" role="alert" hidden></p>
+    <button type="submit" class="btn btn--primary cs-submit" id="cs-submit">{t.ui.enviar}</button>
+    <p class="cs-version">{VERSION}</p>
+  </form>
+
+  <section class="cs-done" id="cs-done" hidden>
+    <span class="cs-done__ico" aria-hidden="true">✓</span>
+    <h2 class="cs-h1">{t.ui.doneH}</h2>
+    <p class="cs-intro">{t.ui.doneP}</p>
+    <button type="button" class="btn btn--outline" id="cs-again">{t.ui.otro}</button>
+  </section>
+</div>
+
+<style>
+  .cs {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 48px;
+  }
+  .cs-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .cs-prof {
+    font-size: 12.5px;
+    color: var(--text-sec);
+    margin: 0;
+  }
+  .cs-lang {
+    display: flex;
+    gap: 6px;
+  }
+  .cs-lang a {
+    min-width: 46px;
+    min-height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-sec);
+    text-decoration: none;
+    border: 1.5px solid var(--line);
+    border-radius: 100px;
+  }
+  .cs-lang a[aria-current='page'] {
+    color: #fff;
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .cs-h1 {
+    font-weight: 700;
+    font-size: 26px;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 0 0 10px;
+  }
+  .cs-intro {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-sec);
+    margin: 0 0 20px;
+  }
+  .cs-card {
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 20px 18px;
+    margin-bottom: 14px;
+  }
+  .cs-card.is-invalid {
+    border-color: #b00020;
+  }
+  .cs-h2 {
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--text);
+    margin: 0 0 12px;
+  }
+  .cs-h2 em,
+  .cs-field em {
+    font-style: normal;
+    color: var(--green);
+  }
+  .cs-hint {
+    font-size: 13px;
+    color: var(--text-sec);
+    margin: -6px 0 12px;
+  }
+  .cs-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .cs-field {
+    display: block;
+    margin-bottom: 14px;
+  }
+  .cs-field > span {
+    display: block;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 7px;
+    color: var(--text);
+  }
+  .cs-field small {
+    display: block;
+    font-size: 12px;
+    color: var(--text-sec);
+    margin-top: 5px;
+  }
+  .cs-field input {
+    width: 100%;
+    min-height: 50px;
+    font-family: var(--font);
+    font-size: 16px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg-soft);
+    color: var(--text);
+    outline: none;
+  }
+  .cs-field input:focus {
+    border-color: var(--green);
+    background: #fff;
+  }
+  .cs-field.is-invalid input {
+    border-color: #b00020;
+  }
+  .cs-hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+  .cs-check {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 12px 4px;
+    font-size: 15.5px;
+    line-height: 1.5;
+    color: var(--text);
+    cursor: pointer;
+    border-top: 1px solid var(--line-soft);
+  }
+  .cs-check:first-of-type {
+    border-top: none;
+  }
+  .cs-check input {
+    flex-shrink: 0;
+    width: 26px;
+    height: 26px;
+    margin: 0;
+    accent-color: var(--green);
+  }
+  .cs-info .cs-sec {
+    margin-bottom: 14px;
+  }
+  .cs-info h3 {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--green);
+    margin: 0 0 6px;
+  }
+  .cs-info p,
+  .cs-info li {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .cs-info p {
+    margin: 0 0 6px;
+  }
+  .cs-info ul {
+    margin: 0 0 6px;
+    padding-left: 22px;
+  }
+  .cs-info .cs-after {
+    color: var(--text-sec);
+  }
+  .cs-legal {
+    font-size: 13px !important;
+    color: var(--text-sec) !important;
+    margin-top: 10px !important;
+  }
+  .cs-legal a {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .cs-sig + .cs-sig {
+    margin-top: 22px;
+  }
+  .cs-sig__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .cs-sig__head .cs-h2 {
+    margin: 0;
+  }
+  .cs-clear {
+    min-height: 40px;
+    padding: 0 16px;
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--green);
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: 100px;
+    cursor: pointer;
+  }
+  .cs-canvas {
+    display: block;
+    width: 100%;
+    height: 200px;
+    margin: 12px 0 10px;
+    background: #fff;
+    border: 2px dashed var(--line);
+    border-radius: 12px;
+    touch-action: none;
+    cursor: crosshair;
+  }
+  .cs-sig.is-invalid .cs-canvas {
+    border-color: #b00020;
+  }
+  .cs-error {
+    margin: 4px 0 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #fdecee;
+    color: #8a0018;
+    font-size: 15px;
+  }
+  .cs-error[hidden] {
+    display: none;
+  }
+  .cs-submit {
+    width: 100%;
+    justify-content: center;
+    min-height: 56px;
+    font-size: 17px;
+  }
+  .cs-submit:disabled {
+    opacity: 0.6;
+  }
+  .cs-version {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-sec);
+    margin: 12px 0 0;
+  }
+  .cs-done {
+    text-align: center;
+    padding: 60px 16px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .cs-done[hidden] {
+    display: none;
+  }
+  .cs-done__ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--green);
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  @media (max-width: 560px) {
+    .cs-row {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script define:vars={{ MSG: msgs }}>
+  (function () {
+    var form = document.getElementById('cs-form');
+    var errorEl = document.getElementById('cs-error');
+    var submit = document.getElementById('cs-submit');
+    var done = document.getElementById('cs-done');
+
+    // ── Firma: pointer events con alternativa táctil y de ratón ──
+    function SignaturePad(wrap) {
+      var canvas = wrap.querySelector('canvas');
+      var ctx = canvas.getContext('2d');
+      var drawing = false;
+      var last = null;
+      var self = this;
+      this.dirty = false;
+      this.wrap = wrap;
+
+      function size() {
+        var ratio = Math.max(window.devicePixelRatio || 1, 1);
+        var data = self.dirty ? canvas.toDataURL() : null;
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#111111';
+        ctx.lineWidth = 2.6;
+        if (data) {
+          var img = new Image();
+          img.onload = function () { ctx.drawImage(img, 0, 0, canvas.offsetWidth, canvas.offsetHeight); };
+          img.src = data;
+        }
+      }
+      function pos(e) {
+        var r = canvas.getBoundingClientRect();
+        var p = e.touches && e.touches.length ? e.touches[0] : e;
+        return { x: p.clientX - r.left, y: p.clientY - r.top };
+      }
+      function start(e) {
+        e.preventDefault();
+        drawing = true;
+        last = pos(e);
+        ctx.beginPath();
+        ctx.arc(last.x, last.y, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = '#111111';
+        ctx.fill();
+        self.dirty = true;
+        wrap.classList.remove('is-invalid');
+      }
+      function move(e) {
+        if (!drawing) return;
+        e.preventDefault();
+        var p = pos(e);
+        ctx.beginPath();
+        ctx.moveTo(last.x, last.y);
+        ctx.lineTo(p.x, p.y);
+        ctx.stroke();
+        last = p;
+      }
+      function end() {
+        drawing = false;
+      }
+
+      if (window.PointerEvent) {
+        canvas.addEventListener('pointerdown', function (e) {
+          if (canvas.setPointerCapture) canvas.setPointerCapture(e.pointerId);
+          start(e);
+        });
+        canvas.addEventListener('pointermove', move);
+        canvas.addEventListener('pointerup', end);
+        canvas.addEventListener('pointercancel', end);
+      } else {
+        canvas.addEventListener('touchstart', start, { passive: false });
+        canvas.addEventListener('touchmove', move, { passive: false });
+        canvas.addEventListener('touchend', end);
+        canvas.addEventListener('mousedown', start);
+        canvas.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', end);
+      }
+
+      this.clear = function () {
+        self.dirty = false;
+        size();
+      };
+      this.toJpeg = function () {
+        // Se reduce a un tamaño razonable antes de enviar.
+        var out = document.createElement('canvas');
+        var w = Math.min(canvas.width, 900);
+        out.width = w;
+        out.height = Math.round(canvas.height * (w / canvas.width));
+        var o = out.getContext('2d');
+        o.fillStyle = '#ffffff';
+        o.fillRect(0, 0, out.width, out.height);
+        o.drawImage(canvas, 0, 0, out.width, out.height);
+        return out.toDataURL('image/jpeg', 0.85);
+      };
+
+      wrap.querySelector('[data-clear]').addEventListener('click', this.clear);
+      size();
+      var timer;
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(size, 200);
+      });
+    }
+
+    var pads = {};
+    Array.prototype.forEach.call(document.querySelectorAll('.cs-sig'), function (w) {
+      pads[w.getAttribute('data-sig')] = new SignaturePad(w);
+    });
+
+    function showError(msg) {
+      errorEl.textContent = msg;
+      errorEl.hidden = false;
+      errorEl.scrollIntoView({ block: 'center' });
+    }
+
+    function validate() {
+      var bad = false;
+      Array.prototype.forEach.call(form.querySelectorAll('.is-invalid'), function (el) {
+        el.classList.remove('is-invalid');
+      });
+      ['nombre', 'telefono'].forEach(function (n) {
+        var input = form.elements[n];
+        var ok = n === 'telefono' ? input.value.replace(/\D/g, '').length >= 6 : input.value.trim() !== '';
+        if (!ok) {
+          input.closest('.cs-field').classList.add('is-invalid');
+          bad = true;
+        }
+      });
+      if (!form.querySelectorAll('input[name="tecnica"]:checked').length) {
+        document.getElementById('cs-tecnicas').classList.add('is-invalid');
+        bad = true;
+      }
+      var decl = form.querySelectorAll('input[name="declaracion"]');
+      var allDecl = Array.prototype.every.call(decl, function (d) { return d.checked; });
+      if (!allDecl) {
+        document.getElementById('cs-decl').classList.add('is-invalid');
+        bad = true;
+      }
+      var sigBad = false;
+      Object.keys(pads).forEach(function (k) {
+        if (!pads[k].dirty) {
+          pads[k].wrap.classList.add('is-invalid');
+          sigBad = true;
+        }
+      });
+      if (bad) return MSG.errCampos;
+      if (sigBad) return MSG.errFirma;
+      return null;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      errorEl.hidden = true;
+      var err = validate();
+      if (err) {
+        showError(err);
+        return;
+      }
+      var payload = {
+        lang: MSG.lang,
+        nombre: form.elements.nombre.value,
+        telefono: form.elements.telefono.value,
+        documento: form.elements.documento.value,
+        tecnicas: Array.prototype.map.call(form.querySelectorAll('input[name="tecnica"]:checked'), function (c) {
+          return c.value;
+        }),
+        declaraciones: true,
+        firmaPaciente: pads.paciente.toJpeg(),
+        firmaProfesional: pads.profesional.toJpeg(),
+        _gotcha: form.elements._gotcha.value,
+      };
+      submit.disabled = true;
+      submit.textContent = MSG.enviando;
+      fetch('/api/consentimiento', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            if (!res.ok || !body.ok) throw new Error(body.error || res.status);
+          });
+        })
+        .then(function () {
+          form.hidden = true;
+          done.hidden = false;
+          window.scrollTo(0, 0);
+        })
+        .catch(function () {
+          showError(MSG.errEnvio);
+        })
+        .then(function () {
+          submit.disabled = false;
+          submit.textContent = MSG.enviar;
+        });
+    });
+
+    // Nuevo consentimiento: vacía datos y firmas del anterior sin recargar
+    // (una recarga podría restaurar los campos del paciente anterior).
+    document.getElementById('cs-again').addEventListener('click', function () {
+      form.reset();
+      Object.keys(pads).forEach(function (k) { pads[k].clear(); });
+      done.hidden = true;
+      form.hidden = false;
+      window.scrollTo(0, 0);
+    });
+  })();
+</script>

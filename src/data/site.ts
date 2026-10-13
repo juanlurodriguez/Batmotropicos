@@ -27,6 +27,8 @@ export const titular = {
   nombre: 'Juan Luis Rodríguez Ávila',
   nif: '77380906M',
   domicilio: 'Carrer Vicenç Ensenyat, 25, 07300 Inca (Illes Balears)',
+  colegiado: '2498',
+  colegio: 'Colegio Oficial de Fisioterapeutas de las Illes Balears (COFIB)',
 };
 
 // WhatsApp con mensaje predefinido

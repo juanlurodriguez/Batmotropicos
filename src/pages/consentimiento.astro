@@ -1,0 +1,17 @@
+---
+// Consentimiento informado de fisioterapia invasiva (página oculta: noindex,
+// fuera del menú). Se firma en la tablet de consulta. Versión inglesa: /consentimiento/en.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ConsentForm from '../components/ConsentForm.astro';
+---
+
+<BaseLayout
+  title="Consentimiento informado"
+  description="Consentimiento informado para fisioterapia invasiva."
+  path="/consentimiento"
+  lang="es"
+  noindex
+  minimal
+>
+  <ConsentForm lang="es" />
+</BaseLayout>
