@@ -1,111 +1,162 @@
 ---
 // ════════════════════════════════════════════════════════════
-// RUEDA DE BIENESTAR CORPORATIVO — 8 áreas estratégicas
+// RUEDA DE BIENESTAR CORPORATIVO — 8 áreas en dos mitades
+// Arriba "La persona" (físico, mental, propósito, financiero);
+// abajo "El equipo" (cohesión, comunicación, liderazgo, obligatoria).
+// Cada área dice a RRHH qué indicador mejora y si es bonificable.
 // Desktop: rueda SVG interactiva + panel lateral con detalle.
 // Móvil: rueda SVG táctil (tocar un área abre su tarjeta) + tarjetas desplegables.
 // El SVG se genera en build; el JS runtime solo gestiona la selección.
 // Cero dependencias. Los CTAs usan las anclas reales del catálogo.
 // ════════════════════════════════════════════════════════════
+import { BONIF_NOTE } from '../data/catalogo';
+
+type Group = 'p' | 'e';
 
 interface Area {
   /** Número visual 01-08 */
   n: string;
+  /** Mitad de la rueda: p = la persona, e = el equipo */
+  g: Group;
   /** Etiqueta corta para el segmento de la rueda */
   short: string;
+  /** Icono (contenido SVG, viewBox 24, trazo) */
+  icon: string;
   /** Nombre completo del área */
   name: string;
-  /** Descripción breve, una línea */
+  /** Descripción breve */
   desc: string;
+  /** Qué indicadores de RRHH mejora */
+  mejora: string;
   /** Ejemplos (máx. 5) */
   ex: string[];
+  /** Sello de bonificación */
+  bonif: string;
   /** Ancla del catálogo para "Ver acciones" */
   anchor: string;
   /** Enlace secundario opcional dentro de la tarjeta */
   extra?: { label: string; anchor: string };
 }
 
+const GROUPS: Record<Group, string> = { p: 'La persona', e: 'El equipo' };
+
 const AREAS: Area[] = [
   {
     n: '01',
-    short: 'Salud física',
-    name: 'Salud física, ergonomía y movimiento',
-    desc: 'Cuida el cuerpo en el puesto: menos molestias, mejor postura y más movimiento en la jornada.',
-    ex: ['Espalda sana', 'Ergonomía', 'Gestión de cargas', 'Pausas activas', 'Fisioterapia in company'],
+    g: 'p',
+    short: 'Físico',
+    icon: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
+    name: 'Salud física, nutrición y descanso',
+    desc: 'Menos molestias y más energía: ergonomía, movimiento, alimentación y descanso aplicados al puesto.',
+    mejora: 'Bajas por lesiones musculoesqueléticas, absentismo y fatiga en los puestos físicos.',
+    ex: ['Ergonomía', 'Pausas activas', 'Espalda sana', 'Alimentación y sueño', 'Fisioterapia in company'],
+    bonif: 'Bonificable FUNDAE*',
     anchor: '#salud-fisica',
     extra: { label: 'Wellness in company', anchor: '#wellness-in-company' },
   },
   {
     n: '02',
-    short: 'Salud mental',
-    name: 'Salud mental y gestión emocional',
-    desc: 'Protege el equilibrio mental del equipo y previene el desgaste sostenido.',
-    ex: ['Gestión del estrés', 'Gestión emocional', 'Respiración consciente', 'Mindfulness activo', 'Burnout'],
+    g: 'p',
+    short: 'Mental',
+    icon: '<path d="M19 14c1.5-1.5 3-3.2 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.8 0-3 .5-4.5 2-1.5-1.5-2.7-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4 3 5.5l7 7Z"/>',
+    name: 'Salud mental y emocional',
+    desc: 'Herramientas para gestionar la presión y prevenir el desgaste antes de que se convierta en baja.',
+    mejora: 'Estrés, bajas por ansiedad o burnout y presentismo.',
+    ex: ['Gestión del estrés', 'Regulación emocional', 'Respiración', 'Mindfulness', 'Yoga y pilates'],
+    bonif: 'Bonificable FUNDAE*',
     anchor: '#salud-mental',
   },
   {
     n: '03',
-    short: 'Nutrición',
-    name: 'Nutrición, descanso y energía',
-    desc: 'Hábitos de alimentación, descanso y energía que sostienen el rendimiento diario.',
-    ex: ['Alimentación saludable', 'Tupper saludable', 'Sueño y recuperación', 'Energía laboral', 'Hábitos saludables'],
-    anchor: '#salud-practica',
+    g: 'p',
+    short: 'Propósito',
+    icon: '<circle cx="12" cy="12" r="10"/><path d="m16.2 7.8-2.1 6.3-6.3 2.1 2.1-6.3z"/>',
+    name: 'Propósito y autoconocimiento',
+    desc: 'Taller Ikigai: cada persona descubre qué la mueve, en qué es buena y cómo conectarlo con su trabajo.',
+    mejora: 'Motivación, compromiso y retención del talento.',
+    ex: ['Ikigai', 'Autoconocimiento', 'Motivación', 'Sentido del trabajo'],
+    bonif: 'Bonificable FUNDAE*',
+    anchor: '#proposito',
   },
   {
     n: '04',
-    short: 'Cohesión',
-    name: 'Cohesión y team building',
-    desc: 'Actividades para reforzar pertenencia, confianza y buen ambiente entre equipos.',
-    ex: ['Team building', 'Dinámicas de cohesión', 'Jornadas deportivas', 'Escape room', 'MasterChef / paellas'],
-    anchor: '#team-building',
+    g: 'p',
+    short: 'Financiero',
+    icon: '<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>',
+    name: 'Bienestar financiero',
+    desc: 'Entender la nómina, ahorrar y decidir mejor. Menos preocupación económica, más cabeza en el trabajo.',
+    mejora: 'Estrés económico, concentración y valor percibido de la nómina.',
+    ex: ['Entiende tu nómina', 'Ahorro', 'Deuda', 'Estrés financiero', 'Prevención de fraudes'],
+    bonif: 'Bonificable FUNDAE*',
+    anchor: '#bienestar-financiero',
   },
   {
     n: '05',
-    short: 'Comunicación',
-    name: 'Comunicación, liderazgo y atención al cliente',
-    desc: 'Equipos que se comunican mejor, líderes que saben cuidar y una atención al cliente más sólida.',
-    ex: ['Comunicación efectiva', 'Liderazgo', 'Gestión de conflictos', 'Atención al cliente', 'Comunicación interdepartamental'],
-    anchor: '#salud-mental',
+    g: 'e',
+    short: 'Cohesión',
+    icon: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/>',
+    name: 'Cohesión y team building',
+    desc: 'Experiencias que crean confianza y pertenencia entre personas y departamentos.',
+    mejora: 'Clima laboral, pertenencia y colaboración entre departamentos.',
+    ex: ['Team building', 'Dinámicas de cohesión', 'Jornadas deportivas', 'Escape room', 'MasterChef y paellas'],
+    bonif: 'Parcialmente bonificable*',
+    anchor: '#team-building',
   },
   {
     n: '06',
-    short: 'Productividad',
-    name: 'Productividad, IA y organización del trabajo',
-    desc: 'Trabajar mejor con IA, método y herramientas actuales — no es formación obligatoria.',
-    ex: ['IA para empresas', 'Productividad', 'Gestión del tiempo', 'Herramientas digitales', 'Organización'],
-    anchor: '#productividad-digital',
+    g: 'e',
+    short: 'Comunicación',
+    icon: '<path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5Z"/>',
+    name: 'Comunicación y negociación',
+    desc: 'Equipos que se entienden, resuelven conflictos y negocian mejor, dentro de la empresa y con el cliente.',
+    mejora: 'Conflictos internos, coordinación entre áreas y resultados comerciales.',
+    ex: ['Comunicación asertiva', 'Gestión de conflictos', 'Negociación', 'Atención al cliente', 'Inglés profesional'],
+    bonif: 'Bonificable FUNDAE*',
+    anchor: '#liderazgo-comunicacion',
   },
   {
     n: '07',
-    short: 'Cumplimiento',
-    name: 'Cumplimiento, prevención y emergencias',
-    desc: 'Formaciones obligatorias o preventivas para cumplir normativa y proteger a las personas.',
-    ex: ['PRL', 'Primeros auxilios', 'Acoso laboral', 'LGTBI', 'Socorrismo'],
-    anchor: '#cumplimiento-prevencion',
+    g: 'e',
+    short: 'Liderazgo',
+    icon: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/>',
+    name: 'Liderazgo y gestión de equipos',
+    desc: 'La gente no deja empresas, deja jefes. Formamos mandos que cuidan, motivan y exigen sin quemar al equipo.',
+    mejora: 'Rotación, clima en cada equipo y retención de los buenos perfiles.',
+    ex: ['Liderazgo', 'Gestión de equipos', 'Gestión de conflictos'],
+    bonif: 'Bonificable FUNDAE*',
+    anchor: '#liderazgo-comunicacion',
   },
   {
     n: '08',
-    short: 'Financiero',
-    name: 'Bienestar financiero',
-    desc: 'Formación para reducir el estrés económico y mejorar las decisiones financieras del equipo.',
-    ex: ['Salud financiera', 'Ahorro', 'Presupuesto personal', 'Deuda', 'Estrés económico'],
-    anchor: '#bienestar-financiero',
+    g: 'e',
+    short: 'Obligatoria',
+    icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/>',
+    name: 'Formación obligatoria y prevención',
+    desc: 'Todo lo que la ley te exige, documentado y con un solo proveedor. Sin coordinar a cinco empresas distintas.',
+    mejora: 'Cumplimiento legal, inspecciones sin sustos y seguridad de las personas.',
+    ex: ['PRL', 'Igualdad y protocolo de acoso', 'Primeros auxilios y DEA', 'Manipulación de alimentos', 'Socorrismo'],
+    bonif: 'Bonificable FUNDAE*',
+    anchor: '#cumplimiento-prevencion',
   },
 ];
 
-// Geometría de la rueda (SVG 440×440, donut de 8 segmentos)
+// Geometría de la rueda (SVG 440×440, donut de 8 segmentos).
+// Empieza a las 9 en punto: los 4 primeros forman la mitad de arriba
+// (la persona) y los 4 últimos la de abajo (el equipo).
 const C = 220;
-const R = 182;
-const r = 106;
+const R = 178;
+const r = 104;
 const GAP = 2.4;
+const START = -180;
 const rad = (a: number) => (a * Math.PI) / 180;
 const pt = (a: number, rr: number) =>
   `${(C + rr * Math.cos(rad(a))).toFixed(2)} ${(C + rr * Math.sin(rad(a))).toFixed(2)}`;
 
 const segs = AREAS.map((_, i) => {
-  const a0 = -90 + i * 45 + GAP / 2;
-  const a1 = -90 + (i + 1) * 45 - GAP / 2;
+  const a0 = START + i * 45 + GAP / 2;
+  const a1 = START + (i + 1) * 45 - GAP / 2;
   const d = `M ${pt(a0, R)} A ${R} ${R} 0 0 1 ${pt(a1, R)} L ${pt(a1, r)} A ${r} ${r} 0 0 0 ${pt(a0, r)} Z`;
-  const mid = -90 + i * 45 + 22.5;
+  const mid = START + i * 45 + 22.5;
   const lr = (R + r) / 2;
   return {
     d,
@@ -113,6 +164,15 @@ const segs = AREAS.map((_, i) => {
     ly: +(C + lr * Math.sin(rad(mid))).toFixed(2),
   };
 });
+
+// Rótulos de cada mitad, por fuera del anillo. Arriba se recorre de
+// izquierda a derecha por encima; abajo, de izquierda a derecha por
+// debajo, para que los dos se lean derechos.
+const RT = R + 9;
+const RB = R + 19;
+const ARC_TOP = `M ${C - RT} ${C} A ${RT} ${RT} 0 0 1 ${C + RT} ${C}`;
+const ARC_BOT = `M ${C - RB} ${C} A ${RB} ${RB} 0 0 0 ${C + RB} ${C}`;
+
 
 // Isotipo Batmotrópicos (corazón + rayo) — trazados de Icon.astro,
 // incrustados en el hub de la rueda. El glifo ocupa x≈191-815, y≈172-818
@@ -133,50 +193,64 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
   <div class="ww-desk">
     <div class="ww-wheelbox">
       <svg viewBox="0 0 440 440" class="ww-svg" aria-label="Rueda con las 8 áreas del bienestar corporativo">
+        <defs>
+          <path id="ww-at-d" d={ARC_TOP}></path>
+          <path id="ww-ab-d" d={ARC_BOT}></path>
+        </defs>
+        <text class="ww-half g-p"><textPath href="#ww-at-d" startOffset="50%">{GROUPS.p}</textPath></text>
+        <text class="ww-half g-e"><textPath href="#ww-ab-d" startOffset="50%">{GROUPS.e}</textPath></text>
         {
           AREAS.map((a, i) => (
             <path
               d={segs[i].d}
-              class={`ww-seg${i === 0 ? ' sel' : ''}`}
+              class={`ww-seg g-${a.g}${i % 2 ? ' alt' : ''}${i === 0 ? ' sel' : ''}`}
               data-ww-seg={i}
               tabindex="0"
               role="button"
               aria-pressed={i === 0 ? 'true' : 'false'}
-              aria-label={`${a.name} — ver detalle`}
+              aria-label={`${a.name}: ver detalle`}
             />
           ))
         }
         {
           AREAS.map((a, i) => (
-            <text x={segs[i].lx} y={segs[i].ly + 4} class={`ww-slb${i === 0 ? ' on' : ''}`} data-ww-lb={i}>
-              {a.short}
-            </text>
+            <g class={`ww-lbl g-${a.g}${i === 0 ? ' on' : ''}`} data-ww-lb={i}>
+              <svg x={segs[i].lx - 10} y={segs[i].ly - 24} width="20" height="20" viewBox="0 0 24 24" class="ww-ico" set:html={a.icon} />
+              <text x={segs[i].lx} y={segs[i].ly + 12} class="ww-slb">{a.short}</text>
+            </g>
           ))
         }
-        <circle cx={C} cy={C} r={r - 14} class="ww-hub"></circle>
+        <circle cx={C} cy={C} r={r - 12} class="ww-hub"></circle>
         <g transform={`translate(${ICON_TX} ${ICON_TY}) scale(${ICON_S})`} class="ww-hub-icon" aria-hidden="true">
           <path d={ICON_P1}></path>
           <path d={ICON_P2}></path>
         </g>
-        <text x={C} y={C + 4} class="ww-hub-title">Bienestar</text>
-        <text x={C} y={C + 27} class="ww-hub-title">corporativo</text>
-        <text x={C} y={C + 52} class="ww-hub-sub">8 áreas estratégicas</text>
+        <text x={C} y={C + 8} class="ww-hub-title">Equipos que están</text>
+        <text x={C} y={C + 27} class="ww-hub-title">bien, rinden</text>
+        <text x={C} y={C + 46} class="ww-hub-title">y se quedan</text>
       </svg>
-      <p class="ww-hint">Pasa el cursor o haz clic en un área para ver el detalle.</p>
+      <p class="ww-hint">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v5"/><path d="M13 10V9a2 2 0 0 1 4 0v2"/><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-1.5a7 7 0 0 1-5.6-2.8L4 15.5a2 2 0 0 1 3-2.6L9 15"/></svg>
+        Pasa por cada área para ver qué mejora en tu empresa
+      </p>
     </div>
-
     <div class="ww-panel" aria-live="polite">
       {
         AREAS.map((a, i) => (
-          <div class="ww-card" data-ww-card={i} hidden={i !== 0}>
-            <p class="ww-eyebrow">Área {a.n} · de 8</p>
+          <div class={`ww-card g-${a.g}`} data-ww-card={i} hidden={i !== 0}>
+            <p class="ww-eyebrow">{GROUPS[a.g]} · Área {a.n}</p>
             <h3 class="ww-name">{a.name}</h3>
             <p class="ww-desc">{a.desc}</p>
+            <div class="ww-mejora">
+              <span class="ww-mejora__k">Qué mejora</span>
+              <span class="ww-mejora__v">{a.mejora}</span>
+            </div>
             <div class="ww-chips">
               {a.ex.map((e) => (
                 <span class="ww-chip">{e}</span>
               ))}
             </div>
+            <p class="ww-bonif">{a.bonif}</p>
             <div class="ww-cta">
               <a href="/diagnostico" class="btn btn--primary btn--sm">
                 Diagnosticar mi equipo <span class="arrow">→</span>
@@ -200,43 +274,58 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
   <div class="ww-mobile">
     <div class="ww-mwheel">
       <svg viewBox="0 0 440 440" class="ww-svg" aria-label="Rueda con las 8 áreas del bienestar corporativo">
+        <defs>
+          <path id="ww-at-m" d={ARC_TOP}></path>
+          <path id="ww-ab-m" d={ARC_BOT}></path>
+        </defs>
+        <text class="ww-half g-p"><textPath href="#ww-at-m" startOffset="50%">{GROUPS.p}</textPath></text>
+        <text class="ww-half g-e"><textPath href="#ww-ab-m" startOffset="50%">{GROUPS.e}</textPath></text>
         {
           AREAS.map((a, i) => (
             <path
               d={segs[i].d}
-              class={`ww-seg${i === 0 ? ' sel' : ''}`}
+              class={`ww-seg g-${a.g}${i % 2 ? ' alt' : ''}${i === 0 ? ' sel' : ''}`}
               data-ww-mseg={i}
               tabindex="0"
               role="button"
               aria-pressed={i === 0 ? 'true' : 'false'}
-              aria-label={`${a.name} — abrir detalle`}
+              aria-label={`${a.name}: abrir detalle`}
             />
           ))
         }
         {
           AREAS.map((a, i) => (
-            <text x={segs[i].lx} y={segs[i].ly + 4} class={`ww-slb ww-slb--m${i === 0 ? ' on' : ''}`} data-ww-mlb={i}>
-              {a.short}
-            </text>
+            <g class={`ww-lbl ww-lbl--m g-${a.g}${i === 0 ? ' on' : ''}`} data-ww-mlb={i}>
+              <svg x={segs[i].lx - 11} y={segs[i].ly - 26} width="22" height="22" viewBox="0 0 24 24" class="ww-ico" set:html={a.icon} />
+              <text x={segs[i].lx} y={segs[i].ly + 13} class="ww-slb">{a.short}</text>
+            </g>
           ))
         }
-        <circle cx={C} cy={C} r={r - 14} class="ww-hub"></circle>
+        <circle cx={C} cy={C} r={r - 12} class="ww-hub"></circle>
         <g transform={`translate(${ICON_TX} ${ICON_TY}) scale(${ICON_S})`} class="ww-hub-icon" aria-hidden="true">
           <path d={ICON_P1}></path>
           <path d={ICON_P2}></path>
         </g>
-        <text x={C} y={C + 4} class="ww-hub-title">Bienestar</text>
-        <text x={C} y={C + 27} class="ww-hub-title">corporativo</text>
-        <text x={C} y={C + 52} class="ww-hub-sub">8 áreas estratégicas</text>
+        <text x={C} y={C + 8} class="ww-hub-title">Equipos que están</text>
+        <text x={C} y={C + 27} class="ww-hub-title">bien, rinden</text>
+        <text x={C} y={C + 46} class="ww-hub-title">y se quedan</text>
       </svg>
-      <p class="ww-hint">Toca un área de la rueda para ver su detalle.</p>
+      <p class="ww-hint">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11V5a2 2 0 0 1 4 0v5"/><path d="M13 10V9a2 2 0 0 1 4 0v2"/><path d="M17 11a2 2 0 0 1 4 0v4a7 7 0 0 1-7 7h-1.5a7 7 0 0 1-5.6-2.8L4 15.5a2 2 0 0 1 3-2.6L9 15"/></svg>
+        Toca un área para ver qué mejora en tu empresa
+      </p>
     </div>
     {
       AREAS.map((a, i) => (
-        <details class="ww-mi" data-ww-mi={i} open={i === 0}>
+        <details class={`ww-mi g-${a.g}`} data-ww-mi={i} open={i === 0}>
           <summary class="ww-ms">
-            <span class="ww-num" aria-hidden="true">{a.n}</span>
-            <span class="ww-mt">{a.name}</span>
+            <span class="ww-num" aria-hidden="true">
+              <svg viewBox="0 0 24 24" set:html={a.icon} />
+            </span>
+            <span class="ww-mt">
+              <span class="ww-mg">{GROUPS[a.g]}</span>
+              {a.name}
+            </span>
             <span class="ww-chev" aria-hidden="true">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M6 9l6 6 6-6" />
@@ -245,11 +334,16 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
           </summary>
           <div class="ww-mb">
             <p class="ww-desc">{a.desc}</p>
+            <div class="ww-mejora">
+              <span class="ww-mejora__k">Qué mejora</span>
+              <span class="ww-mejora__v">{a.mejora}</span>
+            </div>
             <div class="ww-chips">
               {a.ex.map((e) => (
                 <span class="ww-chip">{e}</span>
               ))}
             </div>
+            <p class="ww-bonif">{a.bonif}</p>
             <div class="ww-cta">
               <a href="/diagnostico" class="btn btn--primary btn--sm">
                 Diagnosticar mi equipo <span class="arrow">→</span>
@@ -268,11 +362,30 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
       ))
     }
   </div>
+
+  <p class="ww-note">* {BONIF_NOTE}</p>
 </div>
 
 <style>
   .ww {
     margin-top: 16px;
+    /* Dos tonos dentro de la marca: verde para la persona, verde azulado para el equipo */
+    --ww-p: var(--green);
+    --ww-p-dark: var(--green-dark);
+    --ww-p-rgb: 26, 92, 26;
+    --ww-e: #17696c;
+    --ww-e-dark: #0f4446;
+    --ww-e-rgb: 23, 119, 122;
+  }
+  .g-p {
+    --c: var(--ww-p);
+    --c-dark: var(--ww-p-dark);
+    --c-rgb: var(--ww-p-rgb);
+  }
+  .g-e {
+    --c: var(--ww-e);
+    --c-dark: var(--ww-e-dark);
+    --c-rgb: var(--ww-e-rgb);
   }
 
   /* ── Desktop: rueda + panel ── */
@@ -286,38 +399,58 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     margin: 0 auto;
     font-family: var(--font);
   }
-  /* Tintas alternas dentro de la familia verde/salvia; activo en verde principal */
   path.ww-seg {
-    fill: rgba(26, 92, 26, 0.09);
+    fill: rgba(var(--c-rgb), 0.1);
     stroke: #fff;
     stroke-width: 3;
     cursor: pointer;
     transition: fill 0.15s ease;
   }
-  path.ww-seg:nth-of-type(2n) {
-    fill: rgba(26, 92, 26, 0.17);
+  path.ww-seg.alt {
+    fill: rgba(var(--c-rgb), 0.18);
   }
   path.ww-seg:hover {
-    fill: rgba(26, 92, 26, 0.3);
+    fill: rgba(var(--c-rgb), 0.32);
   }
   path.ww-seg:focus-visible {
     outline: none;
-    fill: rgba(26, 92, 26, 0.3);
-    stroke: var(--green-dark);
+    fill: rgba(var(--c-rgb), 0.32);
+    stroke: var(--c-dark);
     stroke-width: 2;
   }
   path.ww-seg.sel {
-    fill: var(--green);
+    fill: var(--c);
+  }
+  .ww-lbl {
+    pointer-events: none;
+  }
+  .ww-ico {
+    fill: none;
+    stroke: var(--c);
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
   }
   .ww-slb {
     font-size: 13.5px;
     font-weight: 600;
-    fill: var(--green-dark);
+    fill: var(--c-dark);
     text-anchor: middle;
-    pointer-events: none;
   }
-  .ww-slb.on {
+  .ww-lbl.on .ww-slb {
     fill: #fff;
+  }
+  .ww-lbl.on .ww-ico {
+    stroke: #fff;
+  }
+  .ww-half {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    fill: var(--c);
+    text-anchor: middle;
   }
   .ww-hub {
     fill: #fff;
@@ -334,28 +467,35 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     stroke-linecap: round;
   }
   .ww-hub-title {
-    font-size: 19px;
+    font-size: 15.5px;
     font-weight: 700;
     fill: var(--text);
     text-anchor: middle;
     pointer-events: none;
   }
-  .ww-hub-sub {
-    font-size: 11.5px;
-    fill: var(--text-sec);
-    text-anchor: middle;
-    pointer-events: none;
-  }
   .ww-hint {
-    font-size: 12px;
-    color: var(--text-sec);
-    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--green);
     text-align: center;
-    margin: 6px 0 0;
+    margin: 10px 0 0;
   }
-
+  .ww-hint svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
   .ww-panel {
-    min-height: 380px;
+    min-height: 440px;
     display: flex;
     align-items: center;
   }
@@ -363,7 +503,7 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     width: 100%;
     background: #fff;
     border: 1px solid var(--line);
-    border-top: 3px solid var(--green);
+    border-top: 3px solid var(--c);
     border-radius: var(--radius);
     box-shadow: var(--shadow-soft);
     padding: 24px 24px 22px;
@@ -384,39 +524,79 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
   }
   .ww-eyebrow {
     font-size: 10.5px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: var(--green-accent);
+    color: var(--c);
     margin: 0 0 8px;
   }
   .ww-name {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 700;
     color: var(--text);
     line-height: 1.3;
     margin: 0 0 8px;
   }
   .ww-desc {
-    font-size: 13.5px;
+    font-size: 14px;
     color: var(--text-sec);
     line-height: 1.55;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
+  }
+  /* Lo que RRHH quiere leer: el indicador que mejora */
+  .ww-mejora {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    background: rgba(var(--c-rgb), 0.07);
+    border-left: 3px solid var(--c);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    margin: 0 0 14px;
+  }
+  .ww-mejora__k {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c);
+  }
+  .ww-mejora__v {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.45;
   }
   .ww-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 0 0 16px;
+    margin: 0 0 12px;
   }
   .ww-chip {
     font-size: 11.5px;
     font-weight: 500;
-    color: var(--green-dark);
+    color: var(--c-dark);
     background: var(--surface);
     border: 1px solid var(--line);
     border-radius: 100px;
     padding: 4px 10px;
+  }
+  .ww-bonif {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green-accent);
+    margin: 0 0 16px;
+  }
+  .ww-bonif::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--green-accent);
   }
   .ww-cta {
     display: flex;
@@ -438,6 +618,12 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
   .ww-extralink:hover {
     text-decoration: underline;
   }
+  .ww-note {
+    font-size: 11.5px;
+    color: var(--text-sec);
+    line-height: 1.5;
+    margin: 18px 0 0;
+  }
 
   /* ── Móvil: rueda táctil + tarjetas desplegables ── */
   .ww-mobile {
@@ -446,20 +632,25 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
     gap: 10px;
   }
   .ww-mwheel {
-    max-width: 360px;
+    max-width: 380px;
     width: 100%;
     margin: 0 auto 10px;
   }
-  /* Etiquetas algo mayores: la rueda móvil se renderiza más pequeña.
-     14.5px es el máximo que cabe sin que "Productividad" toque el hub. */
-  .ww-slb--m {
+  /* Etiquetas algo mayores: la rueda móvil se renderiza más pequeña. */
+  .ww-lbl--m .ww-slb {
     font-size: 14.5px;
+  }
+  .ww-half {
+    font-size: 11px;
   }
   .ww-mi {
     background: #fff;
     border: 1px solid var(--line);
     border-radius: 10px;
     overflow: hidden;
+  }
+  .ww-mi[open] {
+    border-color: rgba(var(--c-rgb), 0.45);
   }
   .ww-ms {
     display: flex;
@@ -474,31 +665,48 @@ const ICON_TY = +(172 - 495 * ICON_S).toFixed(2);
   }
   .ww-num {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    border: 1.5px solid var(--green);
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid var(--c);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green);
+    color: var(--c);
     transition: background 0.15s ease, color 0.15s ease;
   }
+  .ww-num svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
   .ww-mi[open] .ww-num {
-    background: var(--green);
+    background: var(--c);
     color: #fff;
   }
   .ww-mt {
     flex: 1;
-    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 14.5px;
     font-weight: 600;
     color: var(--text);
     line-height: 1.3;
   }
+  .ww-mg {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c);
+  }
   .ww-chev {
-    color: var(--green);
+    color: var(--c);
     display: flex;
     align-items: center;
     transition: transform 0.18s ease;

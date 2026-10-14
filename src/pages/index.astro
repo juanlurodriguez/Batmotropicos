@@ -126,7 +126,8 @@ const proceso = ['Diagnóstico', 'Diseño', 'Gestión FUNDAE previa', 'Ejecució
       </div>
       <ul class="areas reveal">
         {
-          catalogo.map((c) => (
+          // Programas no es un área: se muestran las 9 áreas (rejilla 3×3).
+          catalogo.filter((c) => c.id !== 'programas').map((c) => (
             <li>
               <a href={`/catalogo#${c.id}`} class="area">
                 <span class="area__letter" aria-hidden="true">{c.letter}</span>
