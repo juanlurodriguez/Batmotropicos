@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const email = 'contacto@juanlurodriguez.com';
+// No mostrar una agenda hasta que exista un enlace de pacientes probado.
+const configuredBooking = import.meta.env.PUBLIC_PATIENT_BOOKING_URL || '';
+let bookingUrl = '';
+try {
+  const url = new URL(configuredBooking);
+  if (url.protocol === 'https:' && ['cal.com', 'app.cal.com', 'cal.eu', 'app.cal.eu'].includes(url.hostname)
+    && url.pathname !== '/' && !url.username && !url.password) bookingUrl = url.href;
+} catch { /* Solicitud por email disponible sin agenda configurada. */ }
+---
+
+<BaseLayout title="Pide cita con Juan Luis Rodríguez Ávila" description="Fisioterapia musculoesquelética para adultos en Inca y online. Sesión presencial de unos 55 minutos: 55 €. Sesión online: 40 €." path="/cita" minimal>
+  <section class="booking wrap">
+    <p class="eyebrow">Fisioterapia · Inca y online</p>
+    <h1>Juan Luis Rodríguez Ávila</h1>
+    <p class="intro">Una sesión individual para valorar tu situación, trabajar en tu recuperación y darte pautas que puedas aplicar en tu día a día.</p>
+    <p class="credentials">Fisioterapeuta · Colegiado 2498</p>
+
+    <div class="services">
+      <article><span>En Inca</span><h2>Sesión presencial</h2><p class="price">55 €</p><p>Aproximadamente 55 minutos.</p><p>Valoración, tratamiento y pautas de ejercicio y autocuidado. Las técnicas se eligen según tus necesidades tras la valoración.</p></article>
+      <article><span>Por videollamada</span><h2>Sesión online</h2><p class="price">40 €</p><p>Duración a concretar al concertar la cita.</p><p>Valoración, orientación y seguimiento mediante ejercicio terapéutico para problemas musculoesqueléticos.</p></article>
+    </div>
+
+    {bookingUrl && <div class="calendar"><h2>Elige un horario</h2><p>Consulta la disponibilidad y revisa la confirmación de tu reserva.</p><a class="btn btn--primary" href={bookingUrl} target="_blank" rel="noopener noreferrer">Ver horarios y reservar</a><p>Si necesitas ayuda, también puedes solicitar cita por email.</p></div>}
+
+    <section class="request" aria-labelledby="request-title">
+      <h2 id="request-title">Solicita tu cita</h2>
+      <p>Indica la modalidad y cuándo te viene bien. Te responderemos por email para concretar la cita. <strong>La solicitud no confirma un horario.</strong></p>
+      <form id="appointment-request">
+        <label for="patient-name">Tu nombre</label>
+        <input id="patient-name" name="nombre" autocomplete="given-name" maxlength="80" required />
+        <label for="modality">Modalidad</label>
+        <select id="modality" name="modalidad" required>
+          <option value="">Selecciona una opción</option>
+          <option value="Presencial en Inca — 55 €">Presencial en Inca · 55 €</option>
+          <option value="Online — 40 €">Online · 40 €</option>
+        </select>
+        <label for="availability">¿Qué días y franjas horarias te vienen bien?</label>
+        <input id="availability" name="disponibilidad" maxlength="250" placeholder="Por ejemplo: martes o jueves por la tarde" required />
+        <p class="note">En este primer contacto no necesitamos informes, diagnósticos ni medicación. La información clínica se recoge después, por el canal indicado para ello.</p>
+        <button type="submit" class="btn btn--primary">Preparar email de solicitud</button>
+        <p class="note">Se abrirá tu aplicación de correo con la solicitud preparada. Revisa el mensaje y pulsa enviar allí. Estos campos no se envían desde esta página.</p>
+        <p id="request-status" role="status" hidden>El email está preparado. Si tu aplicación de correo no se abre, escribe directamente a <a href={`mailto:${email}?subject=Solicitud%20de%20cita%20de%20fisioterapia`}>{email}</a>. Tu solicitud solo llega cuando envías el correo.</p>
+      </form>
+      <p class="direct">También puedes escribir directamente a <a href={`mailto:${email}?subject=Solicitud%20de%20cita%20de%20fisioterapia`}>{email}</a>.</p>
+    </section>
+
+    <section class="about"><h2>Sobre la atención</h2><p>Atención a adultos centrada en fisioterapia musculoesquelética, deportiva e invasiva. Actualmente trabajo en atención primaria del IB-Salut y anteriormente he trabajado en el Hospital Universitario Son Llàtzer.</p><p>La punción seca y la electropunción se utilizan cuando están indicadas y con tu consentimiento. No es necesario elegir una técnica al solicitar cita.</p><p>La ficha clínica previa se facilita cuando la cita está concertada.</p></section>
+  </section>
+</BaseLayout>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#appointment-request');
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const data = new FormData(form);
+    const body = `Hola, quiero solicitar una cita de fisioterapia.\n\nNombre: ${data.get('nombre')}\nModalidad: ${data.get('modalidad')}\nDisponibilidad: ${data.get('disponibilidad')}\n\nQuedo pendiente de la confirmación de día y hora.`;
+    window.location.href = `mailto:contacto@juanlurodriguez.com?subject=${encodeURIComponent('[CITA FISIO] Solicitud de cita')}&body=${encodeURIComponent(body)}`;
+    document.querySelector<HTMLElement>('#request-status')!.hidden = false;
+  });
+</script>
+
+<style>
+  .booking{max-width:920px;padding-top:50px;padding-bottom:70px}h1{font-size:clamp(28px,5vw,44px);line-height:1.2;margin:10px 0 20px}h2{font-size:23px;line-height:1.3;margin:10px 0 14px}.intro{font-size:19px;max-width:730px;line-height:1.65}.credentials,.note{color:var(--text-sec);font-size:14px;line-height:1.6}.services{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:32px 0}.services article,.request,.calendar{padding:28px;border:1px solid var(--line);border-radius:12px;background:#fff}.services article>span{font-size:13px;color:var(--green);font-weight:600}.price{font-size:36px;line-height:1.1;font-weight:700;margin:12px 0}.services p,.request p,.about p,.calendar p{line-height:1.65}.request{background:var(--bg-soft)}form{display:grid;gap:10px;margin-top:25px}label{font-weight:600;margin-top:10px;font-size:14px}input,select{font:inherit;width:100%;padding:13px;border:1px solid var(--line);border-radius:6px;background:white;box-sizing:border-box}input:focus,select:focus{outline:2px solid var(--green);outline-offset:2px}.btn{justify-self:start;max-width:100%;white-space:normal;text-align:center}.direct a,#request-status a{overflow-wrap:anywhere;color:var(--green);text-decoration:underline}.about{padding-top:30px}.calendar{margin-bottom:24px;background:var(--green-soft)}[hidden]{display:none!important}@media(max-width:640px){.services{grid-template-columns:1fr}.services article,.request,.calendar{padding:22px}.booking{padding-top:30px}.btn{width:100%}}
+</style>
