@@ -1,0 +1,5 @@
+# Cabeceras de Cloudflare Pages.
+# La ficha de contacto de /hola se sirve como vCard en UTF-8 para que
+# el móvil la abra en la agenda y respete las tildes.
+/juanlu.vcf
+  Content-Type: text/vcard; charset=utf-8
