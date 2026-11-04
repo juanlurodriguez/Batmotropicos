@@ -11,7 +11,7 @@ export interface Caso {
   empresa: string;
   /** Sector o contexto */
   sector: string;
-  /** Estado de publicación */
+  /** Estado de publicación (los casos 'proximamente' no se muestran en la web) */
   estado: 'publicado' | 'proximamente';
   /** Objetivo del programa */
   objetivo: string;

@@ -22,7 +22,7 @@ import { casos } from '../data/casos';
 
       <div class="casos">
         {
-          casos.map((c) => (
+          casos.filter((c) => c.estado === 'publicado').map((c) => (
             <article class="caso card card--accent reveal">
               <div class="caso__media">
                 {c.videoSrc ? (
