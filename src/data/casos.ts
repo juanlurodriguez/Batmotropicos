@@ -56,12 +56,14 @@ export const casos: Caso[] = [
   {
     id: 'kokomo',
     empresa: 'Caso Kokomo',
-    sector: 'Hostelería · Restauración',
-    estado: 'proximamente',
+    sector: 'Hostelería · Restaurante de playa',
+    estado: 'publicado',
     objetivo: 'Activar al equipo y reducir molestias físicas durante la temporada.',
     accion: 'Programa de bienestar y autocuidado in company (4 sesiones).',
-    feedback: 'Pendiente de publicación junto al material audiovisual.',
-    videoSrc: '',
+    feedback: 'El equipo completó las 4 sesiones del programa y cada participante recibió su diploma de formación.',
+    videoSrc: '/assets/video/hero-reel.mp4',
+    poster: '/assets/casos/kokomo-poster.jpg',
+    vertical: true,
     linkedin: '',
   },
 ];
